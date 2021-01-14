@@ -93,6 +93,16 @@ func (io IO) SetDisplaySize(value Vec2) {
 	C.iggIoSetDisplaySize(io.handle, out)
 }
 
+// MouseDrawCursor returns true if mouse cursor should be drawn
+func (io IO) MouseDrawCursor() bool {
+    return C.iggIoGetMouseDrawCursor(io.handle) != 0
+}
+
+// SetMouseDrawCursor sets whether or not the mouse cursor should be drawn
+func (io IO) SetMouseDrawCursor(b bool) {
+    C.iggIoSetMouseDrawCursor(io.handle, castBool(b))
+}
+
 // Fonts returns the font atlas to load and assemble one or more fonts into a single tightly packed texture.
 func (io IO) Fonts() FontAtlas {
 	return FontAtlas(C.iggIoGetFonts(io.handle))
