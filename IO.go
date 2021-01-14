@@ -252,6 +252,11 @@ func (io IO) SetConfigFlags(flags int) {
 	C.iggIoSetConfigFlags(io.handle, C.int(flags))
 }
 
+// ConfigFlags gets the gamepad/keyboard navigation options, etc.
+func (io IO) ConfigFlags() int {
+	return int(C.iggIoGetConfigFlags(io.handle))
+}
+
 const (
 	// BackendFlagNone default = 0
 	BackendFlagNone = 0
