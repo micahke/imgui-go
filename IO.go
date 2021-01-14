@@ -278,6 +278,16 @@ func (io IO) SetBackendFlags(flags int) {
 	C.iggIoSetBackendFlags(io.handle, C.int(flags))
 }
 
+// FrameCountSinceLastInput returns the number of frames since the last input
+func (io IO) FrameCountSinceLastInput() int {
+    return int(C.iggGetFrameCountSinceLastInput(io.handle))
+}
+
+// SetFrameCountSinceLastInput sets a counter that tracks the number of frames since the last input
+func (io IO) SetFrameCountSinceLastInput(count int) {
+    C.iggSetFrameCountSinceLastInput(io.handle, C.int(count))
+}
+
 // Clipboard describes the access to the text clipboard of the window manager.
 type Clipboard interface {
 	// Text returns the current text from the clipboard, if available.
