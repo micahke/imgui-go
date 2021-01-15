@@ -1637,6 +1637,7 @@ struct ImGuiIO
     ImWchar16   InputQueueSurrogate;            // For AddInputCharacterUTF16
     ImVector<ImWchar> InputQueueCharacters;     // Queue of _characters_ input (obtained by platform back-end). Fill using AddInputCharacter() helper.
 
+
     IMGUI_API   ImGuiIO();
 };
 

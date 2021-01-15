@@ -50,6 +50,26 @@ const (
 	ButtonFlagsMouseButtonMiddle = 1 << 2
 )
 
+func SmallButton(id string) bool {
+	idArg, idFin := wrapString(id)
+	defer idFin()
+	return C.iggSmallButton(idArg) != 0
+}
+
+func ArrowButton(id string, dir uint8) bool {
+	idArg, idFin := wrapString(id)
+	defer idFin()
+	return C.iggArrowButton(idArg, C.uchar(dir)) != 0
+}
+
+// BulletText.
+// Text with a little bullet aligned to the typical tree node.
+func BulletText(text string) {
+	textArg, textFin := wrapString(text)
+	defer textFin()
+	C.iggBulletText(textArg)
+}
+
 // InvisibleButtonV returning true if it is pressed.
 func InvisibleButtonV(id string, size Vec2, flags ButtonFlags) bool {
 	idArg, idFin := wrapString(id)
@@ -654,6 +674,21 @@ func InputIntV(label string, value *int32, step int, stepFast int, flags int) bo
 // InputInt calls InputIntV(label, value, 1, 100, 0).
 func InputInt(label string, value *int32) bool {
 	return InputIntV(label, value, 1, 100, 0)
+}
+
+func InputFloat(label string, value *float32) bool {
+	return InputFloatV(label, value, 0.0, 0.0, "%.3f", 0)
+}
+
+func InputFloatV(label string, value *float32, step, step_fast float32, format string, flags int) bool {
+	labelArg, labelFin := wrapString(label)
+	defer labelFin()
+	valueArg, valueFin := wrapFloat(value)
+	defer valueFin()
+	formatArg, formatFin := wrapString(format)
+	defer formatFin()
+
+	return C.iggInputFloat(labelArg, valueArg, C.float(step), C.float(step_fast), formatArg, C.int(flags)) != 0
 }
 
 const (

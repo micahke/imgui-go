@@ -10,6 +10,8 @@ extern void iggTextUnformatted(char const *text);
 extern void iggLabelText(char const *label, char const *text);
 
 extern IggBool iggButton(char const *label, IggVec2 const *size);
+extern IggBool iggSmallButton(char const *label);
+extern IggBool iggArrowButton(const char* id, unsigned char dir);
 extern IggBool iggInvisibleButton(char const *label, IggVec2 const *size, int flags);
 extern void iggImage(IggTextureID textureID,
    IggVec2 const *size, IggVec2 const *uv0, IggVec2 const *uv1,
@@ -21,6 +23,7 @@ extern IggBool iggImageButton(IggTextureID textureID,
 extern IggBool iggCheckbox(char const *label, IggBool *selected);
 extern IggBool iggRadioButton(char const *label, IggBool active);
 extern void iggBullet();
+extern void iggBulletText(const char* text);
 extern void iggProgressBar(float fraction, IggVec2 const *size, char const *overlay);
 
 extern IggBool iggBeginCombo(char const *label, char const *previewValue, int flags);
@@ -46,6 +49,8 @@ extern IggBool iggInputTextSingleline(char const *label, char const *hint, char 
 extern IggBool iggInputTextMultiline(char const *label, char *buf, unsigned int bufSize, IggVec2 const *size, int flags, int callbackKey);
 
 extern IggBool iggInputInt(char const *label, int *value, int step, int step_fast, int flags);
+extern IggBool iggInputFloat(char const *label, float *v, float step,
+                             float step_fast, const char *format, int flags);
 
 extern IggBool iggColorEdit3(char const *label, float *col, int flags);
 extern IggBool iggColorEdit4(char const *label, float *col, int flags);

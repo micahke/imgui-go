@@ -19,6 +19,16 @@ IggBool iggButton(char const *label, IggVec2 const *size)
    return ImGui::Button(label, *sizeArg) ? 1 : 0;
 }
 
+IggBool iggSmallButton(char const *label)
+{
+   return ImGui::SmallButton(label) ? 1 : 0;
+}
+
+IggBool iggArrowButton(const char* id, unsigned char dir)
+{
+   return ImGui::ArrowButton(id, dir) ? 1 : 0;
+}
+
 IggBool iggInvisibleButton(char const *label, IggVec2 const *size, int flags)
 {
    Vec2Wrapper sizeArg(size);
@@ -64,6 +74,11 @@ IggBool iggRadioButton(char const *label, IggBool active)
 void iggBullet()
 {
    ImGui::Bullet();
+}
+
+void iggBulletText(const char* text)
+{
+   ImGui::BulletText("%s", text);
 }
 
 void iggProgressBar(float fraction, IggVec2 const *size, char const *overlay)
@@ -171,6 +186,11 @@ IggBool iggInputTextMultiline(char const *label, char *buf, unsigned int bufSize
 IggBool iggInputInt(char const *label, int *value, int step, int step_fast, int flags)
 {
    return ImGui::InputInt(label, value, step, step_fast, flags) ? 1 : 0;
+}
+
+IggBool iggInputFloat(char const *label, float* v, float step, float step_fast, const char* format, int flags)
+{
+  return ImGui::InputFloat(label, v, step, step_fast, format, flags) ? 1 : 0;
 }
 
 IggBool iggColorEdit3(char const *label, float *col, int flags)

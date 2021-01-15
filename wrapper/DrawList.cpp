@@ -105,6 +105,115 @@ void iggAddTriangleFilled(IggDrawList handle, IggVec2 *p1, IggVec2 *p2, IggVec2 
    list->AddTriangleFilled(*p1Arg, *p2Arg, *p3Arg, col);
 }
 
+void iggAddText(IggDrawList handle, IggVec2 *pos, IggPackedColor col,
+                        const char *text) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper posArg(pos);
+  list->AddText(*posArg, col, text);
+}
+
+void iggAddBezierCurve(IggDrawList handle, IggVec2 *pos0, IggVec2 *cp0,
+                               IggVec2 *cp1, IggVec2 *pos1, IggPackedColor col,
+                               float thickness, int num_segments) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper pos0Arg(pos0);
+  Vec2Wrapper pos1Arg(pos1);
+  Vec2Wrapper cp0Arg(cp0);
+  Vec2Wrapper cp1Arg(cp1);
+  list->AddBezierCurve(*pos0Arg, *cp0Arg, *cp1Arg, *pos1Arg, col, thickness,
+                       num_segments);
+}
+
+void iggAddQuad(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
+                        IggVec2 *p3, IggVec2 *p4, IggPackedColor col,
+                        float thickness) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper p1Arg(p1);
+  Vec2Wrapper p2Arg(p2);
+  Vec2Wrapper p3Arg(p3);
+  Vec2Wrapper p4Arg(p4);
+  list->AddQuad(*p1Arg, *p2Arg, *p3Arg, *p4Arg, col, thickness);
+}
+
+void iggAddQuadFilled(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
+                              IggVec2 *p3, IggVec2 *p4, IggPackedColor col) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper p1Arg(p1);
+  Vec2Wrapper p2Arg(p2);
+  Vec2Wrapper p3Arg(p3);
+  Vec2Wrapper p4Arg(p4);
+  list->AddQuadFilled(*p1Arg, *p2Arg, *p3Arg, *p4Arg, col);
+}
+
+void iggPathClear(IggDrawList handle) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  list->PathClear();
+}
+
+void iggPathLineTo(IggDrawList handle, IggVec2 *pos) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper posArg(pos);
+  list->PathLineTo(*posArg);
+}
+
+void iggPathLineToMergeDuplicate(IggDrawList handle, IggVec2 *pos) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper posArg(pos);
+  list->PathLineToMergeDuplicate(*posArg);
+}
+
+void iggPathFillConvex(IggDrawList handle, IggPackedColor col) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  list->PathFillConvex(col);
+}
+
+void iggPathStroke(IggDrawList handle, IggPackedColor col, IggBool closed,
+                           float thickness) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  list->PathStroke(col, closed != 0, thickness);
+}
+
+void iggPathArcTo(IggDrawList handle, IggVec2 *center, float radius,
+                          float a_min, float a_max, int num_segments) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper centerArg(center);
+  list->PathArcTo(*centerArg, radius, a_min, a_max, num_segments);
+}
+
+void iggPathArcToFast(IggDrawList handle, IggVec2 *center, float radius,
+                              int a_min_of_12, int a_max_of_12) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper centerArg(center);
+  list->PathArcToFast(*centerArg, radius, a_min_of_12, a_max_of_12);
+}
+
+void iggPathBezierCurveTo(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
+                                  IggVec2 *p3, int num_segments) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper p1Arg(p1);
+  Vec2Wrapper p2Arg(p2);
+  Vec2Wrapper p3Arg(p3);
+  list->PathBezierCurveTo(*p1Arg, *p2Arg, *p3Arg, num_segments);
+}
+
+void iggAddImage(IggDrawList handle, IggTextureID id, IggVec2 *p_min,
+                         IggVec2 *p_max) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper pMinArg(p_min);
+  Vec2Wrapper pMaxArg(p_max);
+  list->AddImage(ImTextureID(id), *pMinArg, *pMaxArg);
+}
+
+void iggAddImageV(IggDrawList handle, IggTextureID id, IggVec2 *p_min,
+                         IggVec2 *p_max, IggVec2 *uv_min, IggVec2 *uv_max, IggPackedColor color) {
+  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+  Vec2Wrapper pMinArg(p_min);
+  Vec2Wrapper pMaxArg(p_max);
+  Vec2Wrapper uvMinArg(uv_min);
+  Vec2Wrapper uvMaxArg(uv_max);
+  list->AddImage(ImTextureID(id), *pMinArg, *pMaxArg, *uvMinArg, *uvMaxArg, color);
+}
+
 IggDrawList iggGetWindowDrawList()
 {
    return static_cast<IggDrawList>(const_cast<ImDrawList *>(ImGui::GetWindowDrawList()));

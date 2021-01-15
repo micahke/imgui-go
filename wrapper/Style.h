@@ -21,6 +21,7 @@ extern void iggPopStyleVar(int count);
 extern void iggStyleGetItemInnerSpacing(IggGuiStyle handle, IggVec2 *value);
 extern void iggStyleGetItemSpacing(IggGuiStyle handle, IggVec2 *value);
 
+extern void iggStyleGetWindowPadding(IggGuiStyle handle, IggVec2 *value);
 extern void iggStyleGetFramePadding(IggGuiStyle handle, IggVec2 *value);
 
 extern void iggStyleSetColor(IggGuiStyle handle, int index, IggVec4 const *color);
