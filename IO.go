@@ -95,12 +95,12 @@ func (io IO) SetDisplaySize(value Vec2) {
 
 // MouseDrawCursor returns true if mouse cursor should be drawn
 func (io IO) MouseDrawCursor() bool {
-    return C.iggIoGetMouseDrawCursor(io.handle) != 0
+	return C.iggIoGetMouseDrawCursor(io.handle) != 0
 }
 
 // SetMouseDrawCursor sets whether or not the mouse cursor should be drawn
 func (io IO) SetMouseDrawCursor(b bool) {
-    C.iggIoSetMouseDrawCursor(io.handle, castBool(b))
+	C.iggIoSetMouseDrawCursor(io.handle, castBool(b))
 }
 
 // Fonts returns the font atlas to load and assemble one or more fonts into a single tightly packed texture.
@@ -286,16 +286,6 @@ const (
 // SetBackendFlags sets back-end capabilities.
 func (io IO) SetBackendFlags(flags int) {
 	C.iggIoSetBackendFlags(io.handle, C.int(flags))
-}
-
-// FrameCountSinceLastInput returns the number of frames since the last input
-func (io IO) FrameCountSinceLastInput() int {
-    return int(C.iggGetFrameCountSinceLastInput(io.handle))
-}
-
-// SetFrameCountSinceLastInput sets a counter that tracks the number of frames since the last input
-func (io IO) SetFrameCountSinceLastInput(count int) {
-    C.iggSetFrameCountSinceLastInput(io.handle, C.int(count))
 }
 
 // Clipboard describes the access to the text clipboard of the window manager.

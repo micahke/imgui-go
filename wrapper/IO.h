@@ -44,8 +44,6 @@ extern void iggIoSetIniFilename(IggIO handle, char const *value);
 extern void iggIoSetConfigFlags(IggIO handle, int flags);
 extern int iggIoGetConfigFlags(IggIO handle);
 extern void iggIoSetBackendFlags(IggIO handle, int flags);
-extern int iggGetFrameCountSinceLastInput(IggIO handle);
-extern void iggSetFrameCountSinceLastInput(IggIO handle, int count);
 
 extern void iggIoRegisterClipboardFunctions(IggIO handle);
 extern void iggIoClearClipboardFunctions(IggIO handle);
