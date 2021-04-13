@@ -105,13 +105,15 @@ void iggAddTriangleFilled(IggDrawList handle, IggVec2 *p1, IggVec2 *p2, IggVec2 
    list->AddTriangleFilled(*p1Arg, *p2Arg, *p3Arg, col);
 }
 
-void iggAddText(IggDrawList handle, IggVec2 *pos, IggPackedColor col,
-                        const char *text) {
-  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
-  Vec2Wrapper posArg(pos);
-  list->AddText(*posArg, col, text);
+void iggAddText(IggDrawList handle, IggVec2 const *pos, IggPackedColor col, const char *text, int length)
+{
+   Vec2Wrapper posArg(pos);
+   ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
+   list->AddText(*posArg, col, text, text + length);
 }
 
+
+/* TODO -- API has changed in v4
 void iggAddBezierCurve(IggDrawList handle, IggVec2 *pos0, IggVec2 *cp0,
                                IggVec2 *cp1, IggVec2 *pos1, IggPackedColor col,
                                float thickness, int num_segments) {
@@ -123,6 +125,7 @@ void iggAddBezierCurve(IggDrawList handle, IggVec2 *pos0, IggVec2 *cp0,
   list->AddBezierCurve(*pos0Arg, *cp0Arg, *cp1Arg, *pos1Arg, col, thickness,
                        num_segments);
 }
+*/
 
 void iggAddQuad(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
                         IggVec2 *p3, IggVec2 *p4, IggPackedColor col,
@@ -187,6 +190,7 @@ void iggPathArcToFast(IggDrawList handle, IggVec2 *center, float radius,
   list->PathArcToFast(*centerArg, radius, a_min_of_12, a_max_of_12);
 }
 
+/* TODO -- API has changed in v4
 void iggPathBezierCurveTo(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
                                   IggVec2 *p3, int num_segments) {
   ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
@@ -195,6 +199,7 @@ void iggPathBezierCurveTo(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
   Vec2Wrapper p3Arg(p3);
   list->PathBezierCurveTo(*p1Arg, *p2Arg, *p3Arg, num_segments);
 }
+*/
 
 void iggAddImage(IggDrawList handle, IggTextureID id, IggVec2 *p_min,
                          IggVec2 *p_max) {
@@ -204,17 +209,22 @@ void iggAddImage(IggDrawList handle, IggTextureID id, IggVec2 *p_min,
   list->AddImage(ImTextureID(id), *pMinArg, *pMaxArg);
 }
 
-void iggAddImageV(IggDrawList handle, IggTextureID id, IggVec2 *p_min,
-                         IggVec2 *p_max, IggVec2 *uv_min, IggVec2 *uv_max, IggPackedColor color) {
-  ImDrawList *list = reinterpret_cast<ImDrawList *>(handle);
-  Vec2Wrapper pMinArg(p_min);
-  Vec2Wrapper pMaxArg(p_max);
-  Vec2Wrapper uvMinArg(uv_min);
-  Vec2Wrapper uvMaxArg(uv_max);
-  list->AddImage(ImTextureID(id), *pMinArg, *pMaxArg, *uvMinArg, *uvMaxArg, color);
+void iggAddImage(IggDrawList handle, IggTextureID textureID, IggVec2* pMin, IggVec2* pMax, IggVec2* uvMin, IggVec2* uvMax, IggPackedColor col) {
+  Vec2Wrapper pMinArg(pMin);
+  Vec2Wrapper pMaxArg(pMax);
+  Vec2Wrapper uvMinArg(uvMin);
+  Vec2Wrapper uvMaxArg(uvMax);
+
+  ImDrawList* list = reinterpret_cast<ImDrawList *>(handle);
+  list->AddImage(reinterpret_cast<ImTextureID>(textureID), *pMinArg, *pMaxArg, *uvMinArg, *uvMaxArg, col);
 }
 
 IggDrawList iggGetWindowDrawList()
 {
    return static_cast<IggDrawList>(const_cast<ImDrawList *>(ImGui::GetWindowDrawList()));
+}
+
+IggDrawList iggGetBackgroundDrawList()
+{
+   return static_cast<IggDrawList>(const_cast<ImDrawList *>(ImGui::GetBackgroundDrawList()));
 }
