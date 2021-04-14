@@ -23,14 +23,13 @@ extern void iggAddCircleFilled(IggDrawList handle, IggVec2 const *center, float 
 extern void iggAddTriangle(IggDrawList handle, IggVec2 *p1, IggVec2 *p2, IggVec2 *p3, IggPackedColor col, float thickness);
 extern void iggAddTriangleFilled(IggDrawList handle, IggVec2 *p1, IggVec2 *p2, IggVec2 *p3, IggPackedColor col);
 extern void iggAddText(IggDrawList handle, IggVec2 const *pos, IggPackedColor col, const char *text, int length);
-extern void iggAddImage(IggDrawList handle, IggTextureID textureID, IggVec2* pMin, IggVec2* pMax, IggVec2* uvMin, IggVec2* uvMax, IggPackedColor col);
+extern void iggAddImage(IggDrawList handle, IggTextureID textureID, IggVec2* pMin, IggVec2* pMax);
 
-/*
-extern void iggAddBezierCurve(IggDrawList handle, IggVec2 *pos0,
+extern void iggAddBezierCubic(IggDrawList handle, IggVec2 *pos0,
                                       IggVec2 *cp0, IggVec2 *cp1, IggVec2 *pos1,
                                       IggPackedColor col, float thickness,
                                       int num_segments);
-*/
+
 extern void iggAddQuad(IggDrawList handle, IggVec2 *p1, IggVec2 *p2,
                                IggVec2 *p3, IggVec2 *p4, IggPackedColor col,
                                float thickness);
@@ -51,11 +50,10 @@ extern void iggPathArcTo(IggDrawList handle, IggVec2 *center,
 extern void iggPathArcToFast(IggDrawList handle, IggVec2 *center,
                                      float radius, int a_min_of_12,
                                      int a_max_of_12);
-/*
-extern void iggPathBezierCurveTo(IggDrawList handle, IggVec2 *p1,
+extern void iggPathBezierCubicCurveTo(IggDrawList handle, IggVec2 *p1,
                                          IggVec2 *p2, IggVec2 *p3,
                                          int num_segments);
-*/
+
 extern void iggAddImageV(IggDrawList handle, IggTextureID id,
                                 IggVec2 *p_min, IggVec2 *p_max,
                                 IggVec2 *uv_min, IggVec2 *uv_max,

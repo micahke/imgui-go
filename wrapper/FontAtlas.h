@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 
+extern IggGlyphRanges iggGetGlyphRangesAll();
 extern IggGlyphRanges iggGetGlyphRangesDefault(IggFontAtlas handle);
 extern IggGlyphRanges iggGetGlyphRangesKorean(IggFontAtlas handle);
 extern IggGlyphRanges iggGetGlyphRangesJapanese(IggFontAtlas handle);
@@ -29,6 +30,7 @@ extern void iggFontAtlasGetTexDataAsRGBA32(IggFontAtlas handle, unsigned char **
    int *width, int *height, int *bytesPerPixel);
 extern void iggFontAtlasSetTextureID(IggFontAtlas handle, IggTextureID id);
 extern IggBool iggFontAtlasBuild(IggFontAtlas handle);
+extern void iggFontAtlasClear(IggFontAtlas handle);
 
 extern unsigned int iggFontAtlasGetFontBuilderFlags(IggFontAtlas handle);
 extern void         iggFontAtlasSetFontBuilderFlags(IggFontAtlas handle, unsigned int flags);

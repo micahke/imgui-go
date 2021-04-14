@@ -165,16 +165,14 @@ func (list DrawList) AddRectFilledV(min Vec2, max Vec2, col PackedColor, roundin
 	C.iggAddRectFilled(list.handle(), minArg, maxArg, C.IggPackedColor(col), C.float(rounding), C.int(flags))
 }
 
-/* TODO -- api has changed in v4
 // AddBezierCurve adds a bezier curve to the draw list.
-func (list DrawList) AddBezierCurve(pos0, cp0, cp1, pos1 Vec2, col PackedColor, thickness float32, num_segments int) {
+func (list DrawList) AddBezierCubic(pos0, cp0, cp1, pos1 Vec2, col PackedColor, thickness float32, num_segments int) {
 	pos0Arg, _ := pos0.wrapped()
 	cp0Arg, _ := cp0.wrapped()
 	cp1Arg, _ := cp1.wrapped()
 	pos1Arg, _ := pos1.wrapped()
-	C.iggAddBezierCurve(list.handle(), pos0Arg, cp0Arg, cp1Arg, pos1Arg, C.IggPackedColor(col), C.float(thickness), C.int(num_segments))
+	C.iggAddBezierCubic(list.handle(), pos0Arg, cp0Arg, cp1Arg, pos1Arg, C.IggPackedColor(col), C.float(thickness), C.int(num_segments))
 }
-*/
 
 // AddCircleFilled calls AddCircleFilledV(center, radius, col, 0).
 func (list DrawList) AddCircleFilled(center Vec2, radius float32, col PackedColor) {
@@ -258,7 +256,7 @@ func (list DrawList) AddImageV(textureID TextureID, posMin Vec2, posMax Vec2, uv
 	posMaxArg, _ := posMax.wrapped()
 	uvMinArg, _ := uvMin.wrapped()
 	uvMaxArg, _ := uvMax.wrapped()
-	C.iggAddImage(list.handle(), C.IggTextureID(textureID), posMinArg, posMaxArg, uvMinArg, uvMaxArg, C.IggPackedColor(tintCol))
+	C.iggAddImageV(list.handle(), C.IggTextureID(textureID), posMinArg, posMaxArg, uvMinArg, uvMaxArg, C.IggPackedColor(tintCol))
 }
 
 // Stateful path API, add points then finish with PathFillConvex() or PathStroke()
@@ -294,11 +292,9 @@ func (list DrawList) PathArcToFast(center Vec2, radius float32, a_min_of_12, a_m
 	C.iggPathArcToFast(list.handle(), centerArg, C.float(radius), C.int(a_min_of_12), C.int(a_max_of_12))
 }
 
-/* TODO -- api has changed in v4
-func (list DrawList) PathBezierCurveTo(p1, p2, p3 Vec2, num_segments int) {
+func (list DrawList) PathBezierCubicCurveTo(p1, p2, p3 Vec2, num_segments int) {
 	p1Arg, _ := p1.wrapped()
 	p2Arg, _ := p2.wrapped()
 	p3Arg, _ := p3.wrapped()
-	C.iggPathBezierCurveTo(list.handle(), p1Arg, p2Arg, p3Arg, C.int(num_segments))
+	C.iggPathBezierCubicCurveTo(list.handle(), p1Arg, p2Arg, p3Arg, C.int(num_segments))
 }
-*/

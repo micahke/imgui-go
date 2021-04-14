@@ -24,6 +24,10 @@ func (atlas FontAtlas) handle() C.IggFontAtlas {
 	return C.IggFontAtlas(atlas)
 }
 
+func GlyphRangesAll() GlyphRanges {
+	return GlyphRanges(C.iggGetGlyphRangesAll())
+}
+
 // GlyphRangesDefault describes Basic Latin, Extended Latin.
 func (atlas FontAtlas) GlyphRangesDefault() GlyphRanges {
 	return GlyphRanges(C.iggGetGlyphRangesDefault(atlas.handle()))
@@ -79,6 +83,12 @@ func (atlas FontAtlas) AddFontFromFileTTFV(filename string, sizePixels float32,
 	config FontConfig, glyphRange GlyphRanges) Font {
 	filenameArg, filenameFin := wrapString(filename)
 	defer filenameFin()
+
+	// Multiply sizePixels with DPI scale
+	if DPIScale > 0 {
+		sizePixels *= DPIScale
+	}
+
 	fontHandle := C.iggAddFontFromFileTTF(atlas.handle(), filenameArg, C.float(sizePixels),
 		config.handle(), glyphRange.handle())
 	return Font(fontHandle)
@@ -106,6 +116,11 @@ func (atlas FontAtlas) AddFontFromMemoryTTFV(
 	cBuf := ptrToByteSlice(fontDataC)
 
 	copy(cBuf, fontData)
+
+	// Multiply sizePixels with DPI scale
+	if DPIScale > 0 {
+		sizePixels *= DPIScale
+	}
 
 	fontHandle := C.iggAddFontFromMemoryTTF(atlas.handle(), (*C.char)(fontDataC), C.int(len(fontData)), C.float(sizePixels),
 		config.handle(), glyphRange.handle())
@@ -161,6 +176,10 @@ func (atlas FontAtlas) TextureDataRGBA32() *RGBA32Image {
 // It is passed back to you during rendering via the DrawCommand.
 func (atlas FontAtlas) SetTextureID(id TextureID) {
 	C.iggFontAtlasSetTextureID(atlas.handle(), id.handle())
+}
+
+func (atlas FontAtlas) Clear() {
+	C.iggFontAtlasClear(atlas.handle())
 }
 
 // Build pixels data. This is called automatically for you by the TextureData*** functions.

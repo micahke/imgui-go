@@ -3,6 +3,16 @@
 #include "FontAtlas.h"
 #include "WrapperConverter.h"
 
+
+IggGlyphRanges iggGetGlyphRangesAll()
+{
+   static const ImWchar ranges[] = {
+      0x0001, 0xFFFF,
+      0,
+   };
+   return static_cast<IggGlyphRanges>(const_cast<ImWchar *>(&ranges[0]));
+}
+
 IggGlyphRanges iggGetGlyphRangesDefault(IggFontAtlas handle)
 {
    ImFontAtlas *fontAtlas = reinterpret_cast<ImFontAtlas *>(handle);
@@ -110,6 +120,12 @@ IggBool iggFontAtlasBuild(IggFontAtlas handle)
 {
    ImFontAtlas *fontAtlas = reinterpret_cast<ImFontAtlas *>(handle);
    return fontAtlas->Build() ? 1 : 0;
+}
+
+void iggFontAtlasClear(IggFontAtlas handle)
+{
+     ImFontAtlas *fontAtlas = reinterpret_cast<ImFontAtlas *>(handle);
+     fontAtlas->Clear();
 }
 
 unsigned int iggFontAtlasGetFontBuilderFlags(IggFontAtlas handle)
