@@ -21,6 +21,7 @@
 #include "wrapper/Font.cpp"
 #include "wrapper/FontAtlas.cpp"
 #include "wrapper/FontConfig.cpp"
+#include "wrapper/FontGlyphRangesBuilder.cpp"
 #include "wrapper/InputTextCallbackData.cpp"
 #include "wrapper/IO.cpp"
 #include "wrapper/Layout.cpp"

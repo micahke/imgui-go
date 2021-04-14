@@ -20,6 +20,7 @@ typedef void *IggGlyphRanges;
 typedef void *IggGuiStyle;
 typedef void *IggInputTextCallbackData;
 typedef void *IggIO;
+typedef void *IggFontGlyphRangesBuilder;
 typedef unsigned int IggPackedColor;
 typedef void *IggPayload;
 typedef void *IggTableSortSpecs;
