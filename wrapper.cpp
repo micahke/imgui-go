@@ -34,3 +34,19 @@
 #include "wrapper/Widgets.cpp"
 #include "wrapper/Window.cpp"
 #include "wrapper/WrapperConverter.cpp"
+
+// imnodes code
+// imnodes/ is added to include path in wrapper.go
+#include "imnodes.cpp"
+
+// imgui-go wrapper around imnodes
+#include "wrapper/imnodesWrapper.cpp"
+
+// implot code
+// implot/ is added to include path in wrapper.go
+#include "implot.cpp"
+#include "implot_demo.cpp"
+#include "implot_items.cpp"
+
+// imgui-go wrapper around implot
+#include "wrapper/implotWrapper.cpp"
