@@ -51,3 +51,10 @@
 
 // imgui-go wrapper around implot
 #include "wrapper/implotWrapper.cpp"
+
+
+// ImGuiColorTextEdit code
+#include "TextEditor.cpp"
+
+// imgui-go wrapper around ImGuiColorTextEdit
+#include "wrapper/TextEditorWrapper.cpp"

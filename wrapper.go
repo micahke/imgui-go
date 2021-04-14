@@ -1,6 +1,6 @@
 package imgui
 
-// #cgo CPPFLAGS: -I./imgui -I./implot -I./imnodes
+// #cgo CPPFLAGS: -I./imgui -I./implot -I./imnodes -I./imguicolortextedit
 // #cgo CXXFLAGS: -std=c++11
 // #cgo CXXFLAGS: -Wno-subobject-linkage
 import "C"
