@@ -30,3 +30,7 @@ func Render() {
 func EndFrame() {
 	C.iggEndFrame()
 }
+
+func GetEventWaitingTime() float64 {
+	return float64(C.iggGetEventWaitingTime())
+}

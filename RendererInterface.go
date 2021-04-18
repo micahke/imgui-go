@@ -1,7 +1,6 @@
-package renderer
+package imgui
 
 import (
-	. "github.com/AllenDang/imgui-go"
 	"image"
 )
 

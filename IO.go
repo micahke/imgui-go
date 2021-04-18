@@ -267,6 +267,8 @@ const (
 	// cursor. You may want to honor requests from imgui by reading GetMouseCursor() yourself instead.
 	ConfigFlagsNoMouseCursorChange ConfigFlags = 1 << 5
 
+	ConfigFlagsEnablePowerSavingMode = 1 << 6
+
 	// User storage (to allow your back-end/engine to communicate to code that may be shared between multiple projects.
 	// Those flags are not used by core Dear ImGui).
 
@@ -308,6 +310,14 @@ const (
 // SetBackendFlags sets back-end capabilities.
 func (io IO) SetBackendFlags(flags BackendFlags) {
 	C.iggIoSetBackendFlags(io.handle, C.int(flags))
+}
+
+func (io IO) GetFrameCountSinceLastInput() int {
+	return int(C.iggGetFrameCountSinceLastInput(io.handle))
+}
+
+func (io IO) SetFrameCountSinceLastInput(count int) {
+	C.iggSetFrameCountSinceLastInput(io.handle, C.int(count))
 }
 
 // Clipboard describes the access to the text clipboard of the window manager.

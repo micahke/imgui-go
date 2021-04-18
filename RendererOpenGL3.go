@@ -1,4 +1,4 @@
-package renderer
+package imgui
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"unsafe"
 
-	. "github.com/AllenDang/imgui-go"
 	"github.com/go-gl/gl/v3.2-core/gl"
 )
 
