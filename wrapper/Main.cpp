@@ -26,3 +26,8 @@ void iggEndFrame()
 {
    ImGui::EndFrame();
 }
+
+double iggGetEventWaitingTime()
+{
+   return ImGui::GetEventWaitingTime();
+}

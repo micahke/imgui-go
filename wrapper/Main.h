@@ -13,6 +13,8 @@ extern void iggNewFrame(void);
 extern void iggRender(void);
 extern void iggEndFrame(void);
 
+extern double iggGetEventWaitingTime(void);
+
 #ifdef __cplusplus
 }
 #endif
