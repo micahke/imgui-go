@@ -1,7 +1,7 @@
 package imgui
 
 // #cgo CXXFLAGS: -std=c++11
-// #include "wrapper/imnodesWrapper.h"
+// #include "imnodesWrapper.h"
 import "C"
 
 func ImNodesCreateContext() {

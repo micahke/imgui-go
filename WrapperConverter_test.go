@@ -1,4 +1,4 @@
-package imgui // nolint: testpackage
+package imgui
 
 import (
 	"fmt"

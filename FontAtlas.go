@@ -1,6 +1,6 @@
 package imgui
 
-// #include "wrapper/FontAtlas.h"
+// #include "FontAtlasWrapper.h"
 import "C"
 import "unsafe"
 
@@ -17,7 +17,7 @@ type RGBA32Image struct {
 }
 
 // FontAtlas contains runtime data for multiple fonts,
-// bake multiple fonts into a single texture, TTF/OTF font loader.
+// bake multiple fonts into a single texture, TTF/OTF font loader
 type FontAtlas uintptr
 
 func (atlas FontAtlas) handle() C.IggFontAtlas {
@@ -113,9 +113,9 @@ func (atlas FontAtlas) AddFontFromMemoryTTFV(
 	}
 
 	fontDataC := C.malloc(C.size_t(len(fontData)))
-	cBuf := ptrToByteSlice(fontDataC)
+	cBuf := (*[1 << 30]byte)(fontDataC)
 
-	copy(cBuf, fontData)
+	copy(cBuf[:], fontData)
 
 	// Multiply sizePixels with DPI scale
 	if DPIScale > 0 {
@@ -182,18 +182,6 @@ func (atlas FontAtlas) Clear() {
 	C.iggFontAtlasClear(atlas.handle())
 }
 
-// Build pixels data. This is called automatically for you by the TextureData*** functions.
-func (atlas FontAtlas) Build() bool {
-	return C.iggFontAtlasBuild(atlas.handle()) != 0
-}
-
-// FontBuilderFlags returns shared flags (for all fonts) for custom font builder.
-func (atlas FontAtlas) FontBuilderFlags() uint {
-	return uint(C.iggFontAtlasGetFontBuilderFlags(atlas.handle()))
-}
-
-// SetFontBuilderFlags sets shared flags (for all fonts) for custom font builder.
-// THIS IS BUILD IMPLEMENTATION DEPENDENT. Per-font override is also available in FontConfig.
-func (atlas FontAtlas) SetFontBuilderFlags(flags uint) {
-	C.iggFontAtlasSetFontBuilderFlags(atlas.handle(), C.uint(flags))
+func (atlas FontAtlas) Build() {
+	C.iggFontAtlasBuild(atlas.handle())
 }

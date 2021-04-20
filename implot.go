@@ -1,7 +1,7 @@
 package imgui
 
 // #cgo CXXFLAGS: -std=c++11
-// #include "wrapper/implotWrapper.h"
+// #include "implotWrapper.h"
 import "C"
 import "unsafe"
 

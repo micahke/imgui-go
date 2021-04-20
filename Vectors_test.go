@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/AllenDang/imgui-go"
+	"github.com/AllenDang/giu/imgui"
 )
 
 func TestVec2Addition(t *testing.T) {

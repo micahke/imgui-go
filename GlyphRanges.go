@@ -1,6 +1,6 @@
 package imgui
 
-// #include "wrapper/Types.h"
+// #include "imguiWrapperTypes.h"
 import "C"
 
 // GlyphRanges describes a list of Unicode ranges; 2 value per range, values are inclusive.

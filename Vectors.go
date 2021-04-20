@@ -1,6 +1,6 @@
 package imgui
 
-// #include "wrapper/Types.h"
+// #include "imguiWrapperTypes.h"
 import "C"
 
 // Vec2 represents a two-dimensional vector.
@@ -23,6 +23,12 @@ func (vec *Vec2) wrapped() (out *C.IggVec2, finisher func()) {
 		finisher = func() {}
 	}
 	return
+}
+
+// Set sets values of the vec with args.
+func (vec *Vec2) Set(x, y float32) {
+	vec.X = x
+	vec.Y = y
 }
 
 // Plus returns vec + other.
@@ -75,6 +81,14 @@ func (vec *Vec4) wrapped() (out *C.IggVec4, finisher func()) {
 		finisher = func() {}
 	}
 	return
+}
+
+// Set sets values of the vec with args.
+func (vec *Vec4) Set(x, y, z, w float32) {
+	vec.X = x
+	vec.Y = y
+	vec.Z = z
+	vec.W = w
 }
 
 // Plus returns vec + other.

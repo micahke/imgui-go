@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-// #include "wrapper/Context.h"
+// #include "imguiWrapper.h"
 import "C"
 
 // Context specifies a scope of ImGui.
@@ -57,4 +57,8 @@ func (context Context) SetCurrent() error {
 	}
 	C.iggSetCurrentContext(context.handle)
 	return nil
+}
+
+func SetMaxWaitBeforeNextFrame(time float32) {
+	C.iggSetMaxWaitBeforeNextFrame(C.double(time))
 }

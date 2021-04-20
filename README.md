@@ -1,8 +1,8 @@
 # Dear ImGui for Go
 
-[![Go Doc](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/inkyblackness/imgui-go/v2)
+[![Go Doc](https://godoc.org/github.com/inkyblackness/imgui-go?status.svg)](https://godoc.org/github.com/inkyblackness/imgui-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/inkyblackness/imgui-go)](https://goreportcard.com/report/github.com/inkyblackness/imgui-go)
-[![Lint Status](https://github.com/inkyblackness/imgui-go/workflows/golangci-lint/badge.svg)](https://github.com/inkyblackness/imgui-go/actions)
+[![GolangCI](https://golangci.com/badges/github.com/inkyblackness/imgui-go.svg)](https://golangci.com)
 
 This library is a [Go](https://www.golang.org) wrapper for **[Dear ImGui](https://github.com/ocornut/imgui)**.
 
@@ -43,7 +43,7 @@ This library does not mirror the versions of the wrapped **Dear ImGui**. The sem
 * Minor changes: Extensions in API. Typically done through small version increments of **Dear ImGui** and/or exposing further features in a compatible way.
 * Patch changes: Bug fixes - either in the wrapper or the wrapped **Dear ImGui**, given that the API & behaviour remains the same.
 
-At the moment, this library uses version [1.81](https://github.com/ocornut/imgui/releases/tag/v1.81) of **Dear ImGui**.
+At the moment, this library uses version [1.79](https://github.com/ocornut/imgui/releases/tag/v1.79) of **Dear ImGui**.
 
 ## Examples
 A separate repository was created to host ported examples and reference implementations.
@@ -63,12 +63,10 @@ go build -tags="imguifreetype"
 ```
 This extra is based on the reference implementation from **Dear ImGui**.
 
-If you set the build tag, yet the corresponding support has not been added to the library, you will receive a build error.
-Contributions to support more build environments are happily accepted. See file `FreeType.go`.
+This allows you to use the function `FontAtlas.BuildWithFreeType()`. If the build tag is not set, this function will always return an error. 
 
-> If you are trying to do this on MS Windows with MinGW and receive an error like
-> `pkg-config: exec: "pkg-config": executable file not found in %PATH%`,
-> refer to [online guides](https://stackoverflow.com/questions/1710922/how-to-install-pkg-config-in-windows) on how to add this to your installation.
+If you set the build tag, yet the corresponding support has not been added to the library, you will receive a build error.
+Contributions to support more build environments are happily accepted. See files `FreeTypeEnabled*.go`.
 
 ## Alternatives
 
@@ -82,7 +80,6 @@ Before this project was created, the following alternatives were considered - an
   * Was using old API (1.5x), 1.6x was attempted
   * Apparently semi-exposed the C++ API, especially through the structures
   * Adding this adds another dependency
-  * Note: `cimgui` has since switched to an auto-generated method. You can use that instead of this manually curated wrapper here.
 
 
 ## License

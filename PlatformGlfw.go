@@ -44,12 +44,11 @@ type GLFW struct {
 	time             float64
 	mouseJustPressed [3]bool
 
-	mouseCursors map[MouseCursorID]*glfw.Cursor
+	mouseCursors map[int]*glfw.Cursor
 
 	posChangeCallback  func(int, int)
 	sizeChangeCallback func(int, int)
 	dropCallback       func([]string)
-	inputCallback	   func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action)
 }
 
 // NewGLFW attempts to initialize a GLFW context.
@@ -106,7 +105,7 @@ func NewGLFW(io IO, title string, width, height int, flags GLFWWindowFlags) (*GL
 	platform.installCallbacks()
 
 	// Create mosue cursors
-	platform.mouseCursors = make(map[MouseCursorID]*glfw.Cursor)
+	platform.mouseCursors = make(map[int]*glfw.Cursor)
 	platform.mouseCursors[MouseCursorArrow] = glfw.CreateStandardCursor(glfw.ArrowCursor)
 	platform.mouseCursors[MouseCursorTextInput] = glfw.CreateStandardCursor(glfw.IBeamCursor)
 	platform.mouseCursors[MouseCursorResizeAll] = glfw.CreateStandardCursor(glfw.CrosshairCursor)
@@ -207,7 +206,7 @@ func (platform *GLFW) ShouldStop() bool {
 }
 
 func (platform *GLFW) WaitForEvent() {
-	if platform.imguiIO.ConfigFlags() & ConfigFlagsEnablePowerSavingMode == 0 {
+	if platform.imguiIO.GetConfigFlags()&ConfigFlagEnablePowerSavingMode == 0 {
 		return
 	}
 
@@ -297,18 +296,14 @@ func (platform *GLFW) SetDropCallback(cb func(names []string)) {
 	platform.dropCallback = cb
 }
 
-func (platform *GLFW) SetInputCallback(cb func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action)) {
-	platform.inputCallback = cb
-}
-
 func (platform *GLFW) updateMouseCursor() {
 	io := platform.imguiIO
-	if (io.ConfigFlags() & ConfigFlagsNoMouseCursorChange) == 1 || platform.window.GetInputMode(glfw.CursorMode) == glfw.CursorDisabled {
+	if (io.GetConfigFlags()&ConfigFlagNoMouseCursorChange) == 1 || platform.window.GetInputMode(glfw.CursorMode) == glfw.CursorDisabled {
 		return
 	}
 
 	cursor := MouseCursor()
-	if cursor == MouseCursorNone || io.MouseDrawCursor() {
+	if cursor == MouseCursorNone || io.GetMouseDrawCursor() {
 		platform.window.SetInputMode(glfw.CursorMode, glfw.CursorHidden)
 	} else {
 		gCursor := platform.mouseCursors[MouseCursorArrow]
@@ -423,10 +418,6 @@ func (platform *GLFW) keyChange(window *glfw.Window, key glfw.Key, scancode int,
 	platform.imguiIO.KeyShift(int(glfw.KeyLeftShift), int(glfw.KeyRightShift))
 	platform.imguiIO.KeyAlt(int(glfw.KeyLeftAlt), int(glfw.KeyRightAlt))
 	platform.imguiIO.KeySuper(int(glfw.KeyLeftSuper), int(glfw.KeyRightSuper))
-
-	if platform.inputCallback != nil {
-		platform.inputCallback(key, mods, action)
-	}
 }
 
 func (platform *GLFW) charChange(window *glfw.Window, char rune) {
