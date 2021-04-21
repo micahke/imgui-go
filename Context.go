@@ -25,6 +25,10 @@ func CreateContext(fontAtlas *FontAtlas) *Context {
 	return &Context{handle: C.iggCreateContext(fontAtlasPtr)}
 }
 
+func (c *Context) GetHandle() C.IggContext {
+	return c.handle
+}
+
 // ErrNoContext is used when no context is current.
 var ErrNoContext = errors.New("no current context")
 

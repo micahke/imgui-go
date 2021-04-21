@@ -7,7 +7,11 @@ linters:
   # linters are disabled if their majority of issues is considered false-positive (intended code)
   # and the remaining issues (if existing) aren't worth it.
   disable:
+    - scopelint
+    - maligned
+    - interfacer
     - gochecknoglobals
+    - godot
     - goimports # disabled because of so many false-positives with "imgui-go"
     - gofumpt # disabled because no extra need
     - wsl # this one has become too pedantic
