@@ -579,7 +579,7 @@ func VSliderIntV(label string, size Vec2, value *int32, min, max int32, format s
 	return C.iggVSliderInt(labelArg, sizeArg, valueArg, C.int(min), C.int(max), formatArg, C.int(flags)) != 0
 }
 
-// InputTextV creates a text field for dynamic text input.
+// InputText creates a text field for dynamic text input.
 //
 // Contrary to the original library, this wrapper does not limit the maximum number of possible characters.
 // Dynamic resizing of the internal buffer is handled within the wrapper and the user will never be called for such requests.
@@ -587,22 +587,6 @@ func VSliderIntV(label string, size Vec2, value *int32, min, max int32, format s
 // The provided callback is called for any of the requested InputTextFlagsCallback* flags.
 //
 // To implement a character limit, provide a callback that drops input characters when the requested length has been reached.
-func InputTextV(label string, text *string, flags int, cb InputTextCallback) bool {
-	if text == nil {
-		panic("text can't be nil")
-	}
-	labelArg, labelFin := wrapString(label)
-	defer labelFin()
-	state := newInputTextState(*text, cb)
-	defer func() {
-		*text = state.buf.toGo()
-		state.release()
-	}()
-
-	return C.iggInputText(labelArg, (*C.char)(state.buf.ptr), C.uint(state.buf.size),
-		C.int(flags|inputTextFlagsCallbackResize), state.key) != 0
-}
-
 func InputTextWithHint(label, hint string, text *string, flags int, cb InputTextCallback) bool {
 	if text == nil {
 		panic("text can't be nil")
@@ -622,6 +606,10 @@ func InputTextWithHint(label, hint string, text *string, flags int, cb InputText
 
 	return C.iggInputTextWithHint(labelArg, hintArg, (*C.char)(state.buf.ptr), C.uint(state.buf.size),
 		C.int(flags|inputTextFlagsCallbackResize), state.key) != 0
+}
+
+func InputTextV(label string, text *string, flags int, cb InputTextCallback) bool {
+	return InputTextWithHint(label, "", text, flags, cb)
 }
 
 // InputText calls InputTextV(label, string, 0, nil)
