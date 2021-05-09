@@ -603,6 +603,27 @@ func InputTextV(label string, text *string, flags int, cb InputTextCallback) boo
 		C.int(flags|inputTextFlagsCallbackResize), state.key) != 0
 }
 
+func InputTextWithHint(label, hint string, text *string, flags int, cb InputTextCallback) bool {
+	if text == nil {
+		panic("text can't be nil")
+	}
+
+	labelArg, labelFin := wrapString(label)
+	defer labelFin()
+
+	hintArg, hintFin := wrapString(hint)
+	defer hintFin()
+
+	state := newInputTextState(*text, cb)
+	defer func() {
+		*text = state.buf.toGo()
+		state.release()
+	}()
+
+	return C.iggInputTextWithHint(labelArg, hintArg, (*C.char)(state.buf.ptr), C.uint(state.buf.size),
+		C.int(flags|inputTextFlagsCallbackResize), state.key) != 0
+}
+
 // InputText calls InputTextV(label, string, 0, nil)
 func InputText(label string, text *string) bool {
 	return InputTextV(label, text, 0, nil)
