@@ -1,6 +1,6 @@
 package imgui
 
-// #include "imguiWrapperTypes.h"
+// #include "FontWrapper.h"
 import "C"
 
 // Font describes one loaded font in an atlas.
@@ -12,4 +12,8 @@ const DefaultFont Font = 0
 
 func (font Font) handle() C.IggFont {
 	return C.IggFont(font)
+}
+
+func (font Font) FindGlyph(c rune) C.IggFontGlyph {
+	return C.iggFontFindGlyph(font.handle(), C.uint(c))
 }
