@@ -15,6 +15,7 @@ linters:
     - goimports # disabled because of so many false-positives with "imgui-go"
     - gofumpt # disabled because no extra need
     - wsl # this one has become too pedantic
+    - nlreturn
 
 issues:
   exclude-use-default: false # disable filtering of defaults for better zero-issue policy
