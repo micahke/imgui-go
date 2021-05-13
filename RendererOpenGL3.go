@@ -1,6 +1,7 @@
 package imgui
 
 import (
+	"errors"
 	"fmt"
 	"image"
 	"math"
@@ -323,6 +324,10 @@ func (renderer *OpenGL3) createFontsTexture() {
 
 	image := fonts.TextureDataRGBA32()
 
+	renderer.SetFontTexture(image)
+}
+
+func (renderer *OpenGL3) SetFontTexture(image *RGBA32Image) {
 	// Upload texture to graphics system
 	var lastTexture int32
 	gl.GetIntegerv(gl.TEXTURE_BINDING_2D, &lastTexture)
@@ -334,7 +339,7 @@ func (renderer *OpenGL3) createFontsTexture() {
 	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, int32(image.Width), int32(image.Height), 0, gl.RGBA, gl.UNSIGNED_BYTE, image.Pixels)
 
 	// Store our identifier
-	io.Fonts().SetTextureID(TextureID(renderer.fontTexture))
+	CurrentIO().Fonts().SetTextureID(TextureID(renderer.fontTexture))
 
 	// Restore state
 	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
@@ -394,8 +399,9 @@ func (renderer *OpenGL3) SetTextureMinFilter(min uint) error {
 	case textureFilterLinearMipmapLinear:
 		renderer.textureMinFilter = gl.LINEAR_MIPMAP_LINEAR
 	default:
-		return fmt.Errorf("invalid minifying filter")
+		return errors.New("invalid minifying filter")
 	}
+
 	return nil
 }
 

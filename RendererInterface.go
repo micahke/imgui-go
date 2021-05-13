@@ -12,6 +12,8 @@ type Renderer interface {
 	SetTextureMinFilter(min uint) error
 	// Sets the texture magnifying filter.
 	SetTextureMagFilter(mag uint) error
+	// Set font texture
+	SetFontTexture(image *RGBA32Image)
 	// Load image and return the TextureID
 	LoadImage(image *image.RGBA) (TextureID, error)
 	// Release image
