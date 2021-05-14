@@ -60,3 +60,9 @@ int iggFontConfigGetFontDataOwnedByAtlas(IggFontConfig handle)
    ImFontConfig *fontConfig = reinterpret_cast<ImFontConfig *>(handle);
    return fontConfig->FontDataOwnedByAtlas;
 }
+
+void iggFontConfigSetRasterizerMultiply(IggFontConfig handle, float value)
+{
+   ImFontConfig *fontConfig = reinterpret_cast<ImFontConfig *>(handle);
+   fontConfig->RasterizerMultiply = value;
+}

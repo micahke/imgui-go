@@ -18,6 +18,7 @@ extern void iggFontConfigSetGlyphMinAdvanceX(IggFontConfig handle, float value);
 extern void iggFontConfigSetGlyphMaxAdvanceX(IggFontConfig handle, float value);
 extern void iggFontConfigSetMergeMode(IggFontConfig handle, IggBool value);
 extern int iggFontConfigGetFontDataOwnedByAtlas(IggFontConfig handle);
+extern void iggFontConfigSetRasterizerMultiply(IggFontConfig handle, float value);
 
 #ifdef __cplusplus
 }
