@@ -1,6 +1,7 @@
 package imgui
 
 // #cgo CXXFLAGS: -std=c++11
+// #cgo CPPFLAGS: -DIMGUI_USE_WCHAR32 -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS
 // #cgo windows CPPFLAGS: -DIMGUI_DISABLE_WIN32_DEFAULT_IME_FUNCTIONS
 // #cgo windows LDFLAGS: -limm32
 // #include "imguiWrapper.h"
