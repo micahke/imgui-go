@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"image"
-	"math"
-	"runtime"
 	"unsafe"
 
 	"github.com/go-gl/gl/v3.2-core/gl"
@@ -293,41 +291,20 @@ void main()
 	gl.GenBuffers(1, &renderer.vboHandle)
 	gl.GenBuffers(1, &renderer.elementsHandle)
 
-	renderer.createFontsTexture()
-
 	// Restore modified GL state
 	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
 	gl.BindBuffer(gl.ARRAY_BUFFER, uint32(lastArrayBuffer))
 	gl.BindVertexArray(uint32(lastVertexArray))
 }
 
-func (renderer *OpenGL3) createFontsTexture() {
-	// Build texture atlas
-	io := CurrentIO()
-	fonts := io.Fonts()
-
-	if runtime.GOOS != "darwin" {
-		// Zoom font size using dpi scale factor.
-		// Fix: MacOS doesn't need to scale font.
-		fontConfig := NewFontConfig()
-
-		fontConfig.SetSize(13 * renderer.contentScale)
-
-		if renderer.contentScale > 1 {
-			scale := int(math.Round(float64(renderer.contentScale)))
-			fontConfig.SetOversampleH(scale)
-			fontConfig.SetOversampleV(scale)
-		}
-
-		fonts.AddFontDefaultV(fontConfig)
+func (renderer *OpenGL3) SetFontTexture(image *RGBA32Image) {
+	// Delete old font texture
+	if renderer.fontTexture != 0 {
+		gl.DeleteTextures(1, &renderer.fontTexture)
+		CurrentIO().Fonts().SetTextureID(0)
+		renderer.fontTexture = 0
 	}
 
-	image := fonts.TextureDataRGBA32()
-
-	renderer.SetFontTexture(image)
-}
-
-func (renderer *OpenGL3) SetFontTexture(image *RGBA32Image) {
 	// Upload texture to graphics system
 	var lastTexture int32
 	gl.GetIntegerv(gl.TEXTURE_BINDING_2D, &lastTexture)
