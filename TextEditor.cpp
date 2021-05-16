@@ -3626,7 +3626,7 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::SQL() {
     langDef.mSingleLineComment = "//";
 
     langDef.mCaseSensitive = false;
-    langDef.mAutoIndentation = false;
+    langDef.mAutoIndentation = true;
 
     langDef.mName = "SQL";
 
