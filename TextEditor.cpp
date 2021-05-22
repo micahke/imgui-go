@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <ctype.h>
 #include <regex>
 #include <string>
-#include <ctype.h>
 
 #include "TextEditor.h"
 
@@ -266,15 +266,15 @@ int TextEditor::InsertTextAt(Coordinates & /* inout */ aWhere,
 void TextEditor::AddUndo(UndoRecord &aValue) {
   assert(!mReadOnly);
   // printf("AddUndo: (@%d.%d) +\'%s' [%d.%d .. %d.%d], -\'%s', [%d.%d .. %d.%d]
-  // (@%d.%d)\n", 	aValue.mBefore.mCursorPosition.mLine,
-  // aValue.mBefore.mCursorPosition.mColumn, 	aValue.mAdded.c_str(),
+  // (@%d.%d)\n",  aValue.mBefore.mCursorPosition.mLine,
+  // aValue.mBefore.mCursorPosition.mColumn,  aValue.mAdded.c_str(),
   // aValue.mAddedStart.mLine, aValue.mAddedStart.mColumn,
-  // aValue.mAddedEnd.mLine, aValue.mAddedEnd.mColumn, 	aValue.mRemoved.c_str(),
+  // aValue.mAddedEnd.mLine, aValue.mAddedEnd.mColumn,  aValue.mRemoved.c_str(),
   // aValue.mRemovedStart.mLine, aValue.mRemovedStart.mColumn,
   // aValue.mRemovedEnd.mLine, aValue.mRemovedEnd.mColumn,
-  //	aValue.mAfter.mCursorPosition.mLine,
+  // aValue.mAfter.mCursorPosition.mLine,
   // aValue.mAfter.mCursorPosition.mColumn
-  //	);
+  // );
 
   mUndoBuffer.resize((size_t)(mUndoIndex + 1));
   mUndoBuffer.back() = aValue;
@@ -1201,7 +1201,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
       if (start > end)
         std::swap(start, end);
       start.mColumn = 0;
-      //			end.mColumn = end.mLine < mLines.size() ?
+      //   end.mColumn = end.mLine < mLines.size() ?
       // mLines[end.mLine].size() : 0;
       if (end.mColumn == 0 && end.mLine > 0)
         --end.mLine;
@@ -1210,7 +1210,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
       end.mColumn = GetLineMaxColumn(end.mLine);
 
       // if (end.mColumn >= GetLineMaxColumn(end.mLine))
-      //	end.mColumn = GetLineMaxColumn(end.mLine) - 1;
+      // end.mColumn = GetLineMaxColumn(end.mLine) - 1;
 
       u.mRemovedStart = start;
       u.mRemovedEnd = end;
@@ -1771,15 +1771,43 @@ void TextEditor::Backspace() {
         --cindex;
 
       // if (cindex > 0 && UTF8CharLength(line[cindex].mChar) > 1)
-      //	--cindex;
+      // --cindex;
+
+      int actualLoc = pos.mColumn;
+      for (int i = 0; i < line.size(); i++) {
+        if (line[i].mChar == '\t')
+          actualLoc -= GetTabSize() - 1;
+      }
+
+      if (actualLoc > 0 && actualLoc < line.size()) {
+        if ((line[actualLoc - 1].mChar == '(' &&
+             line[actualLoc].mChar == ')') ||
+            (line[actualLoc - 1].mChar == '{' &&
+             line[actualLoc].mChar == '}') ||
+            (line[actualLoc - 1].mChar == '[' && line[actualLoc].mChar == ']'))
+          Delete();
+      }
 
       u.mRemovedStart = u.mRemovedEnd = GetActualCursorCoordinates();
-      --u.mRemovedStart.mColumn;
-      --mState.mCursorPosition.mColumn;
 
       while (cindex < line.size() && cend-- > cindex) {
+        int remColumn = 0;
+        for (int i = 0; i < cindex && i < line.size(); i++) {
+          if (line[i].mChar == '\t') {
+            int tabSize = remColumn - (remColumn / mTabSize) * mTabSize;
+            remColumn += mTabSize - tabSize;
+          } else
+            remColumn++;
+        }
+
+        int remSize = mState.mCursorPosition.mColumn - remColumn;
+
         u.mRemoved += line[cindex].mChar;
+        u.mRemovedStart.mColumn -= remSize;
+
         line.erase(line.begin() + cindex);
+
+        mState.mCursorPosition.mColumn -= remSize;
       }
     }
 
