@@ -99,10 +99,19 @@ func (config FontConfig) getFontDataOwnedByAtlas() bool {
 	return true
 }
 
-
 // Brighten (>1.0f) or darken (<1.0f) font output. Brightening small fonts may be a good workaround to make them more readable.
 func (config FontConfig) SetRasterizerMultiply(value float32) {
 	if config != DefaultFontConfig {
 		C.iggFontConfigSetRasterizerMultiply(config.handle(), C.float(value))
 	}
+}
+
+// FontBuilderFlags returns settings for custom font builder.
+func (config FontConfig) FontBuilderFlags() uint {
+	return uint(C.iggFontConfigGetFontBuilderFlags(config.handle()))
+}
+
+// SetFontBuilderFlags sets settings for custom font builder. THIS IS BUILDER IMPLEMENTATION DEPENDENT. Leave as zero if unsure.
+func (config FontConfig) SetFontBuilderFlags(flags uint) {
+	C.iggFontConfigSetFontBuilderFlags(config.handle(), C.uint(flags))
 }
