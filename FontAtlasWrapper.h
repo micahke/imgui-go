@@ -35,6 +35,8 @@ extern void iggFontAtlasSetTextureID(IggFontAtlas handle, IggTextureID id);
 extern void iggFontAtlasBuild(IggFontAtlas handle);
 extern void iggFontAtlasClear(IggFontAtlas handle);
 
+extern unsigned int iggFontAtlasGetFontBuilderFlags(IggFontAtlas handle);
+extern void iggFontAtlasSetFontBuilderFlags(IggFontAtlas handle, unsigned int flags);
 
 #ifdef __cplusplus
 }
