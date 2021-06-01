@@ -166,3 +166,18 @@ IggBool iggImPlotIsPlotYAxisHovered(int y_axis)
 {
   return ImPlot::IsPlotYAxisHovered(y_axis) ? 1 : 0;
 }
+
+void iggImPlotUseLocalTime(IggBool localtime)
+{
+  ImPlot::GetStyle().UseLocalTime = localtime;
+}
+
+void iggImPlotUseISO8601(IggBool iso8601)
+{
+  ImPlot::GetStyle().UseISO8601 = iso8601;
+}
+
+void iggImPlotUse24HourClock(IggBool clock24h)
+{
+  ImPlot::GetStyle().Use24HourClock = clock24h;
+}
