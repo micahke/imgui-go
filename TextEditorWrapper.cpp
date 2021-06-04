@@ -100,6 +100,13 @@ void IggTextEditorGetCursorPos(IggTextEditor handle, int* column, int* line)
   *line = (float)col.mLine;
 }
 
+void IggTextEditorSetCursorPos(IggTextEditor handle, int column, int line)
+{
+  TextEditor *editor = reinterpret_cast<TextEditor*>(handle);
+  TextEditor::Coordinates col(line, column);
+  editor->SetCursorPosition(col);
+}
+
 void IggTextEditorGetSelectionStart(IggTextEditor handle, int* column, int* line)
 {
   TextEditor *editor = reinterpret_cast<TextEditor*>(handle);

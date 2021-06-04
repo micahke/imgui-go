@@ -25,6 +25,7 @@ extern void IggTextEditorGetScreenCursorPos(IggTextEditor handle, int *x,
                                             int *y);
 extern void IggTextEditorGetCursorPos(IggTextEditor handle, int *column,
                                       int *line);
+extern void IggTextEditorSetCursorPos(IggTextEditor handle, int column, int line);
 extern void IggTextEditorGetSelectionStart(IggTextEditor handle, int *column,
                                            int *line);
 

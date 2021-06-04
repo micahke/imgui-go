@@ -101,6 +101,10 @@ func (t TextEditor) GetCursorPos() (int, int) {
 	return column, line
 }
 
+func (t TextEditor) SetCursorPos(line, column int) {
+	C.IggTextEditorSetCursorPos(t.handle(), (C.int)(column), (C.int)(line))
+}
+
 func (t TextEditor) GetSelectionStart() (int, int) {
 	var column int
 	var line int
