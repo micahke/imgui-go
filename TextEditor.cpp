@@ -1771,43 +1771,19 @@ void TextEditor::Backspace() {
         --cindex;
 
       // if (cindex > 0 && UTF8CharLength(line[cindex].mChar) > 1)
-      // --cindex;
-
-      int actualLoc = pos.mColumn;
-      for (int i = 0; i < line.size(); i++) {
-        if (line[i].mChar == '\t')
-          actualLoc -= GetTabSize() - 1;
-      }
-
-      if (actualLoc > 0 && actualLoc < line.size()) {
-        if ((line[actualLoc - 1].mChar == '(' &&
-             line[actualLoc].mChar == ')') ||
-            (line[actualLoc - 1].mChar == '{' &&
-             line[actualLoc].mChar == '}') ||
-            (line[actualLoc - 1].mChar == '[' && line[actualLoc].mChar == ']'))
-          Delete();
-      }
+      //	--cindex;
 
       u.mRemovedStart = u.mRemovedEnd = GetActualCursorCoordinates();
+      --u.mRemovedStart.mColumn;
+
+      if (line[cindex].mChar == '\t')
+        mState.mCursorPosition.mColumn -= mTabSize;
+      else
+        --mState.mCursorPosition.mColumn;
 
       while (cindex < line.size() && cend-- > cindex) {
-        int remColumn = 0;
-        for (int i = 0; i < cindex && i < line.size(); i++) {
-          if (line[i].mChar == '\t') {
-            int tabSize = remColumn - (remColumn / mTabSize) * mTabSize;
-            remColumn += mTabSize - tabSize;
-          } else
-            remColumn++;
-        }
-
-        int remSize = mState.mCursorPosition.mColumn - remColumn;
-
         u.mRemoved += line[cindex].mChar;
-        u.mRemovedStart.mColumn -= remSize;
-
         line.erase(line.begin() + cindex);
-
-        mState.mCursorPosition.mColumn -= remSize;
       }
     }
 
