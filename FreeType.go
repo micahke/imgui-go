@@ -1,12 +1,4 @@
-// +build imguifreetype
-
 package imgui
-
-// #cgo pkg-config: freetype2
-// #cgo CXXFLAGS: -DIMGUI_ENABLE_FREETYPE
-// #cgo CFLAGS: -DIMGUI_ENABLE_FREETYPE
-// #cgo CPPFLAGS: -DIMGUI_ENABLE_FREETYPE
-import "C"
 
 // Hinting greatly impacts visuals (and glyph sizes).
 // - By default, hinting is enabled and the font's native hinter is preferred over the auto-hinter.
