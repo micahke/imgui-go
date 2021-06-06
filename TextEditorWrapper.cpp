@@ -2,6 +2,27 @@
 #include "TextEditor.h"
 #include "WrapperConverter.h"
 
+
+IggTextEditorLanguageDefinition IggNewLanguageDef()
+{
+  TextEditor::LanguageDefinition *ld = new TextEditor::LanguageDefinition();
+  return static_cast<IggTextEditorLanguageDefinition>(ld);
+}
+
+void IggTextEditorLDSetName(IggTextEditorLanguageDefinition handle, const char *name)
+{
+  TextEditor::LanguageDefinition *ld = reinterpret_cast<TextEditor::LanguageDefinition*>(handle);
+  ld->mName = name;
+}
+
+void IggTextEditorLDSetKeywords(IggTextEditorLanguageDefinition handle, const char **keywords, int length)
+{
+  TextEditor::LanguageDefinition *ld = reinterpret_cast<TextEditor::LanguageDefinition*>(handle);
+  int i = 0;
+  for (i = 0; i < length; i++)
+    ld->mKeywords.insert(keywords[i]);
+}
+
 IggTextEditor IggNewTextEditor()
 {
   TextEditor *editor = new TextEditor();
@@ -113,6 +134,13 @@ void IggTextEditorGetSelectionStart(IggTextEditor handle, int* column, int* line
   TextEditor::Coordinates col = editor->GetSelectionStart();
   *column = (float)col.mColumn;
   *line = (float)col.mLine;
+}
+
+void IggTextEditorSetLanguageDefinition(IggTextEditor handle, IggTextEditorLanguageDefinition defHandle)
+{
+  TextEditor *editor = reinterpret_cast<TextEditor*>(handle);
+  TextEditor::LanguageDefinition *def = static_cast<TextEditor::LanguageDefinition*>(defHandle);
+  editor->SetLanguageDefinition(*def);
 }
 
 void IggTextEditorSetLanguageDefinitionSQL(IggTextEditor handle)

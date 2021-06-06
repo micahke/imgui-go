@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+typedef void *IggTextEditorLanguageDefinition;
+
+extern IggTextEditorLanguageDefinition IggNewLanguageDef();
+extern void IggTextEditorLDSetName(IggTextEditorLanguageDefinition handle, const char *name);
+extern void IggTextEditorLDSetKeywords(IggTextEditorLanguageDefinition handle, const char **keywords, int length);
+
 typedef void *IggTextEditor;
 typedef void *IggTextEditorErrorMarkers;
 
@@ -36,6 +42,7 @@ extern void IggTextEditorDelete(IggTextEditor handle);
 
 extern void IggTextEditorSelectWordUnderCursor(IggTextEditor handle);
 
+extern void IggTextEditorSetLanguageDefinition(IggTextEditor handle, IggTextEditorLanguageDefinition defHandle);
 extern void IggTextEditorSetLanguageDefinitionSQL(IggTextEditor handle);
 extern void IggTextEditorSetLanguageDefinitionCPP(IggTextEditor handle);
 extern void IggTextEditorSetLanguageDefinitionC(IggTextEditor handle);

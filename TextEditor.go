@@ -5,6 +5,35 @@ package imgui
 import "C"
 import "unsafe"
 
+type LanguageDefinition uintptr
+
+func NewLanguageDefinition() LanguageDefinition {
+	handle := C.IggNewLanguageDef()
+	return LanguageDefinition(handle)
+}
+
+func (ld LanguageDefinition) handle() C.IggTextEditorLanguageDefinition {
+	return C.IggTextEditorLanguageDefinition(ld)
+}
+
+func (ld LanguageDefinition) SetName(name string) {
+	nameArg, nameDeleter := wrapString(name)
+	defer nameDeleter()
+
+	C.IggTextEditorLDSetName(ld.handle(), nameArg)
+}
+
+func (ld LanguageDefinition) SetKeywords(keywords []string) {
+	keywordsArg := make([]*C.char, len(keywords))
+	for i, k := range keywords {
+		kArg, kDeleter := wrapString(k)
+		defer kDeleter()
+		keywordsArg[i] = kArg
+	}
+
+	C.IggTextEditorLDSetKeywords(ld.handle(), &keywordsArg[0], C.int(len(keywords)))
+}
+
 type TextEditor uintptr
 
 func NewTextEditor() TextEditor {
@@ -112,6 +141,10 @@ func (t TextEditor) GetSelectionStart() (int, int) {
 	C.IggTextEditorGetSelectionStart(t.handle(), (*C.int)(unsafe.Pointer(&column)), (*C.int)(unsafe.Pointer(&line)))
 
 	return column, line
+}
+
+func (t TextEditor) SetLanguageDefinition(ld LanguageDefinition) {
+	C.IggTextEditorSetLanguageDefinition(t.handle(), ld.handle())
 }
 
 func (t TextEditor) SetLanguageDefinitionSQL() {
