@@ -3938,6 +3938,7 @@ void ImGui::NewFrame()
     g.TooltipOverrideCount = 0;
     g.WindowsActiveCount = 0;
     g.MenusIdSubmittedThisFrame.resize(0);
+    g.MaxWaitBeforeNextFrame = INFINITY;
 
     // Calculate frame-rate for the user, as a purely luxurious feature
     g.FramerateSecPerFrameAccum += g.IO.DeltaTime - g.FramerateSecPerFrame[g.FramerateSecPerFrameIdx];
@@ -4444,6 +4445,7 @@ void ImGui::EndFrame()
     // End frame
     g.WithinFrameScope = false;
     g.FrameCountEnded = g.FrameCount;
+    g.IO.FrameCountSinceLastInput++;
 
     // Initiate moving window + handle left-click and right-click focus
     UpdateMouseMovingWindowEndFrame();
