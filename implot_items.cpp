@@ -42,16 +42,10 @@
         }                                                                                          \
     }
 
-// Support for pre-1.82 versions. Users on 1.82+ can use 0 (default) flags to mean "all corners" but in order to support older versions we are more explicit.
+// Support for pre-1.82 version. Users on 1.82+ can use 0 (default) flags to mean "all corners" but in order to support older versions we are more explicit.
 #if (IMGUI_VERSION_NUM < 18102) && !defined(ImDrawFlags_RoundCornersAll)
 #define ImDrawFlags_RoundCornersAll ImDrawCornerFlags_All
 #endif
-
-// Support for pre-1.84 versions. ImPool's GetSize() -> GetBufSize()
-#if (IMGUI_VERSION_NUM < 18303)
-#define GetBufSize GetSize          // A little bit ugly since 'GetBufSize' could technically be used elsewhere (but currently isn't). Could use a proxy define if needed.
-#endif
-
 
 namespace ImPlot {
 
@@ -138,7 +132,7 @@ void HideNextItem(bool hidden, ImGuiCond cond) {
 
 void BustItemCache() {
     ImPlotContext& gp = *GImPlot;
-    for (int p = 0; p < gp.Plots.GetBufSize(); ++p) {
+    for (int p = 0; p < gp.Plots.GetSize(); ++p) {
         ImPlotPlot& plot = *gp.Plots.GetByIndex(p);
         plot.ColormapIdx = 0;
         plot.Items.Clear();
@@ -891,10 +885,9 @@ inline void RenderMarkers(Getter getter, Transformer transformer, ImDrawList& Dr
         RenderMarkerAsterisk
     };
     ImPlotContext& gp = *GImPlot;
-    const ImRect& rect = gp.CurrentPlot->PlotRect;
     for (int i = 0; i < getter.Count; ++i) {
         ImVec2 c = transformer(getter(i));
-        if (c.x >= rect.Min.x && c.y >= rect.Min.y && c.x <= rect.Max.x && c.y <= rect.Max.y)
+        if (gp.CurrentPlot->PlotRect.Contains(c))
             marker_table[marker](DrawList, c, size, rend_mk_line, col_mk_line, rend_mk_fill, col_mk_fill, weight);
     }
 }
@@ -925,8 +918,6 @@ inline void PlotLineEx(const char* label_id, const Getter& getter) {
         }
         // render markers
         if (s.Marker != ImPlotMarker_None) {
-            PopPlotClipRect();
-            PushPlotClipRect(s.MarkerSize);
             const ImU32 col_line = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerOutline]);
             const ImU32 col_fill = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerFill]);
             switch (GetCurrentScale()) {
@@ -998,8 +989,6 @@ inline void PlotScatterEx(const char* label_id, const Getter& getter) {
         // render markers
         ImPlotMarker marker = s.Marker == ImPlotMarker_None ? ImPlotMarker_Circle : s.Marker;
         if (marker != ImPlotMarker_None) {
-            PopPlotClipRect();
-            PushPlotClipRect(s.MarkerSize);
             const ImU32 col_line = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerOutline]);
             const ImU32 col_fill = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerFill]);
             switch (GetCurrentScale()) {
@@ -1079,8 +1068,6 @@ inline void PlotStairsEx(const char* label_id, const Getter& getter) {
         }
         // render markers
         if (s.Marker != ImPlotMarker_None) {
-            PopPlotClipRect();
-            PushPlotClipRect(s.MarkerSize);
             const ImU32 col_line = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerOutline]);
             const ImU32 col_fill = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerFill]);
             switch (GetCurrentScale()) {
@@ -1563,8 +1550,6 @@ inline void PlotStemsEx(const char* label_id, const GetterM& get_mark, const Get
         // render markers
         ImPlotMarker marker = s.Marker == ImPlotMarker_None ? ImPlotMarker_Circle : s.Marker;
         if (marker != ImPlotMarker_None) {
-            PopPlotClipRect();
-            PushPlotClipRect(s.MarkerSize);
             const ImU32 col_line = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerOutline]);
             const ImU32 col_fill = ImGui::GetColorU32(s.Colors[ImPlotCol_MarkerFill]);
             switch (GetCurrentScale()) {
