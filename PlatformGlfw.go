@@ -229,8 +229,7 @@ func (platform *GLFW) WaitForEvent() {
 
 // ProcessEvents handles all pending window events.
 func (platform *GLFW) ProcessEvents() {
-	platform.WaitForEvent()
-	glfw.PollEvents()
+	glfw.WaitEvents()
 }
 
 // DisplaySize returns the dimension of the display.
