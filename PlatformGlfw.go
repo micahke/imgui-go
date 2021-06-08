@@ -205,9 +205,32 @@ func (platform *GLFW) ShouldStop() bool {
 	return platform.window.ShouldClose()
 }
 
+func (platform *GLFW) WaitForEvent() {
+	if platform.imguiIO.GetConfigFlags()&ConfigFlagEnablePowerSavingMode == 0 {
+		return
+	}
+
+	windowIsHidden := platform.window.GetAttrib(glfw.Visible) == glfw.False || platform.window.GetAttrib(glfw.Iconified) == glfw.True
+
+	waitingTime := math.Inf(0)
+
+	if !windowIsHidden {
+		waitingTime = GetEventWaitingTime()
+	}
+
+	if waitingTime > 0 {
+		if math.IsInf(waitingTime, 0) {
+			glfw.WaitEvents()
+		} else {
+			glfw.WaitEventsTimeout(waitingTime)
+		}
+	}
+}
+
 // ProcessEvents handles all pending window events.
 func (platform *GLFW) ProcessEvents() {
-	glfw.WaitEvents()
+	platform.WaitForEvent()
+	glfw.PollEvents()
 }
 
 // DisplaySize returns the dimension of the display.
@@ -348,7 +371,7 @@ func (platform *GLFW) onDrop(window *glfw.Window, names []string) {
 }
 
 func (platform *GLFW) posChange(window *glfw.Window, x, y int) {
-	glfw.PostEmptyEvent()
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 
 	// Notfy pos changed and redraw.
 	if platform.posChangeCallback != nil {
@@ -357,7 +380,7 @@ func (platform *GLFW) posChange(window *glfw.Window, x, y int) {
 }
 
 func (platform *GLFW) sizeChange(window *glfw.Window, width, height int) {
-	glfw.PostEmptyEvent()
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 
 	// Notify size changed and redraw.
 	if platform.sizeChangeCallback != nil {
@@ -366,7 +389,7 @@ func (platform *GLFW) sizeChange(window *glfw.Window, width, height int) {
 }
 
 func (platform *GLFW) mouseButtonChange(window *glfw.Window, rawButton glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
-	glfw.PostEmptyEvent()
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 
 	buttonIndex, known := glfwButtonIndexByID[rawButton]
 
@@ -376,12 +399,12 @@ func (platform *GLFW) mouseButtonChange(window *glfw.Window, rawButton glfw.Mous
 }
 
 func (platform *GLFW) mouseScrollChange(window *glfw.Window, x, y float64) {
-	glfw.PostEmptyEvent()
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 	platform.imguiIO.AddMouseWheelDelta(float32(x), float32(y))
 }
 
 func (platform *GLFW) keyChange(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
-	glfw.PostEmptyEvent()
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 
 	if action == glfw.Press {
 		platform.imguiIO.KeyPress(int(key))
@@ -398,8 +421,7 @@ func (platform *GLFW) keyChange(window *glfw.Window, key glfw.Key, scancode int,
 }
 
 func (platform *GLFW) charChange(window *glfw.Window, char rune) {
-	glfw.PostEmptyEvent()
-
+	platform.imguiIO.SetFrameCountSinceLastInput(0)
 	platform.imguiIO.AddInputCharacters(string(char))
 }
 
