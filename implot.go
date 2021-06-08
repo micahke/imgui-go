@@ -496,3 +496,15 @@ func ImPlotIsPlotXAxisHovered() bool {
 func ImPlotIsPlotYAxisHovered(yAxis int) bool {
 	return C.iggImPlotIsPlotYAxisHovered(C.int(yAxis)) != -0
 }
+
+func ImPlotUseLocalTime(localtime bool) {
+	C.iggImPlotUseLocalTime(castBool(localtime))
+}
+
+func ImPlotUseISO8601(iso8601 bool) {
+	C.iggImPlotUseISO8601(castBool(iso8601))
+}
+
+func ImPlotUse24HourClock(clock24h bool) {
+	C.iggImPlotUse24HourClock(castBool(clock24h))
+}
