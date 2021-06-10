@@ -63,6 +63,10 @@ extern IggBool iggImPlotIsPlotHovered();
 extern IggBool iggImPlotIsPlotXAxisHovered();
 extern IggBool iggImPlotIsPlotYAxisHovered(int y_axis);
 
+extern void iggImPlotUseLocalTime(IggBool localtime);
+extern void iggImPlotUseISO8601(IggBool iso8601);
+extern void iggImPlotUse24HourClock(IggBool clock24h);
+
 #ifdef __cplusplus
 }
 #endif
