@@ -230,6 +230,16 @@ unsigned int iggGetColorU32(const IggVec4 col)
    return ImGui::GetColorU32(*colArg);
 }
 
+void iggPushDisabled()
+{
+   ImGui::PushDisabled();
+}
+
+void iggPopDisabled()
+{
+   ImGui::PopDisabled();
+}
+
 void iggStyleColorsDark()
 {
   ImGui::StyleColorsDark();

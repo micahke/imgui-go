@@ -282,6 +282,14 @@ func GetColorU32(col Vec4) uint {
 	return uint(C.iggGetColorU32(*valueArg))
 }
 
+func PushDisabled() {
+	C.iggPushDisabled()
+}
+
+func PopDisabled() {
+	C.iggPopDisabled()
+}
+
 func StyleColorsDark() {
 	C.iggStyleColorsDark()
 }
