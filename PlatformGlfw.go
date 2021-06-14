@@ -49,6 +49,7 @@ type GLFW struct {
 	posChangeCallback  func(int, int)
 	sizeChangeCallback func(int, int)
 	dropCallback       func([]string)
+	inputCallback      func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action)
 }
 
 // NewGLFW attempts to initialize a GLFW context.
@@ -296,6 +297,10 @@ func (platform *GLFW) SetDropCallback(cb func(names []string)) {
 	platform.dropCallback = cb
 }
 
+func (platform *GLFW) SetInputCallback(cb func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action)) {
+	platform.inputCallback = cb
+}
+
 func (platform *GLFW) updateMouseCursor() {
 	io := platform.imguiIO
 	if (io.GetConfigFlags()&ConfigFlagNoMouseCursorChange) == 1 || platform.window.GetInputMode(glfw.CursorMode) == glfw.CursorDisabled {
@@ -418,6 +423,10 @@ func (platform *GLFW) keyChange(window *glfw.Window, key glfw.Key, scancode int,
 	platform.imguiIO.KeyShift(int(glfw.KeyLeftShift), int(glfw.KeyRightShift))
 	platform.imguiIO.KeyAlt(int(glfw.KeyLeftAlt), int(glfw.KeyRightAlt))
 	platform.imguiIO.KeySuper(int(glfw.KeyLeftSuper), int(glfw.KeyRightSuper))
+
+	if platform.inputCallback != nil {
+		platform.inputCallback(key, mods, action)
+	}
 }
 
 func (platform *GLFW) charChange(window *glfw.Window, char rune) {
