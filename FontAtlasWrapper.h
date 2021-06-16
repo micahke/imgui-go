@@ -23,6 +23,7 @@ extern IggFont iggAddFontFromFileTTF(IggFontAtlas handle, char const *filename, 
 extern IggFont iggAddFontFromMemoryTTF(IggFontAtlas handle, char *font_data, int font_size, float sizePixels,
 		IggFontConfig config, IggGlyphRanges glyphRanges);
 
+extern int iggFontAtlasFontCount(IggFontAtlas handle);
 
 extern void iggFontAtlasSetTexDesiredWidth(IggFontAtlas handle, int value);
 

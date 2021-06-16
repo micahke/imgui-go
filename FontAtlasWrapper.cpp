@@ -139,3 +139,9 @@ void iggFontAtlasSetFontBuilderFlags(IggFontAtlas handle, unsigned int flags)
    ImFontAtlas *fontAtlas = reinterpret_cast<ImFontAtlas *>(handle);
    fontAtlas->FontBuilderFlags = flags;
 }
+
+int iggFontAtlasFontCount(IggFontAtlas handle)
+{
+   ImFontAtlas *fontAtlas = reinterpret_cast<ImFontAtlas *>(handle);
+   return fontAtlas->Fonts.size();
+}

@@ -196,3 +196,8 @@ func (atlas FontAtlas) FontBuilderFlags() uint {
 func (atlas FontAtlas) SetFontBuilderFlags(flags uint) {
 	C.iggFontAtlasSetFontBuilderFlags(atlas.handle(), C.uint(flags))
 }
+
+// Returns fonts count currently available.
+func (atlas FontAtlas) GetFontCount() int {
+	return int(C.iggFontAtlasFontCount(atlas.handle()))
+}
