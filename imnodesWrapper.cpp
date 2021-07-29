@@ -5,67 +5,67 @@
 
 void iggImNodesCreateContext()
 {
-  imnodes::CreateContext();
+  ImNodes::CreateContext();
 }
 
 void iggImNodesDestroyContext()
 {
-  imnodes::DestroyContext();
+  ImNodes::DestroyContext();
 }
 
 void iggImNodesBeginNodeEditor()
 {
-  imnodes::BeginNodeEditor();
+  ImNodes::BeginNodeEditor();
 }
 
 void iggImNodesEndNodeEditor()
 {
-  imnodes::EndNodeEditor();
+  ImNodes::EndNodeEditor();
 }
 
 void iggImNodesBeginNode(int id)
 {
-  imnodes::BeginNode(id);
+  ImNodes::BeginNode(id);
 }
 
 void iggImNodesEndNode()
 {
-  imnodes::EndNode();
+  ImNodes::EndNode();
 }
 
 void iggImNodesBeginNodeTitleBar()
 {
-  imnodes::BeginNodeTitleBar();
+  ImNodes::BeginNodeTitleBar();
 }
 
 void iggImNodesEndNodeTitleBar()
 {
-  imnodes::EndNodeTitleBar();
+  ImNodes::EndNodeTitleBar();
 }
 
 void iggImNodesBeginInputAttribute(int id)
 {
-  imnodes::BeginInputAttribute(id);
+  ImNodes::BeginInputAttribute(id);
 }
 
 void iggImNodesEndInputAttribute()
 {
-  imnodes::EndInputAttribute();
+  ImNodes::EndInputAttribute();
 }
 
 void iggImNodesBeginOutputAttribute(int id)
 {
-  imnodes::BeginOutputAttribute(id);
+  ImNodes::BeginOutputAttribute(id);
 }
 
 void iggImNodesEndOutputAttribute()
 {
-  imnodes::EndOutputAttribute();
+  ImNodes::EndOutputAttribute();
 }
 
 void iggImNodesLink(int id, int start_attribute_id, int end_attribute_id)
 {
-  imnodes::Link(id, start_attribute_id, end_attribute_id);
+  ImNodes::Link(id, start_attribute_id, end_attribute_id);
 }
 
 IggBool iggImNodesIsLinkCreated(
@@ -76,59 +76,59 @@ IggBool iggImNodesIsLinkCreated(
     IggBool* created_from_snap)
 {
   BoolWrapper boolArg(created_from_snap);
-  return imnodes::IsLinkCreated(started_at_node_id, started_at_attribute_id, ended_at_node_id, ended_at_attribute_id, boolArg) ? 1 : 0;
+  return ImNodes::IsLinkCreated(started_at_node_id, started_at_attribute_id, ended_at_node_id, ended_at_attribute_id, boolArg) ? 1 : 0;
 }
 
 IggBool iggImNodesIsLinkDestroyed(int* link_id)
 {
-  return imnodes::IsLinkDestroyed(link_id) ? 1 : 0;
+  return ImNodes::IsLinkDestroyed(link_id) ? 1 : 0;
 }
 
 void iggImNodesPushAttributeFlag(int flag)
 {
-  imnodes::PushAttributeFlag(static_cast<imnodes::AttributeFlags>(flag));
+  ImNodes::PushAttributeFlag(static_cast<ImNodesAttributeFlags>(flag));
 }
 
 void iggImNodesPopAttributeFlag()
 {
-  imnodes::PopAttributeFlag();
+  ImNodes::PopAttributeFlag();
 }
 
 void iggImNodesEnableDetachWithCtrlClick()
 {
-  imnodes::IO& io = imnodes::GetIO();
-  io.link_detach_with_modifier_click.modifier = &ImGui::GetIO().KeyCtrl;
+  ImNodesIO& io = ImNodes::GetIO();
+  io.LinkDetachWithModifierClick.Modifier = &ImGui::GetIO().KeyCtrl;
 }
 
 void iggImNodesSetNodeScreenSpacePos(int node_id, const IggVec2 *screen_space_pos)
 {
   Vec2Wrapper posArg(screen_space_pos);
-  imnodes::SetNodeScreenSpacePos(node_id, *posArg);
+  ImNodes::SetNodeScreenSpacePos(node_id, *posArg);
 }
 
 void iggImNodesSetNodeEditorSpacePos(int node_id, const IggVec2 *editor_space_pos)
 {
   Vec2Wrapper posArg(editor_space_pos);
-  imnodes::SetNodeEditorSpacePos(node_id, *posArg);
+  ImNodes::SetNodeEditorSpacePos(node_id, *posArg);
 }
 
 void iggImNodesSetNodeGridSpacePos(int node_id, const IggVec2 *grid_pos)
 {
   Vec2Wrapper posArg(grid_pos);
-  imnodes::SetNodeGridSpacePos(node_id, *posArg);
+  ImNodes::SetNodeGridSpacePos(node_id, *posArg);
 }
 
 void iggImNodesGetNodeScreenSpacePos(const int node_id, IggVec2 *pos)
 {
-  exportValue(*pos, imnodes::GetNodeScreenSpacePos(node_id));
+  exportValue(*pos, ImNodes::GetNodeScreenSpacePos(node_id));
 }
 
 void iggImNodesGetNodeEditorSpacePos(const int node_id, IggVec2 *pos)
 {
-  exportValue(*pos, imnodes::GetNodeEditorSpacePos(node_id));
+  exportValue(*pos, ImNodes::GetNodeEditorSpacePos(node_id));
 }
 
 void iggImNodesGetNodeGridSpacePos(const int node_id, IggVec2 *pos)
 {
-  exportValue(*pos, imnodes::GetNodeGridSpacePos(node_id));
+  exportValue(*pos, ImNodes::GetNodeGridSpacePos(node_id));
 }
