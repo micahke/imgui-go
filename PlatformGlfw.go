@@ -51,6 +51,7 @@ type GLFW struct {
 	sizeChangeCallback func(int, int)
 	dropCallback       func([]string)
 	inputCallback      func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action)
+	closeCallback      func() bool
 }
 
 // NewGLFW attempts to initialize a GLFW context.
@@ -302,6 +303,10 @@ func (platform *GLFW) SetInputCallback(cb func(key glfw.Key, mods glfw.ModifierK
 	platform.inputCallback = cb
 }
 
+func (platform *GLFW) SetCloseCallback(cb func() bool) {
+	platform.closeCallback = cb
+}
+
 func (platform *GLFW) updateMouseCursor() {
 	io := platform.imguiIO
 	if (io.GetConfigFlags()&ConfigFlagNoMouseCursorChange) == 1 || platform.window.GetInputMode(glfw.CursorMode) == glfw.CursorDisabled {
@@ -354,6 +359,7 @@ func (platform *GLFW) installCallbacks() {
 	platform.window.SetSizeCallback(platform.sizeChange)
 	platform.window.SetDropCallback(platform.onDrop)
 	platform.window.SetPosCallback(platform.posChange)
+	platform.window.SetCloseCallback(platform.onClose)
 }
 
 var glfwButtonIndexByID = map[glfw.MouseButton]int{
@@ -366,6 +372,13 @@ var glfwButtonIDByIndex = map[int]glfw.MouseButton{
 	0: glfw.MouseButton1,
 	1: glfw.MouseButton2,
 	2: glfw.MouseButton3,
+}
+
+func (platform *GLFW) onClose(window *glfw.Window) {
+	if platform.closeCallback != nil {
+		shouldClose := platform.closeCallback()
+		window.SetShouldClose(shouldClose)
+	}
 }
 
 func (platform *GLFW) onDrop(window *glfw.Window, names []string) {

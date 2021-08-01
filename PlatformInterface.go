@@ -40,6 +40,9 @@ type Platform interface {
 	// Set input callback
 	SetInputCallback(func(key glfw.Key, mods glfw.ModifierKey, action glfw.Action))
 
+	// Set close callback, returned value will be used to close or cancel the window
+	SetCloseCallback(func() bool)
+
 	// Force Update
 	Update()
 
