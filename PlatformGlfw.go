@@ -9,6 +9,10 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
+var (
+	GlfwDontCare int = glfw.DontCare
+)
+
 type GLFWClipboard struct {
 	window *glfw.Window
 }
@@ -35,7 +39,7 @@ const (
 	GLFWWindowFlagsTransparent
 )
 
-// GLFW implements a platform based on github.com/go-gl/glfw (v3.2).
+// GLFW implements a platform based on github.com/go-gl/glfw (v3.3).
 type GLFW struct {
 	imguiIO IO
 
@@ -478,4 +482,14 @@ func (platform *GLFW) SetTPS(tps int) {
 // images will be rescaled as needed. Good sizes include 16x16, 32x32 and 48x48.
 func (platform *GLFW) SetIcon(icons []image.Image) {
 	platform.window.SetIcon(icons)
+}
+
+// SetSizeLimits sets the size limits of the client area of the specified window.
+// If the window is full screen or not resizable, this function does nothing.
+//
+// The size limits are applied immediately and may cause the window to be resized.
+// To specify only a minimum size or only a maximum one, set the other pair to GLFW_DONT_CARE.
+// To disable size limits for a window, set them all to GLFW_DONT_CARE.
+func (platform *GLFW) SetSizeLimits(minw, minh, maxw, maxh int) {
+	platform.window.SetSizeLimits(minw, minh, maxw, maxh)
 }

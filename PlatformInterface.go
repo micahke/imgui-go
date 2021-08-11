@@ -63,4 +63,7 @@ type Platform interface {
 
 	// Set icon to master window
 	SetIcon(icons []image.Image)
+
+	// SetSizeLimits sets the size limits of the client area of the specified window.
+	SetSizeLimits(minw, minh, maxw, maxh int)
 }
