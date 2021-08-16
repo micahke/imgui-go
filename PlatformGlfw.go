@@ -493,3 +493,7 @@ func (platform *GLFW) SetIcon(icons []image.Image) {
 func (platform *GLFW) SetSizeLimits(minw, minh, maxw, maxh int) {
 	platform.window.SetSizeLimits(minw, minh, maxw, maxh)
 }
+
+func (platform *GLFW) SetTitle(title string) {
+  platform.window.SetTitle(title)
+}

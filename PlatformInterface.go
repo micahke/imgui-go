@@ -66,4 +66,7 @@ type Platform interface {
 
 	// SetSizeLimits sets the size limits of the client area of the specified window.
 	SetSizeLimits(minw, minh, maxw, maxh int)
+
+  // SetTitle sets the title of platform window.
+  SetTitle(title string)
 }
