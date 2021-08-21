@@ -210,3 +210,9 @@ void iggSetFrameCountSinceLastInput(IggIO handle, int count)
    ImGuiIO &io = *reinterpret_cast<ImGuiIO *>(handle);
    io.FrameCountSinceLastInput = count;
 }
+
+void iggIoAddFocusEvent(IggIO handle, IggBool focused)
+{
+   ImGuiIO &io = *reinterpret_cast<ImGuiIO *>(handle);
+   io.AddFocusEvent(focused);
+}

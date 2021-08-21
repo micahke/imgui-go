@@ -364,6 +364,7 @@ func (platform *GLFW) installCallbacks() {
 	platform.window.SetDropCallback(platform.onDrop)
 	platform.window.SetPosCallback(platform.posChange)
 	platform.window.SetCloseCallback(platform.onClose)
+	platform.window.SetFocusCallback(platform.onFocus)
 }
 
 var glfwButtonIndexByID = map[glfw.MouseButton]int{
@@ -376,6 +377,10 @@ var glfwButtonIDByIndex = map[int]glfw.MouseButton{
 	0: glfw.MouseButton1,
 	1: glfw.MouseButton2,
 	2: glfw.MouseButton3,
+}
+
+func (platform *GLFW) onFocus(window *glfw.Window, focused bool) {
+  platform.imguiIO.AddFocusEvent(focused)
 }
 
 func (platform *GLFW) onClose(window *glfw.Window) {
@@ -495,5 +500,5 @@ func (platform *GLFW) SetSizeLimits(minw, minh, maxw, maxh int) {
 }
 
 func (platform *GLFW) SetTitle(title string) {
-  platform.window.SetTitle(title)
+	platform.window.SetTitle(title)
 }

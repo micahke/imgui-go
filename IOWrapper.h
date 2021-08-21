@@ -45,6 +45,8 @@ extern "C"
     extern int iggGetFrameCountSinceLastInput(IggIO handle);
     extern void iggSetFrameCountSinceLastInput(IggIO handle, int count);
 
+    extern void iggIoAddFocusEvent(IggIO handle, IggBool focused);
+
 #ifdef __cplusplus
 }
 #endif

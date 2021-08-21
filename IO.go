@@ -184,6 +184,10 @@ func (io IO) SetFrameCountSinceLastInput(count int) {
 	C.iggSetFrameCountSinceLastInput(io.handle, C.int(count))
 }
 
+func (io IO) AddFocusEvent(focused bool) {
+  C.iggIoAddFocusEvent(io.handle, castBool(focused))
+}
+
 // Clipboard describes the access to the text clipboard of the window manager.
 type Clipboard interface {
 	// Text returns the current text from the clipboard, if available.
