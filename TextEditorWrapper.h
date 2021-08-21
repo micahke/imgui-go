@@ -41,6 +41,7 @@ extern void IggTextEditorPaste(IggTextEditor handle);
 extern void IggTextEditorDelete(IggTextEditor handle);
 
 extern void IggTextEditorSelectWordUnderCursor(IggTextEditor handle);
+extern void IggTextEditorSelectAll(IggTextEditor handle);
 
 extern void IggTextEditorSetLanguageDefinition(IggTextEditor handle, IggTextEditorLanguageDefinition defHandle);
 extern void IggTextEditorSetLanguageDefinitionSQL(IggTextEditor handle);

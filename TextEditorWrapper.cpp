@@ -232,6 +232,12 @@ void IggTextEditorSelectWordUnderCursor(IggTextEditor handle)
   editor->SelectWordUnderCursor();
 }
 
+void IggTextEditorSelectAll(IggTextEditor handle)
+{
+  TextEditor *editor = reinterpret_cast<TextEditor*>(handle);
+  editor->SelectAll();
+}
+
 void IggTextEditorSetHandleKeyboardInputs(IggTextEditor handle, int aValue)
 {
   TextEditor *editor = reinterpret_cast<TextEditor*>(handle);
