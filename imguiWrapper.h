@@ -51,10 +51,10 @@ extern void iggSetNextWindowBgAlpha(float value);
 
 extern void iggPushFont(IggFont handle);
 extern void iggPopFont(void);
-extern void iggPushStyleColor(float index, IggVec4 const *col);
+extern void iggPushStyleColor(int index, IggVec4 const *col);
 extern void iggPopStyleColor(int count);
-extern void iggPushStyleVarFloat(float index, float value);
-extern void iggPushStyleVarVec2(float index, IggVec2 const *value);
+extern void iggPushStyleVarFloat(int index, float value);
+extern void iggPushStyleVarVec2(int index, IggVec2 const *value);
 extern void iggPopStyleVar(int count);
 extern void iggCalcTextSize(const char *text, int length,
                             IggBool hide_text_after_double_hash,

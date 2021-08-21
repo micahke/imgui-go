@@ -223,7 +223,7 @@ func PopFont() {
 // To revert to the previous color, call PopStyleColor().
 func PushStyleColor(id StyleColorID, color Vec4) {
 	colorArg, _ := color.wrapped()
-	C.iggPushStyleColor(C.float(id), colorArg)
+	C.iggPushStyleColor(C.int(id), colorArg)
 }
 
 // PopStyleColorV reverts the given amount of style color changes.
@@ -238,13 +238,13 @@ func PopStyleColor() {
 
 // PushStyleVarFloat pushes a float value on the stack to temporarily modify a style variable.
 func PushStyleVarFloat(id StyleVarID, value float32) {
-	C.iggPushStyleVarFloat(C.float(id), C.float(value))
+	C.iggPushStyleVarFloat(C.int(id), C.float(value))
 }
 
 // PushStyleVarVec2 pushes a Vec2 value on the stack to temporarily modify a style variable.
 func PushStyleVarVec2(id StyleVarID, value Vec2) {
 	valueArg, _ := value.wrapped()
-	C.iggPushStyleVarVec2(C.float(id), valueArg)
+	C.iggPushStyleVarVec2(C.int(id), valueArg)
 }
 
 // PopStyleVarV reverts the given amount of style variable changes.
