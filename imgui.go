@@ -282,12 +282,12 @@ func GetColorU32(col Vec4) uint {
 	return uint(C.iggGetColorU32(*valueArg))
 }
 
-func PushDisabled() {
-	C.iggPushDisabled()
+func BeginDisabled(disabled bool) {
+	C.iggBeginDisabled(castBool(disabled))
 }
 
-func PopDisabled() {
-	C.iggPopDisabled()
+func EndDisabled() {
+	C.iggEndDisabled()
 }
 
 func StyleColorsDark() {

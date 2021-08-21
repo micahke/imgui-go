@@ -61,8 +61,8 @@ extern void iggCalcTextSize(const char *text, int length,
                             float wrap_width, IggVec2 *value);
 extern unsigned int iggGetColorU32(const IggVec4 col);
 
-extern void iggPushDisabled();
-extern void iggPopDisabled();
+extern void iggBeginDisabled(IggBool disabled);
+extern void iggEndDisabled();
 
 extern void iggStyleColorsDark();
 extern void iggStyleColorsClassic();
