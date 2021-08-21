@@ -187,7 +187,7 @@ void iggPopFont(void)
    ImGui::PopFont();
 }
 
-void iggPushStyleColor(int index, IggVec4 const *col)
+void iggPushStyleColor(float index, IggVec4 const *col)
 {
    Vec4Wrapper colArg(col);
    ImGui::PushStyleColor(index, *colArg);
@@ -198,12 +198,12 @@ void iggPopStyleColor(int count)
    ImGui::PopStyleColor(count);
 }
 
-void iggPushStyleVarFloat(int index, float value)
+void iggPushStyleVarFloat(float index, float value)
 {
    ImGui::PushStyleVar(index, value);
 }
 
-void iggPushStyleVarVec2(int index, IggVec2 const *value)
+void iggPushStyleVarVec2(float index, IggVec2 const *value)
 {
    Vec2Wrapper valueArg(value);
    ImGui::PushStyleVar(index, *valueArg);

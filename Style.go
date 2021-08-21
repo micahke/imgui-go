@@ -4,7 +4,7 @@ package imgui
 import "C"
 
 // StyleVarID identifies a style variable in the UI style.
-type StyleVarID int
+type StyleVarID float32
 
 const (
 	// StyleVarAlpha is a float
@@ -56,7 +56,7 @@ const (
 )
 
 // StyleColorID identifies a color in the UI style.
-type StyleColorID int
+type StyleColorID float32
 
 // StyleColor identifier
 const (
