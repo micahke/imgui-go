@@ -2,6 +2,7 @@ package imgui
 
 import (
 	"image"
+	"unsafe"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -70,6 +71,9 @@ type Platform interface {
 	// SetTitle sets the title of platform window.
 	SetTitle(title string)
 
-  // Get window position
+	// Get window position
 	GetPos() (x, y int)
+
+  // Get window pointer
+	GetWindow() unsafe.Pointer
 }

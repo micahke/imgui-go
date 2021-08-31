@@ -5,6 +5,7 @@ import (
 	"image"
 	"math"
 	"runtime"
+	"unsafe"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -149,12 +150,12 @@ func (platform *GLFW) GetContentScale() float32 {
 	return x
 }
 
-func (platform *GLFW) GetWindow() *glfw.Window {
-	return platform.window
+func (platform *GLFW) GetWindow() unsafe.Pointer {
+	return unsafe.Pointer(platform.window)
 }
 
 func (platform *GLFW) GetPos() (x, y int) {
-  return platform.window.GetPos()
+	return platform.window.GetPos()
 }
 
 func (platform *GLFW) centerWindow() {
@@ -384,7 +385,7 @@ var glfwButtonIDByIndex = map[int]glfw.MouseButton{
 }
 
 func (platform *GLFW) onFocus(window *glfw.Window, focused bool) {
-  platform.imguiIO.AddFocusEvent(focused)
+	platform.imguiIO.AddFocusEvent(focused)
 }
 
 func (platform *GLFW) onClose(window *glfw.Window) {
