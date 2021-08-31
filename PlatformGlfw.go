@@ -153,6 +153,10 @@ func (platform *GLFW) GetWindow() *glfw.Window {
 	return platform.window
 }
 
+func (platform *GLFW) GetPos() (x, y int) {
+  return platform.window.GetPos()
+}
+
 func (platform *GLFW) centerWindow() {
 	monitor := platform.getBestMonitor()
 	if monitor == nil {
