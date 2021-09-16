@@ -181,3 +181,8 @@ void iggImPlotUse24HourClock(IggBool clock24h)
 {
   ImPlot::GetStyle().Use24HourClock = clock24h;
 }
+
+void iggImPlotSetPlotYAxis(int y_axis)
+{
+  ImPlot::SetPlotYAxis(y_axis);
+}

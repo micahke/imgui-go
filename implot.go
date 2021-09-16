@@ -112,6 +112,14 @@ const (
 	ImPlotAxisFlags_NoDecorations ImPlotAxisFlags = ImPlotAxisFlags_NoLabel | ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoTickMarks | ImPlotAxisFlags_NoTickLabels
 )
 
+type ImPlotYAxis int
+
+const (
+	ImPlotYAxis_1 ImPlotYAxis = 0
+	ImPlotYAxis_2 ImPlotYAxis = 1
+	ImPlotYAxis_3 ImPlotYAxis = 2
+)
+
 //-----------------------------------------------------------------------------
 // Begin/End Plot
 //-----------------------------------------------------------------------------
@@ -507,4 +515,8 @@ func ImPlotUseISO8601(iso8601 bool) {
 
 func ImPlotUse24HourClock(clock24h bool) {
 	C.iggImPlotUse24HourClock(castBool(clock24h))
+}
+
+func ImPlotSetPlotYAxis(yAxis ImPlotYAxis) {
+  C.iggImPlotSetPlotYAxis(C.int(yAxis))
 }

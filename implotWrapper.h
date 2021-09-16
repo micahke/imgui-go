@@ -67,6 +67,8 @@ extern void iggImPlotUseLocalTime(IggBool localtime);
 extern void iggImPlotUseISO8601(IggBool iso8601);
 extern void iggImPlotUse24HourClock(IggBool clock24h);
 
+extern void iggImPlotSetPlotYAxis(int y_axis);
+
 #ifdef __cplusplus
 }
 #endif
