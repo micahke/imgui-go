@@ -9,6 +9,8 @@ import (
 type Platform interface {
 	// ShouldStop is regularly called as the abort condition for the program loop.
 	ShouldStop() bool
+	// SetShouldStop sets whether window should be closed
+	SetShouldStop(bool)
 
 	// ProcessEvents is called once per render loop to dispatch any pending events.
 	ProcessEvents()
@@ -67,6 +69,6 @@ type Platform interface {
 	// SetTitle sets the title of platform window.
 	SetTitle(title string)
 
-  // Get window position
+	// Get window position
 	GetPos() (x, y int)
 }

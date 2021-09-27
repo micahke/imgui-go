@@ -9,9 +9,7 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
-var (
-	GlfwDontCare int = glfw.DontCare
-)
+var GlfwDontCare int = glfw.DontCare
 
 type GLFWClipboard struct {
 	window *glfw.Window
@@ -154,7 +152,7 @@ func (platform *GLFW) GetWindow() *glfw.Window {
 }
 
 func (platform *GLFW) GetPos() (x, y int) {
-  return platform.window.GetPos()
+	return platform.window.GetPos()
 }
 
 func (platform *GLFW) centerWindow() {
@@ -214,6 +212,11 @@ func (platform *GLFW) getBestMonitor() *glfw.Monitor {
 // ShouldStop returns true if the window is to be closed.
 func (platform *GLFW) ShouldStop() bool {
 	return platform.window.ShouldClose()
+}
+
+// SetShouldStop sets whether window should be closed
+func (platform *GLFW) SetShouldStop(v bool) {
+	platform.window.SetShouldClose(v)
 }
 
 func (platform *GLFW) WaitForEvent() {
@@ -384,7 +387,7 @@ var glfwButtonIDByIndex = map[int]glfw.MouseButton{
 }
 
 func (platform *GLFW) onFocus(window *glfw.Window, focused bool) {
-  platform.imguiIO.AddFocusEvent(focused)
+	platform.imguiIO.AddFocusEvent(focused)
 }
 
 func (platform *GLFW) onClose(window *glfw.Window) {
