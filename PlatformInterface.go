@@ -46,9 +46,6 @@ type Platform interface {
 	// Force Update
 	Update()
 
-	// GetContentScale function retrieves the content scale for the specified monitor.
-	GetContentScale() float32
-
 	// Get content from system clipboard
 	GetClipboard() string
 

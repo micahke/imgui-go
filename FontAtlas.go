@@ -84,11 +84,6 @@ func (atlas FontAtlas) AddFontFromFileTTFV(filename string, sizePixels float32,
 	filenameArg, filenameFin := wrapString(filename)
 	defer filenameFin()
 
-	// Multiply sizePixels with DPI scale
-	if DPIScale > 0 {
-		sizePixels *= DPIScale
-	}
-
 	fontHandle := C.iggAddFontFromFileTTF(atlas.handle(), filenameArg, C.float(sizePixels),
 		config.handle(), glyphRange.handle())
 	return Font(fontHandle)
@@ -116,11 +111,6 @@ func (atlas FontAtlas) AddFontFromMemoryTTFV(
 	cBuf := (*[1 << 30]byte)(fontDataC)
 
 	copy(cBuf[:], fontData)
-
-	// Multiply sizePixels with DPI scale
-	if DPIScale > 0 {
-		sizePixels *= DPIScale
-	}
 
 	fontHandle := C.iggAddFontFromMemoryTTF(atlas.handle(), (*C.char)(fontDataC), C.int(len(fontData)), C.float(sizePixels),
 		config.handle(), glyphRange.handle())
