@@ -98,16 +98,20 @@ const (
 type ImPlotAxisFlags int
 
 const (
-	ImPlotAxisFlags_None          ImPlotAxisFlags = 0      // default
-	ImPlotAxisFlags_NoLabel       ImPlotAxisFlags = 1 << 0 // the axis label will not be displayed (axis labels also hidden if the supplied string name is NULL)
-	ImPlotAxisFlags_NoGridLines   ImPlotAxisFlags = 1 << 1 // the axis grid lines will not be displayed
-	ImPlotAxisFlags_NoTickMarks   ImPlotAxisFlags = 1 << 2 // the axis tick marks will not be displayed
-	ImPlotAxisFlags_NoTickLabels  ImPlotAxisFlags = 1 << 3 // the axis tick labels will not be displayed
-	ImPlotAxisFlags_LogScale      ImPlotAxisFlags = 1 << 4 // a logartithmic (base 10) axis scale will be used (mutually exclusive with ImPlotAxisFlags_Time)
-	ImPlotAxisFlags_Time          ImPlotAxisFlags = 1 << 5 // axis will display date/time formatted labels (mutually exclusive with ImPlotAxisFlags_LogScale)
-	ImPlotAxisFlags_Invert        ImPlotAxisFlags = 1 << 6 // the axis will be inverted
-	ImPlotAxisFlags_LockMin       ImPlotAxisFlags = 1 << 7 // the axis minimum value will be locked when panning/zooming
-	ImPlotAxisFlags_LockMax       ImPlotAxisFlags = 1 << 8 // the axis maximum value will be locked when panning/zooming
+	ImPlotAxisFlags_None          ImPlotAxisFlags = 0       // default
+	ImPlotAxisFlags_NoLabel       ImPlotAxisFlags = 1 << 0  // the axis label will not be displayed (axis labels also hidden if the supplied string name is NULL)
+	ImPlotAxisFlags_NoGridLines   ImPlotAxisFlags = 1 << 1  // no grid lines will be displayed
+	ImPlotAxisFlags_NoTickMarks   ImPlotAxisFlags = 1 << 2  // no tick marks will be displayed
+	ImPlotAxisFlags_NoTickLabels  ImPlotAxisFlags = 1 << 3  // no text labels will be displayed
+	ImPlotAxisFlags_Foreground    ImPlotAxisFlags = 1 << 4  // grid lines will be displayed in the foreground (i.e. on top of data) in stead of the background
+	ImPlotAxisFlags_LogScale      ImPlotAxisFlags = 1 << 5  // a logartithmic (base 10) axis scale will be used (mutually exclusive with ImPlotAxisFlags_Time)
+	ImPlotAxisFlags_Time          ImPlotAxisFlags = 1 << 6  // axis will display date/time formatted labels (mutually exclusive with ImPlotAxisFlags_LogScale)
+	ImPlotAxisFlags_Invert        ImPlotAxisFlags = 1 << 7  // the axis will be inverted
+	ImPlotAxisFlags_NoInitialFit  ImPlotAxisFlags = 1 << 8  // axis will not be initially fit to data extents on the first rendered frame (also the case if SetNextPlotLimits explicitly called)
+	ImPlotAxisFlags_AutoFit       ImPlotAxisFlags = 1 << 9  // axis will be auto-fitting to data extents
+	ImPlotAxisFlags_RangeFit      ImPlotAxisFlags = 1 << 10 // axis will only fit points if the point is in the visible range of the **orthoganol** axis
+	ImPlotAxisFlags_LockMin       ImPlotAxisFlags = 1 << 11 // the axis minimum value will be locked when panning/zooming
+	ImPlotAxisFlags_LockMax       ImPlotAxisFlags = 1 << 12 // the axis maximum value will be locked when panning/zooming
 	ImPlotAxisFlags_Lock          ImPlotAxisFlags = ImPlotAxisFlags_LockMin | ImPlotAxisFlags_LockMax
 	ImPlotAxisFlags_NoDecorations ImPlotAxisFlags = ImPlotAxisFlags_NoLabel | ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoTickMarks | ImPlotAxisFlags_NoTickLabels
 )
@@ -518,5 +522,5 @@ func ImPlotUse24HourClock(clock24h bool) {
 }
 
 func ImPlotSetPlotYAxis(yAxis ImPlotYAxis) {
-  C.iggImPlotSetPlotYAxis(C.int(yAxis))
+	C.iggImPlotSetPlotYAxis(C.int(yAxis))
 }
