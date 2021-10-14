@@ -1,28 +1,18 @@
 package imgui
 
 const (
-	// HoveredFlagsNone Return true if directly over the item/window, not obstructed by another window,
-	// not obstructed by an active popup or modal blocking inputs under them.
-	HoveredFlagsNone = 0
-	// HoveredFlagsChildWindows IsWindowHovered() only: Return true if any children of the window is hovered.
-	HoveredFlagsChildWindows = 1 << 0
-	// HoveredFlagsRootWindow IsWindowHovered() only: Test from root window (top most parent of the current hierarchy).
-	HoveredFlagsRootWindow = 1 << 1
-	// HoveredFlagsAnyWindow IsWindowHovered() only: Return true if any window is hovered.
-	HoveredFlagsAnyWindow = 1 << 2
-	// HoveredFlagsAllowWhenBlockedByPopup Return true even if a popup window is normally blocking access to this item/window.
-	HoveredFlagsAllowWhenBlockedByPopup = 1 << 3
-	// HoveredFlagsAllowWhenBlockedByActiveItem Return true even if an active item is blocking access to this item/window.
-	// Useful for Drag and Drop patterns.
-	HoveredFlagsAllowWhenBlockedByActiveItem = 1 << 5
-	// HoveredFlagsAllowWhenOverlapped Return true even if the position is overlapped by another window
-	HoveredFlagsAllowWhenOverlapped = 1 << 6
-	// HoveredFlagsAllowWhenDisabled Return true even if the item is disabled
-	HoveredFlagsAllowWhenDisabled = 1 << 7
+    HoveredFlagsNone                          = 0,        // Return true if directly over the item/window, not obstructed by another window, not obstructed by an active popup or modal blocking inputs under them.
+    HoveredFlagsChildWindows                  = 1 << 0,   // IsWindowHovered() only: Return true if any children of the window is hovered
+    HoveredFlagsRootWindow                    = 1 << 1,   // IsWindowHovered() only: Test from root window (top most parent of the current hierarchy)
+    HoveredFlagsAnyWindow                     = 1 << 2,   // IsWindowHovered() only: Return true if any window is hovered
+    HoveredFlagsNoPopupHierarchy              = 1 << 3,   // IsWindowHovered() only: Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with ChildWindows or RootWindow)
+    //HoveredFlagsDockHierarchy               = 1 << 4,   // IsWindowHovered() only: Consider docking hierarchy (treat dockspace host as parent of docked window) (when used with ChildWindows or RootWindow)
+    HoveredFlagsAllowWhenBlockedByPopup       = 1 << 5,   // Return true even if a popup window is normally blocking access to this item/window
+    //HoveredFlagsAllowWhenBlockedByModal     = 1 << 6,   // Return true even if a modal popup window is normally blocking access to this item/window. FIXME-TODO: Unavailable yet.
+    HoveredFlagsAllowWhenBlockedByActiveItem  = 1 << 7,   // Return true even if an active item is blocking access to this item/window. Useful for Drag and Drop patterns.
+    HoveredFlagsAllowWhenOverlapped           = 1 << 8,   // IsItemHovered() only: Return true even if the position is obstructed or overlapped by another window
+    HoveredFlagsAllowWhenDisabled             = 1 << 9,   // IsItemHovered() only: Return true even if the item is disabled
+    HoveredFlagsRectOnly                      = HoveredFlagsAllowWhenBlockedByPopup | HoveredFlagsAllowWhenBlockedByActiveItem | HoveredFlagsAllowWhenOverlapped,
+    HoveredFlagsRootAndChildWindows           = HoveredFlagsRootWindow | HoveredFlagsChildWindows
 )
 
-// HoveredFlags combinations
-const (
-	HoveredFlagsRectOnly            = HoveredFlagsAllowWhenBlockedByPopup | HoveredFlagsAllowWhenBlockedByActiveItem | HoveredFlagsAllowWhenOverlapped
-	HoveredFlagsRootAndChildWindows = HoveredFlagsRootWindow | HoveredFlagsChildWindows
-)
