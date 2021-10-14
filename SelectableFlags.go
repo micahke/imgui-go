@@ -11,4 +11,6 @@ const (
 	SelectableFlagsAllowDoubleClick = 1 << 2
 	// SelectableFlagsDisabled disallows selection and displays text in a greyed out color.
 	SelectableFlagsDisabled = 1 << 3
+
+	SelectableFlags_AllowItemOverlap = 1 << 4 // (WIP) Hit testing to allow subsequent widgets to overlap this one
 )
