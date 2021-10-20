@@ -16,5 +16,5 @@ func (me MemoryEditor) handle() C.IggMemoryEditor {
 }
 
 func (me MemoryEditor) DrawContents(data []uint8) {
-	C.IggMemoryEditorDrawContents(me.handle(), unsafe.Pointer(&data[0]), C.ulong(len(data)))
+	C.IggMemoryEditorDrawContents(me.handle(), unsafe.Pointer(&data[0]), C.size_t(len(data)))
 }
