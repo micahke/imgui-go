@@ -17,10 +17,12 @@ iggMarkdownLinkCallbackData iggMarkdownLink;
 static void markdownLinkCallback(ImGui::MarkdownLinkCallbackData);
 
 void iggMarkdown(char* markdown_) {
-        // clean up link callbacks
+        // clean up link cache.
         iggMarkdownLink.link = NULL;
         iggMarkdownLink.link_len = 0;
 
+        // create imgui markdown config:
+        // TODO: implement all these methods
         ImGui::MarkdownConfig mdConfig;
 
         mdConfig.linkCallback =         markdownLinkCallback;
@@ -32,6 +34,8 @@ void iggMarkdown(char* markdown_) {
         //mdConfig.headingFormats[2] =    { H3, false };
         //mdConfig.userData =             NULL;
         //mdConfig.formatCallback =       ExampleMarkdownFormatCallback;
+        
+        // run ImGui Markdown
         ImGui::Markdown( markdown_, strlen(markdown_), mdConfig );
 }
 
