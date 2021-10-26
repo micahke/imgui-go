@@ -1,17 +1,15 @@
 #pragma once
 
-typedef struct {
-        char* link;
-        int link_len;
-        //IggBool isImage;
-} iggMarkdownLinkCallbackData;
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-    extern void iggMarkdown(char *markdown_);
-    extern iggMarkdownLinkCallbackData iggMarkdownLink;
+	typedef struct {
+		char* link;
+		int link_len;
+	} iggMarkdownLinkCallbackData;
+
+        extern iggMarkdownLinkCallbackData iggMarkdown(char *markdown_);
 #ifdef __cplusplus
 }
 #endif

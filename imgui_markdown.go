@@ -10,9 +10,9 @@ func Markdown(data *string, linkCB func(s string)) {
 		state.release()
 	}()
 
-	C.iggMarkdown((*C.char)(state.buf.ptr))
-	s := C.GoString(C.iggMarkdownLink.link)
-	s = s[:int(C.iggMarkdownLink.link_len)]
+	linkData := C.iggMarkdown((*C.char)(state.buf.ptr))
+	s := C.GoString(linkData.link)
+	s = s[:int(linkData.link_len)]
 	if s != "" {
 		linkCB(s)
 	}

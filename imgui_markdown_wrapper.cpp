@@ -16,7 +16,7 @@
 iggMarkdownLinkCallbackData iggMarkdownLink;
 static void markdownLinkCallback(ImGui::MarkdownLinkCallbackData);
 
-void iggMarkdown(char* markdown_) {
+iggMarkdownLinkCallbackData iggMarkdown(char* markdown_) {
         // clean up link cache.
         iggMarkdownLink.link = NULL;
         iggMarkdownLink.link_len = 0;
@@ -37,6 +37,8 @@ void iggMarkdown(char* markdown_) {
         
         // run ImGui Markdown
         ImGui::Markdown( markdown_, strlen(markdown_), mdConfig );
+
+	return iggMarkdownLink;
 }
 
 void markdownLinkCallback(ImGui::MarkdownLinkCallbackData data_) {
