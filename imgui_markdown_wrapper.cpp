@@ -12,11 +12,15 @@
 #include	<imgui.h>
 #include	<imgui_markdown.h>
 #include	<imgui_markdown_wrapper.h>
+#include	<WrapperConverter.h>
 
 iggMarkdownLinkCallbackData iggMarkdownLink;
 static void markdownLinkCallback(ImGui::MarkdownLinkCallbackData);
 
-iggMarkdownLinkCallbackData iggMarkdown(char* markdown_) {
+iggMarkdownLinkCallbackData iggMarkdown(
+                char* markdown_,
+                iggMarkdownHeaderData headers_[], int numHeaderLevels
+        ) {
         // clean up link cache.
         iggMarkdownLink.link = NULL;
         iggMarkdownLink.link_len = 0;
@@ -26,12 +30,13 @@ iggMarkdownLinkCallbackData iggMarkdown(char* markdown_) {
         ImGui::MarkdownConfig mdConfig;
 
         mdConfig.linkCallback =         markdownLinkCallback;
+        for ( int i = 0; i < numHeaderLevels; i++ ) {
+                ImFont* font = reinterpret_cast<ImFont *>(headers_[i].font);
+                mdConfig.headingFormats[i] = { font, (bool)(headers_[i].separator) };
+        }
         //mdConfig.tooltipCallback =      NULL;
         //mdConfig.imageCallback =        ImageCallback;
         //mdConfig.linkIcon =             ICON_FA_LINK;
-        //mdConfig.headingFormats[0] =    { H1, true };
-        //mdConfig.headingFormats[1] =    { H2, true };
-        //mdConfig.headingFormats[2] =    { H3, false };
         //mdConfig.userData =             NULL;
         //mdConfig.formatCallback =       ExampleMarkdownFormatCallback;
         

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "imguiWrapperTypes.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -9,7 +11,15 @@ extern "C"
 		int link_len;
 	} iggMarkdownLinkCallbackData;
 
-        extern iggMarkdownLinkCallbackData iggMarkdown(char *markdown_);
+        typedef struct {
+                IggFont font;
+                IggBool separator;
+        } iggMarkdownHeaderData;
+
+        extern iggMarkdownLinkCallbackData iggMarkdown(
+                        char *markdown_,
+                        iggMarkdownHeaderData fonts[], int numHeaderLevels
+                );
 #ifdef __cplusplus
 }
 #endif
