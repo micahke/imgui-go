@@ -8,7 +8,17 @@ type MarkdownHeaderData struct {
 	HasSeparator bool
 }
 
-func Markdown(data *string, linkCB func(s string), headers []MarkdownHeaderData) {
+type MarkdownImageData struct {
+	TextureID TextureID
+	Size      Vec2
+}
+
+var markdownImageCallbackCache func(url string) MarkdownImageData = func(_ string) (result MarkdownImageData) {
+	return MarkdownImageData{TextureID: 0}
+}
+
+func Markdown(data *string, linkCB func(s string), imageCB func(path string) MarkdownImageData, headers []MarkdownHeaderData) {
+	markdownImageCallbackCache = imageCB
 	state := newInputTextState(*data, nil)
 	defer func() {
 		*data = state.buf.toGo()
@@ -42,4 +52,22 @@ func Markdown(data *string, linkCB func(s string), headers []MarkdownHeaderData)
 	if s != "" {
 		linkCB(s)
 	}
+}
+
+//export goMarkdownImageCallback
+func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMarkdownImageData) {
+	if markdownImageCallbackCache == nil {
+		return result
+	}
+
+	path := C.GoString(data.link)
+	path = path[:int(data.link_len)]
+	d := markdownImageCallbackCache(path)
+
+	sizeArg, _ := d.Size.wrapped()
+
+	result.texture = d.TextureID.handle()
+	result.size = *sizeArg
+
+	return result
 }

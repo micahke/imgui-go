@@ -16,6 +16,7 @@
 
 iggMarkdownLinkCallbackData iggMarkdownLink;
 static void markdownLinkCallback(ImGui::MarkdownLinkCallbackData);
+static ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData);
 
 iggMarkdownLinkCallbackData iggMarkdown(
                 char* markdown_,
@@ -35,7 +36,7 @@ iggMarkdownLinkCallbackData iggMarkdown(
                 mdConfig.headingFormats[i] = { font, (bool)(headers_[i].separator) };
         }
         //mdConfig.tooltipCallback =      NULL;
-        //mdConfig.imageCallback =        ImageCallback;
+        mdConfig.imageCallback =        markdownImageCallback;
         //mdConfig.linkIcon =             ICON_FA_LINK;
         //mdConfig.userData =             NULL;
         //mdConfig.formatCallback =       ExampleMarkdownFormatCallback;
@@ -49,5 +50,34 @@ iggMarkdownLinkCallbackData iggMarkdown(
 void markdownLinkCallback(ImGui::MarkdownLinkCallbackData data_) {
        iggMarkdownLink.link = (char*)(data_.link);
        iggMarkdownLink.link_len = data_.linkLength;
-       // is image
+}
+
+ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData data_) {
+        iggMarkdownLinkCallbackData dataWrapped;
+        dataWrapped.link = (char*)(data_.link);
+        dataWrapped.link_len = data_.linkLength;
+
+        iggMarkdownImageData src = goMarkdownImageCallback(dataWrapped);
+
+        ImGui::MarkdownImageData result;
+
+        result.useLinkCallback = false; // TODO
+        ImTextureID texture = static_cast<ImTextureID>(src.texture);
+        if ( texture == 0 ) {
+                return result;
+        }
+
+        result.user_texture_id = texture;
+
+        //result.size;
+        //result.uv0;
+        //result.uv1;
+        //result.tint_col;
+        //result.border_col;
+        //
+        
+        result.isValid = true;
+        
+        return result;
+
 }

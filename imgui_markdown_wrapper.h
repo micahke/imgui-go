@@ -16,10 +16,18 @@ extern "C"
                 IggBool separator;
         } iggMarkdownHeaderData;
 
+        typedef struct {
+                IggTextureID texture;
+                IggBool useLinkCallback;
+                IggVec2 size;
+        } iggMarkdownImageData;
+
         extern iggMarkdownLinkCallbackData iggMarkdown(
                         char *markdown_,
                         iggMarkdownHeaderData fonts[], int numHeaderLevels
                 );
+
+        extern iggMarkdownImageData goMarkdownImageCallback(iggMarkdownLinkCallbackData);
 #ifdef __cplusplus
 }
 #endif
