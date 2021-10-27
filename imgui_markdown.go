@@ -13,8 +13,12 @@ type MarkdownImageData struct {
 	Size      Vec2
 }
 
+// markdownImageCallbackCache stores user-definied image loader
+// it is only way to share it with C callback
 var markdownImageCallbackCache func(url string) MarkdownImageData
 
+// markdownImageCache stores markdown image data
+// TODO: meybe it should be done on client-side?...
 var markdownImageCache map[string]*MarkdownImageData
 
 func init() {
@@ -33,13 +37,16 @@ func init() {
 // - headers are headers formatting data. Note, that first index of slice will be applied
 //   to top-level (H1), second for H2 and so on.
 func Markdown(data *string, linkCB func(s string), imageCB func(path string) MarkdownImageData, headers []MarkdownHeaderData) {
+	// share imageCB with C callback (goMarkdownImageCallback)
 	markdownImageCallbackCache = imageCB
+
 	state := newInputTextState(*data, nil)
 	defer func() {
 		*data = state.buf.toGo()
 		state.release()
 	}()
 
+	// prepare headers for C
 	cHeaders := []C.iggMarkdownHeaderData{}
 	if headers != nil {
 		for _, data := range headers {
@@ -54,6 +61,8 @@ func Markdown(data *string, linkCB func(s string), imageCB func(path string) Mar
 
 	var cHeadersPtr *C.iggMarkdownHeaderData
 	if len(cHeaders) > 0 {
+		// this trick allows to pass go slice into C
+		// documentation: https://coderwall.com/p/m_ma7q/pass-go-slices-as-c-array-parameters
 		cHeadersPtr = &cHeaders[0]
 	}
 
@@ -62,6 +71,7 @@ func Markdown(data *string, linkCB func(s string), imageCB func(path string) Mar
 		cHeadersPtr, (C.int)(len(cHeaders)),
 	)
 
+	// Read link callback
 	s := C.GoString(linkData.link)
 	s = s[:int(linkData.link_len)]
 	if s != "" {
@@ -69,6 +79,8 @@ func Markdown(data *string, linkCB func(s string), imageCB func(path string) Mar
 	}
 }
 
+// goMarkdownImageCallback is exported to C callback for loading markdown images.
+// in short, it calls user-definied cached in markdownImageCallbackCache function.
 //export goMarkdownImageCallback
 func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMarkdownImageData) {
 	if markdownImageCallbackCache == nil {
@@ -77,13 +89,17 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 
 	path := C.GoString(data.link)
 	path = path[:int(data.link_len)]
+
+	// it calls user-definied function only at first time when this is called.
 	if _, found := markdownImageCache[path]; !found {
 		d := markdownImageCallbackCache(path)
 		markdownImageCache[path] = &d
 	}
 
 	d := markdownImageCache[path]
-	if d.TextureID == nil || *d.TextureID == 0 {
+
+	// check if texture id isn't nil
+	if d.TextureID == nil {
 		return result
 	}
 
@@ -92,5 +108,6 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 	result.texture = d.TextureID.handle()
 	result.size = *sizeArg
 
+	// return to C
 	return result
 }
