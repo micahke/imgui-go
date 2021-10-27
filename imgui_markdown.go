@@ -9,12 +9,16 @@ type MarkdownHeaderData struct {
 }
 
 type MarkdownImageData struct {
-	TextureID TextureID
+	TextureID *TextureID
 	Size      Vec2
 }
 
-var markdownImageCallbackCache func(url string) MarkdownImageData = func(_ string) (result MarkdownImageData) {
-	return MarkdownImageData{TextureID: 0}
+var markdownImageCallbackCache func(url string) MarkdownImageData
+
+var markdownImageCache map[string]*MarkdownImageData
+
+func init() {
+	markdownImageCache = make(map[string]*MarkdownImageData)
 }
 
 func Markdown(data *string, linkCB func(s string), imageCB func(path string) MarkdownImageData, headers []MarkdownHeaderData) {
@@ -62,7 +66,12 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 
 	path := C.GoString(data.link)
 	path = path[:int(data.link_len)]
-	d := markdownImageCallbackCache(path)
+	if _, found := markdownImageCache[path]; !found {
+		d := markdownImageCallbackCache(path)
+		markdownImageCache[path] = &d
+	}
+
+	d := markdownImageCache[path]
 
 	sizeArg, _ := d.Size.wrapped()
 

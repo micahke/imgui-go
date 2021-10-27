@@ -69,7 +69,8 @@ ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData d
 
         result.user_texture_id = texture;
 
-        //result.size;
+        result.size.x = src.size.x;
+        result.size.y = src.size.y;
         //result.uv0;
         //result.uv1;
         //result.tint_col;
