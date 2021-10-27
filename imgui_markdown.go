@@ -21,6 +21,17 @@ func init() {
 	markdownImageCache = make(map[string]*MarkdownImageData)
 }
 
+// Markdown implements imgui_markdown.h
+// NOTE about arguments:
+// - data is pointer to markdown text data
+// - linkCB is callback called when link is clicked (it should most likely open link in a web browser)
+// - imageCB is expected to load an image at `path` and return POINTER to its texture with some other
+//   stats. BE AWARE that imageCB MUST NOT pause goroutine. It could e.g.:
+//   - create variable with TextureID = 0
+//   - invoge a new goroutine and load the texture there and set pointers value
+//   - return pointer to declared variable
+// - headers are headers formatting data. Note, that first index of slice will be applied
+//   to top-level (H1), second for H2 and so on.
 func Markdown(data *string, linkCB func(s string), imageCB func(path string) MarkdownImageData, headers []MarkdownHeaderData) {
 	markdownImageCallbackCache = imageCB
 	state := newInputTextState(*data, nil)
