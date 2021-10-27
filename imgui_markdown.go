@@ -72,6 +72,9 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 	}
 
 	d := markdownImageCache[path]
+	if d.TextureID == nil || *d.TextureID == 0 {
+		return result
+	}
 
 	sizeArg, _ := d.Size.wrapped()
 
