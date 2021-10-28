@@ -9,8 +9,9 @@ type MarkdownHeaderData struct {
 }
 
 type MarkdownImageData struct {
-	TextureID *TextureID
-	Size      Vec2
+	TextureID       *TextureID
+	Size            Vec2
+	UseLinkCallback bool
 }
 
 // markdownImageCallbackCache stores user-definied image loader
@@ -105,8 +106,11 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 
 	sizeArg, _ := d.Size.wrapped()
 
-	result.texture = d.TextureID.handle()
-	result.size = *sizeArg
+	result = C.iggMarkdownImageData{
+		texture:         d.TextureID.handle(),
+		size:            *sizeArg,
+		useLinkCallback: castBool(d.UseLinkCallback),
+	}
 
 	// return to C
 	return result

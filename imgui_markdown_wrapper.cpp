@@ -61,7 +61,7 @@ ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData d
 
         ImGui::MarkdownImageData result;
 
-        result.useLinkCallback = false; // TODO
+        result.useLinkCallback = src.useLinkCallback;
         ImTextureID texture = static_cast<ImTextureID>(src.texture);
         if ( texture == 0 ) {
                 return result;
