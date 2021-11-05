@@ -93,8 +93,11 @@ func goMarkdownImageCallback(data C.iggMarkdownLinkCallbackData) (result C.iggMa
 
 	// it calls user-definied function only at first time when this is called.
 	if _, found := markdownImageCache[path]; !found {
-		d := markdownImageCallbackCache(path)
-		markdownImageCache[path] = &d
+		markdownImageCache[path] = &MarkdownImageData{}
+		go func() {
+			d := markdownImageCallbackCache(path)
+			*markdownImageCache[path] = d
+		}()
 	}
 
 	d := markdownImageCache[path]
