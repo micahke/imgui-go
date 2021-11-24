@@ -71,6 +71,13 @@ ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData d
 
         result.size.x = src.size.x;
         result.size.y = src.size.y;
+        
+        // scale image size to avoid situation, when image is larger than available region
+        int availableW = ImGui::GetContentRegionAvail().x;
+        if (src.size.x > availableW) {
+                result.size.x = availableW;
+                result.size.y = src.size.y*availableW/src.size.x;
+        }
         //result.uv0;
         //result.uv1;
         //result.tint_col;
