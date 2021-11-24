@@ -20,6 +20,12 @@ extern "C"
                 IggTextureID texture;
                 IggBool useLinkCallback;
                 IggVec2 size;
+                IggBool shouldScale; // if true, image will not be larger than available region
+
+                IggVec2 uv0;
+                IggVec2 uv1;
+                IggVec4 tintColor;
+                IggVec4 borderColor;
         } iggMarkdownImageData;
 
         extern iggMarkdownLinkCallbackData iggMarkdown(

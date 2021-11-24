@@ -69,20 +69,25 @@ ImGui::MarkdownImageData markdownImageCallback(ImGui::MarkdownLinkCallbackData d
 
         result.user_texture_id = texture;
 
-        result.size.x = src.size.x;
-        result.size.y = src.size.y;
-        
         // scale image size to avoid situation, when image is larger than available region
         int availableW = ImGui::GetContentRegionAvail().x;
-        if (src.size.x > availableW) {
-                result.size.x = availableW;
-                result.size.y = src.size.y*availableW/src.size.x;
+        if (src.shouldScale && src.size.x > availableW) {
+                src.size.y = src.size.y*availableW/src.size.x;
+                src.size.x = availableW;
         }
-        //result.uv0;
-        //result.uv1;
-        //result.tint_col;
-        //result.border_col;
-        //
+
+        Vec2Wrapper size(&src.size);
+
+        Vec2Wrapper uv0(&src.uv0);
+        Vec2Wrapper uv1(&src.uv1);
+        Vec4Wrapper tintColor(&src.tintColor);
+        Vec4Wrapper borderColor(&src.borderColor);
+
+        result.size = *size;
+        result.uv0 = *uv0;
+        result.uv1 = *uv1;
+        result.tint_col = *tintColor;
+        result.border_col = *borderColor;
         
         result.isValid = true;
         
