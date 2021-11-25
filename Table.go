@@ -58,36 +58,38 @@ const (
 type TableColumnFlags int
 
 const (
-	// Input configuration flags
-	TableColumnFlags_None                 TableColumnFlags = 0
-	TableColumnFlags_DefaultHide          TableColumnFlags = 1 << 0  // Default as a hidden/disabled column.
-	TableColumnFlags_DefaultSort          TableColumnFlags = 1 << 1  // Default as a sorting column.
-	TableColumnFlags_WidthStretch         TableColumnFlags = 1 << 2  // Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
-	TableColumnFlags_WidthFixed           TableColumnFlags = 1 << 3  // Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
-	TableColumnFlags_NoResize             TableColumnFlags = 1 << 4  // Disable manual resizing.
-	TableColumnFlags_NoReorder            TableColumnFlags = 1 << 5  // Disable manual reordering this column, this will also prevent other columns from crossing over this column.
-	TableColumnFlags_NoHide               TableColumnFlags = 1 << 6  // Disable ability to hide/disable this column.
-	TableColumnFlags_NoClip               TableColumnFlags = 1 << 7  // Disable clipping for this column (all NoClip columns will render in a same draw command).
-	TableColumnFlags_NoSort               TableColumnFlags = 1 << 8  // Disable ability to sort on this field (even if TableFlags_Sortable is set on the table).
-	TableColumnFlags_NoSortAscending      TableColumnFlags = 1 << 9  // Disable ability to sort in the ascending direction.
-	TableColumnFlags_NoSortDescending     TableColumnFlags = 1 << 10 // Disable ability to sort in the descending direction.
-	TableColumnFlags_NoHeaderWidth        TableColumnFlags = 1 << 11 // Disable header text width contribution to automatic column width.
-	TableColumnFlags_PreferSortAscending  TableColumnFlags = 1 << 12 // Make the initial sort direction Ascending when first sorting on this column (default).
-	TableColumnFlags_PreferSortDescending TableColumnFlags = 1 << 13 // Make the initial sort direction Descending when first sorting on this column.
-	TableColumnFlags_IndentEnable         TableColumnFlags = 1 << 14 // Use current Indent value when entering cell (default for column 0).
-	TableColumnFlags_IndentDisable        TableColumnFlags = 1 << 15 // Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+// Input configuration flags
+    TableColumnFlags_None                  = 0
+    TableColumnFlags_Disabled              = 1 << 0   // Overriding/master disable flag: hide column, won't show in context menu (unlike calling TableSetColumnEnabled() which manipulates the user accessible state)
+    TableColumnFlags_DefaultHide           = 1 << 1   // Default as a hidden/disabled column.
+    TableColumnFlags_DefaultSort           = 1 << 2   // Default as a sorting column.
+    TableColumnFlags_WidthStretch          = 1 << 3   // Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+    TableColumnFlags_WidthFixed            = 1 << 4   // Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+    TableColumnFlags_NoResize              = 1 << 5   // Disable manual resizing.
+    TableColumnFlags_NoReorder             = 1 << 6   // Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+    TableColumnFlags_NoHide                = 1 << 7   // Disable ability to hide/disable this column.
+    TableColumnFlags_NoClip                = 1 << 8   // Disable clipping for this column (all NoClip columns will render in a same draw command).
+    TableColumnFlags_NoSort                = 1 << 9   // Disable ability to sort on this field (even if TableFlags_Sortable is set on the table).
+    TableColumnFlags_NoSortAscending       = 1 << 10  // Disable ability to sort in the ascending direction.
+    TableColumnFlags_NoSortDescending      = 1 << 11  // Disable ability to sort in the descending direction.
+    TableColumnFlags_NoHeaderLabel         = 1 << 12  // TableHeadersRow() will not submit label for this column. Convenient for some small columns. Name will still appear in context menu.
+    TableColumnFlags_NoHeaderWidth         = 1 << 13  // Disable header text width contribution to automatic column width.
+    TableColumnFlags_PreferSortAscending   = 1 << 14  // Make the initial sort direction Ascending when first sorting on this column (default).
+    TableColumnFlags_PreferSortDescending  = 1 << 15  // Make the initial sort direction Descending when first sorting on this column.
+    TableColumnFlags_IndentEnable          = 1 << 16  // Use current Indent value when entering cell (default for column 0).
+    TableColumnFlags_IndentDisable         = 1 << 17  // Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
 
-	// Output status flags read-only via TableGetColumnFlags()
-	TableColumnFlags_IsEnabled TableColumnFlags = 1 << 20 // Status: is enabled == not hidden by user/api (referred to as "Hide" in _DefaultHide and _NoHide) flags.
-	TableColumnFlags_IsVisible TableColumnFlags = 1 << 21 // Status: is visible == is enabled AND not clipped by scrolling.
-	TableColumnFlags_IsSorted  TableColumnFlags = 1 << 22 // Status: is currently part of the sort specs
-	TableColumnFlags_IsHovered TableColumnFlags = 1 << 23 // Status: is hovered by mouse
+    // Output status flags read-only via TableGetColumnFlags()
+    TableColumnFlags_IsEnabled             = 1 << 24  // Status: is enabled == not hidden by user/api (referred to as "Hide" in _DefaultHide and _NoHide) flags.
+    TableColumnFlags_IsVisible             = 1 << 25  // Status: is visible == is enabled AND not clipped by scrolling.
+    TableColumnFlags_IsSorted              = 1 << 26  // Status: is currently part of the sort specs
+    TableColumnFlags_IsHovered             = 1 << 27  // Status: is hovered by mouse
 
-	// [Internal] Combinations and masks
-	TableColumnFlags_WidthMask_      TableColumnFlags = TableColumnFlags_WidthStretch | TableColumnFlags_WidthFixed
-	TableColumnFlags_IndentMask_     TableColumnFlags = TableColumnFlags_IndentEnable | TableColumnFlags_IndentDisable
-	TableColumnFlags_StatusMask_     TableColumnFlags = TableColumnFlags_IsEnabled | TableColumnFlags_IsVisible | TableColumnFlags_IsSorted | TableColumnFlags_IsHovered
-	TableColumnFlags_NoDirectResize_ TableColumnFlags = 1 << 30 // [Internal] Disable user resizing this column directly (it may however we resized indirectly from its left edge)
+    // [Internal] Combinations and masks
+    TableColumnFlags_WidthMask_            = TableColumnFlags_WidthStretch | TableColumnFlags_WidthFixed
+    TableColumnFlags_IndentMask_           = TableColumnFlags_IndentEnable | TableColumnFlags_IndentDisable
+    TableColumnFlags_StatusMask_           = TableColumnFlags_IsEnabled | TableColumnFlags_IsVisible | TableColumnFlags_IsSorted | TableColumnFlags_IsHovered
+    TableColumnFlags_NoDirectResize_       = 1 << 30   // [Internal] Disable user resizing this column directly (it may however we resized indirectly from its left edge)
 )
 
 type TableRowFlags int
