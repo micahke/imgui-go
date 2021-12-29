@@ -32,8 +32,21 @@ import "C"
 // advance the cursor to the end of the list and then returns 'false' to end the loop.
 type ListClipper uintptr
 
+func NewListClipper() ListClipper {
+	listClipper := C.iggNewListClipper()
+	return ListClipper(listClipper)
+}
+
 func (c ListClipper) handle() C.IggListClipper {
 	return C.IggListClipper(c)
+}
+
+func (c ListClipper) DisplayStart() int {
+	return int(C.iggListClipperDisplayStart(c.handle()))
+}
+
+func (c ListClipper) DisplayEnd() int {
+	return int(C.iggListClipperDisplayEnd(c.handle()))
 }
 
 // Step must be called in a loop until it returns false.

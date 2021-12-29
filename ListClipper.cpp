@@ -7,6 +7,16 @@ IggListClipper iggNewListClipper() {
   return static_cast<IggListClipper>(clipper);
 }
 
+int iggListClipperDisplayStart(IggListClipper handle) {
+  ImGuiListClipper *clipper = new ImGuiListClipper();
+  return clipper->DisplayStart;
+}
+
+int iggListClipperDisplayEnd(IggListClipper handle) {
+  ImGuiListClipper *clipper = new ImGuiListClipper();
+  return clipper->DisplayEnd;
+}
+
 void iggListClipperDelete(IggListClipper handle) {
   ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
   delete clipper;
