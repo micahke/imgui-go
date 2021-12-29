@@ -34,7 +34,6 @@ type ListClipper struct {
 	StartPosY    float32
 	ItemsHeight  float32
 	ItemsCount   int
-	StepNo       int
 	DisplayStart int
 	DisplayEnd   int
 }
@@ -48,7 +47,6 @@ func (clipper *ListClipper) wrapped() (out *C.IggListClipper, finisher func()) {
 		StartPosY:    C.float(clipper.StartPosY),
 		ItemsHeight:  C.float(clipper.ItemsHeight),
 		ItemsCount:   C.int(clipper.ItemsCount),
-		StepNo:       C.int(clipper.StepNo),
 		DisplayStart: C.int(clipper.DisplayStart),
 		DisplayEnd:   C.int(clipper.DisplayEnd),
 	}
@@ -56,7 +54,6 @@ func (clipper *ListClipper) wrapped() (out *C.IggListClipper, finisher func()) {
 		clipper.StartPosY = float32(out.StartPosY)
 		clipper.ItemsHeight = float32(out.ItemsHeight)
 		clipper.ItemsCount = int(out.ItemsCount)
-		clipper.StepNo = int(out.StepNo)
 		clipper.DisplayStart = int(out.DisplayStart)
 		clipper.DisplayEnd = int(out.DisplayEnd)
 	}

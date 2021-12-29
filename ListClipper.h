@@ -3,18 +3,15 @@
 #include "imguiWrapperTypes.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-typedef struct tagIggListClipper
-{
-   float StartPosY;
-   float ItemsHeight;
-   int ItemsCount;
-   int StepNo;
-   int DisplayStart;
-   int DisplayEnd;
+typedef struct tagIggListClipper {
+  float StartPosY;
+  float ItemsHeight;
+  int ItemsCount;
+  int DisplayStart;
+  int DisplayEnd;
 } IggListClipper;
 
 extern IggBool iggListClipperStep(IggListClipper *clipper);
