@@ -2,49 +2,27 @@
 #include "WrapperConverter.h"
 #include "imguiWrappedHeader.h"
 
-static void importValue(ImGuiListClipper &out, IggListClipper const &in);
-static void exportValue(IggListClipper &out, ImGuiListClipper const &in);
-
-typedef TypeWrapper<ImGuiListClipper, IggListClipper> ListClipperWrapper;
-
-IggBool iggListClipperStep(IggListClipper *clipper) {
-  ImGuiListClipper imguiClipper;
-  importValue(imguiClipper, *clipper);
-  IggBool returnValue = imguiClipper.Step() ? 1 : 0;
-  exportValue(*clipper, imguiClipper);
-  // needs to be done to prevent assert fail, we don't call end because the cursor will move.
-  imguiClipper.ItemsCount = -1;
-  return returnValue;
+IggListClipper iggNewListClipper() {
+  ImGuiListClipper *clipper = new ImGuiListClipper();
+  return static_cast<IggListClipper>(clipper);
 }
 
-void iggListClipperBegin(IggListClipper *clipper, int items_count, float items_height) {
-  ImGuiListClipper imguiClipper;
-  importValue(imguiClipper, *clipper);
-  imguiClipper.Begin(items_count, items_height);
-  exportValue(*clipper, imguiClipper);
-  // needs to be done to prevent assert fail, we don't call end because the cursor will move.
-  imguiClipper.ItemsCount = -1;
+void iggListClipperDelete(IggListClipper handle) {
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
+  delete clipper;
 }
 
-void iggListClipperEnd(IggListClipper *clipper) {
-  ImGuiListClipper imguiClipper;
-  importValue(imguiClipper, *clipper);
-  imguiClipper.End();
-  exportValue(*clipper, imguiClipper);
+IggBool iggListClipperStep(IggListClipper handle) {
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
+  return clipper->Step();
 }
 
-static void importValue(ImGuiListClipper &out, IggListClipper const &in) {
-  out.StartPosY = in.StartPosY;
-  out.ItemsHeight = in.ItemsHeight;
-  out.ItemsCount = in.ItemsCount;
-  out.DisplayStart = in.DisplayStart;
-  out.DisplayEnd = in.DisplayEnd;
+void iggListClipperBegin(IggListClipper handle, int items_count, float items_height) {
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
+  clipper->Begin(items_count, items_height);
 }
 
-static void exportValue(IggListClipper &out, ImGuiListClipper const &in) {
-  out.StartPosY = in.StartPosY;
-  out.ItemsHeight = in.ItemsHeight;
-  out.ItemsCount = in.ItemsCount;
-  out.DisplayStart = in.DisplayStart;
-  out.DisplayEnd = in.DisplayEnd;
+void iggListClipperEnd(IggListClipper handle) {
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
+  clipper->End();
 }

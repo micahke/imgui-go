@@ -30,47 +30,21 @@ import "C"
 //
 // Step 3: the clipper validates that we have reached the expected Y position (corresponding to element DisplayEnd),
 // advance the cursor to the end of the list and then returns 'false' to end the loop.
-type ListClipper struct {
-	StartPosY    float32
-	ItemsHeight  float32
-	ItemsCount   int
-	DisplayStart int
-	DisplayEnd   int
-}
+type ListClipper uintptr
 
-// wrapped return C struct and func for setting the values when done
-func (clipper *ListClipper) wrapped() (out *C.IggListClipper, finisher func()) {
-	if clipper == nil {
-		return nil, func() {}
-	}
-	out = &C.IggListClipper{
-		StartPosY:    C.float(clipper.StartPosY),
-		ItemsHeight:  C.float(clipper.ItemsHeight),
-		ItemsCount:   C.int(clipper.ItemsCount),
-		DisplayStart: C.int(clipper.DisplayStart),
-		DisplayEnd:   C.int(clipper.DisplayEnd),
-	}
-	finisher = func() {
-		clipper.StartPosY = float32(out.StartPosY)
-		clipper.ItemsHeight = float32(out.ItemsHeight)
-		clipper.ItemsCount = int(out.ItemsCount)
-		clipper.DisplayStart = int(out.DisplayStart)
-		clipper.DisplayEnd = int(out.DisplayEnd)
-	}
-	return
+func (c ListClipper) handle() C.IggListClipper {
+	return C.IggListClipper(c)
 }
 
 // Step must be called in a loop until it returns false.
 // The DisplayStart/DisplayEnd fields will be set and you can process/draw those items.
-func (clipper *ListClipper) Step() bool {
-	arg, finishFunc := clipper.wrapped()
-	defer finishFunc()
-	return C.iggListClipperStep(arg) != 0
+func (c *ListClipper) Step() bool {
+	return C.iggListClipperStep(c.handle()) != 0
 }
 
 // Begin calls BeginV(itemsCount, -1.0) .
-func (clipper *ListClipper) Begin(itemsCount int) {
-	clipper.BeginV(itemsCount, -1.0)
+func (c *ListClipper) Begin(itemsCount int) {
+	c.BeginV(itemsCount, -1)
 }
 
 // BeginV must be called before stepping.
@@ -80,15 +54,16 @@ func (clipper *ListClipper) Begin(itemsCount int) {
 // For itemsHeight, use -1.0 to be calculated automatically on first step.
 // Otherwise pass in the distance between your items, typically
 // GetTextLineHeightWithSpacing() or GetFrameHeightWithSpacing().
-func (clipper *ListClipper) BeginV(itemsCount int, itemsHeight float32) {
-	arg, finishFunc := clipper.wrapped()
-	defer finishFunc()
-	C.iggListClipperBegin(arg, C.int(itemsCount), C.float(itemsHeight))
+func (c *ListClipper) BeginV(itemsCount int, itemsHeight float32) {
+	C.iggListClipperBegin(c.handle(), C.int(itemsCount), C.float(itemsHeight))
 }
 
 // End resets the clipper. This function is automatically called on the last call of Step() that returns false.
-func (clipper *ListClipper) End() {
-	arg, finishFunc := clipper.wrapped()
-	defer finishFunc()
-	C.iggListClipperEnd(arg)
+func (c *ListClipper) End() {
+	C.iggListClipperEnd(c.handle())
+}
+
+// Delete removes the list clipper from memory.
+func (c *ListClipper) Delete() {
+	C.iggListClipperDelete(c.handle())
 }

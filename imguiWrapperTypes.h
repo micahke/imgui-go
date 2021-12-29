@@ -1,8 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 typedef int IggBool;
@@ -22,19 +21,18 @@ typedef void *IggGuiStyle;
 typedef void *IggInputTextCallbackData;
 typedef void *IggIO;
 typedef void *IggFontGlyphRangesBuilder;
+typedef void *IggListClipper;
 
-typedef struct tagIggVec2
-{
-   float x;
-   float y;
+typedef struct tagIggVec2 {
+  float x;
+  float y;
 } IggVec2;
 
-typedef struct tagIggVec4
-{
-   float x;
-   float y;
-   float z;
-   float w;
+typedef struct tagIggVec4 {
+  float x;
+  float y;
+  float z;
+  float w;
 } IggVec4;
 
 #ifdef __cplusplus
