@@ -3,7 +3,7 @@
 #include "imguiWrappedHeader.h"
 
 IggListClipper iggNewListClipper() {
-  ImGuiListClipper *clipper = new ImGuiListClipper();
+  ImGuiListClipper *clipper = new ImGuiListClipper;
   return static_cast<IggListClipper>(clipper);
 }
 
