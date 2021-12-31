@@ -3,17 +3,17 @@
 #include "imguiWrappedHeader.h"
 
 IggListClipper iggNewListClipper() {
-  ImGuiListClipper *clipper = new ImGuiListClipper;
+  ImGuiListClipper *clipper = new ImGuiListClipper();
   return static_cast<IggListClipper>(clipper);
 }
 
 int iggListClipperDisplayStart(IggListClipper handle) {
-  ImGuiListClipper *clipper = new ImGuiListClipper();
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
   return clipper->DisplayStart;
 }
 
 int iggListClipperDisplayEnd(IggListClipper handle) {
-  ImGuiListClipper *clipper = new ImGuiListClipper();
+  ImGuiListClipper *clipper = reinterpret_cast<ImGuiListClipper *>(handle);
   return clipper->DisplayEnd;
 }
 
