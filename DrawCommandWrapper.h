@@ -3,10 +3,10 @@
 #include "imguiWrapperTypes.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
+extern unsigned int iggDrawCommandIdxOffset(IggDrawCmd handle);
 extern void iggDrawCommandGetElementCount(IggDrawCmd handle, unsigned int *count);
 extern void iggDrawCommandGetClipRect(IggDrawCmd handle, IggVec4 *rect);
 extern void iggDrawCommandGetTextureID(IggDrawCmd handle, IggTextureID *id);

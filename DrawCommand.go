@@ -10,6 +10,10 @@ func (cmd DrawCommand) handle() C.IggDrawCmd {
 	return C.IggDrawCmd(cmd)
 }
 
+func (cmd DrawCommand) IdxOffset() uint {
+	return uint(C.iggDrawCommandIdxOffset(cmd.handle()))
+}
+
 // ElementCount is the number of indices (multiple of 3) to be rendered as triangles.
 // Vertices are stored in the callee DrawList's VertexBuffer, indices in IndexBuffer.
 func (cmd DrawCommand) ElementCount() int {

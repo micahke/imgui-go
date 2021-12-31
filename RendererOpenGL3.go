@@ -169,7 +169,7 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 
 	// Draw
 	for _, list := range drawData.CommandLists() {
-		var indexBufferOffset uintptr
+		// var indexBufferOffset uintptr
 
 		vertexBuffer, vertexBufferSize := list.VertexBuffer()
 		gl.BindBuffer(gl.ARRAY_BUFFER, renderer.vboHandle)
@@ -188,9 +188,9 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 				gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, renderer.textureMagFilter) // magnification filter
 				clipRect := cmd.ClipRect()
 				gl.Scissor(int32(clipRect.X), int32(fbHeight)-int32(clipRect.W), int32(clipRect.Z-clipRect.X), int32(clipRect.W-clipRect.Y))
-				gl.DrawElements(gl.TRIANGLES, int32(cmd.ElementCount()), uint32(drawType), unsafe.Pointer(indexBufferOffset))
+				gl.DrawElements(gl.TRIANGLES, int32(cmd.ElementCount()), uint32(drawType), unsafe.Pointer(uintptr(cmd.IdxOffset()*uint(indexSize))))
 			}
-			indexBufferOffset += uintptr(cmd.ElementCount() * indexSize)
+			// indexBufferOffset += uintptr(cmd.ElementCount() * indexSize)
 		}
 	}
 	gl.DeleteVertexArrays(1, &vaoHandle)
