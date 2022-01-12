@@ -13,9 +13,7 @@
 // TODO
 // - multiline comments vs single-line: latter is blocking start of a ML
 
-template <class InputIt1, class InputIt2, class BinaryPredicate>
-bool equals(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2,
-            BinaryPredicate p) {
+template <class InputIt1, class InputIt2, class BinaryPredicate> bool equals(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, BinaryPredicate p) {
   for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
     if (!p(*first1, *first2))
       return false;
@@ -23,18 +21,7 @@ bool equals(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2,
   return first1 == last1 && first2 == last2;
 }
 
-TextEditor::TextEditor()
-    : mLineSpacing(1.0f), mUndoIndex(0), mTabSize(4), mOverwrite(false),
-      mReadOnly(false), mWithinRender(false), mScrollToCursor(false),
-      mScrollToTop(false), mTextChanged(false), mColorizerEnabled(true),
-      mTextStart(20.0f), mLeftMargin(10), mCursorPositionChanged(false),
-      mColorRangeMin(0), mColorRangeMax(0),
-      mSelectionMode(SelectionMode::Normal), mCheckComments(true),
-      mLastClick(-1.0f), mHandleKeyboardInputs(true), mHandleMouseInputs(true),
-      mIgnoreImGuiChild(false), mShowWhitespaces(true),
-      mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(
-                     std::chrono::system_clock::now().time_since_epoch())
-                     .count()) {
+TextEditor::TextEditor() : mLineSpacing(1.0f), mUndoIndex(0), mTabSize(4), mOverwrite(false), mReadOnly(false), mWithinRender(false), mScrollToCursor(false), mScrollToTop(false), mTextChanged(false), mColorizerEnabled(true), mTextStart(20.0f), mLeftMargin(10), mCursorPositionChanged(false), mColorRangeMin(0), mColorRangeMax(0), mSelectionMode(SelectionMode::Normal), mCheckComments(true), mLastClick(-1.0f), mHandleKeyboardInputs(true), mHandleMouseInputs(true), mIgnoreImGuiChild(false), mShowWhitespaces(true), mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {
   SetPalette(GetDarkPalette());
   SetLanguageDefinition(LanguageDefinition::HLSL());
   mLines.push_back(Line());
@@ -47,16 +34,14 @@ void TextEditor::SetLanguageDefinition(const LanguageDefinition &aLanguageDef) {
   mRegexList.clear();
 
   for (auto &r : mLanguageDefinition.mTokenRegexStrings)
-    mRegexList.push_back(std::make_pair(
-        std::regex(r.first, std::regex_constants::optimize), r.second));
+    mRegexList.push_back(std::make_pair(std::regex(r.first, std::regex_constants::optimize), r.second));
 
   Colorize();
 }
 
 void TextEditor::SetPalette(const Palette &aValue) { mPaletteBase = aValue; }
 
-std::string TextEditor::GetText(const Coordinates &aStart,
-                                const Coordinates &aEnd) const {
+std::string TextEditor::GetText(const Coordinates &aStart, const Coordinates &aEnd) const {
   std::string result;
 
   auto lstart = aStart.mLine;
@@ -88,16 +73,11 @@ std::string TextEditor::GetText(const Coordinates &aStart,
   return result;
 }
 
-TextEditor::Coordinates TextEditor::GetScreenCursorPosition() {
-  return Coordinates(mCursorScreenX, mCursorScreenY);
-}
+TextEditor::Coordinates TextEditor::GetScreenCursorPosition() { return Coordinates(mCursorScreenX, mCursorScreenY); }
 
-TextEditor::Coordinates TextEditor::GetActualCursorCoordinates() const {
-  return SanitizeCoordinates(mState.mCursorPosition);
-}
+TextEditor::Coordinates TextEditor::GetActualCursorCoordinates() const { return SanitizeCoordinates(mState.mCursorPosition); }
 
-TextEditor::Coordinates
-TextEditor::SanitizeCoordinates(const Coordinates &aValue) const {
+TextEditor::Coordinates TextEditor::SanitizeCoordinates(const Coordinates &aValue) const {
   auto line = aValue.mLine;
   auto column = aValue.mColumn;
   if (line >= (int)mLines.size()) {
@@ -184,8 +164,7 @@ void TextEditor::Advance(Coordinates &aCoordinates) const {
   }
 }
 
-void TextEditor::DeleteRange(const Coordinates &aStart,
-                             const Coordinates &aEnd) {
+void TextEditor::DeleteRange(const Coordinates &aStart, const Coordinates &aEnd) {
   assert(aEnd >= aStart);
   assert(!mReadOnly);
 
@@ -222,8 +201,7 @@ void TextEditor::DeleteRange(const Coordinates &aStart,
   mTextChanged = true;
 }
 
-int TextEditor::InsertTextAt(Coordinates & /* inout */ aWhere,
-                             const char *aValue) {
+int TextEditor::InsertTextAt(Coordinates & /* inout */ aWhere, const char *aValue) {
   assert(!mReadOnly);
 
   int cindex = GetCharacterIndex(aWhere);
@@ -252,8 +230,7 @@ int TextEditor::InsertTextAt(Coordinates & /* inout */ aWhere,
       auto &line = mLines[aWhere.mLine];
       auto d = UTF8CharLength(*aValue);
       while (d-- > 0 && *aValue != '\0')
-        line.insert(line.begin() + cindex++,
-                    Glyph(*aValue++, PaletteIndex::Default));
+        line.insert(line.begin() + cindex++, Glyph(*aValue++, PaletteIndex::Default));
       ++aWhere.mColumn;
     }
 
@@ -281,8 +258,7 @@ void TextEditor::AddUndo(UndoRecord &aValue) {
   ++mUndoIndex;
 }
 
-TextEditor::Coordinates
-TextEditor::ScreenPosToCoordinates(const ImVec2 &aPosition) const {
+TextEditor::Coordinates TextEditor::ScreenPosToCoordinates(const ImVec2 &aPosition) const {
   ImVec2 origin = ImGui::GetCursorScreenPos();
   ImVec2 local(aPosition.x - origin.x, aPosition.y - origin.y);
 
@@ -300,14 +276,9 @@ TextEditor::ScreenPosToCoordinates(const ImVec2 &aPosition) const {
       float columnWidth = 0.0f;
 
       if (line[columnIndex].mChar == '\t') {
-        float spaceSize =
-            ImGui::GetFont()
-                ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, " ")
-                .x;
+        float spaceSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, " ").x;
         float oldX = columnX;
-        float newColumnX = (1.0f + std::floor((1.0f + columnX) /
-                                              (float(mTabSize) * spaceSize))) *
-                           (float(mTabSize) * spaceSize);
+        float newColumnX = (1.0f + std::floor((1.0f + columnX) / (float(mTabSize) * spaceSize))) * (float(mTabSize) * spaceSize);
         columnWidth = newColumnX - oldX;
         if (mTextStart + columnX + columnWidth * 0.5f > local.x)
           break;
@@ -321,10 +292,7 @@ TextEditor::ScreenPosToCoordinates(const ImVec2 &aPosition) const {
         while (i < 6 && d-- > 0)
           buf[i++] = line[columnIndex++].mChar;
         buf[i] = '\0';
-        columnWidth =
-            ImGui::GetFont()
-                ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf)
-                .x;
+        columnWidth = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf).x;
         if (mTextStart + columnX + columnWidth * 0.5f > local.x)
           break;
         columnX += columnWidth;
@@ -336,8 +304,7 @@ TextEditor::ScreenPosToCoordinates(const ImVec2 &aPosition) const {
   return SanitizeCoordinates(Coordinates(lineNo, columnCoord));
 }
 
-TextEditor::Coordinates
-TextEditor::FindWordStart(const Coordinates &aFrom) const {
+TextEditor::Coordinates TextEditor::FindWordStart(const Coordinates &aFrom) const {
   Coordinates at = aFrom;
   if (at.mLine >= (int)mLines.size())
     return at;
@@ -368,8 +335,7 @@ TextEditor::FindWordStart(const Coordinates &aFrom) const {
   return Coordinates(at.mLine, GetCharacterColumn(at.mLine, cindex));
 }
 
-TextEditor::Coordinates
-TextEditor::FindWordEnd(const Coordinates &aFrom) const {
+TextEditor::Coordinates TextEditor::FindWordEnd(const Coordinates &aFrom) const {
   Coordinates at = aFrom;
   if (at.mLine >= (int)mLines.size())
     return at;
@@ -399,8 +365,7 @@ TextEditor::FindWordEnd(const Coordinates &aFrom) const {
   return Coordinates(aFrom.mLine, GetCharacterColumn(aFrom.mLine, cindex));
 }
 
-TextEditor::Coordinates
-TextEditor::FindNextWord(const Coordinates &aFrom) const {
+TextEditor::Coordinates TextEditor::FindNextWord(const Coordinates &aFrom) const {
   Coordinates at = aFrom;
   if (at.mLine >= (int)mLines.size())
     return at;
@@ -524,8 +489,7 @@ void TextEditor::RemoveLine(int aStart, int aEnd) {
 
   ErrorMarkers etmp;
   for (auto &i : mErrorMarkers) {
-    ErrorMarkers::value_type e(i.first >= aStart ? i.first - 1 : i.first,
-                               i.second);
+    ErrorMarkers::value_type e(i.first >= aStart ? i.first - 1 : i.first, i.second);
     if (e.first >= aStart && e.first <= aEnd)
       continue;
     etmp.insert(e);
@@ -552,8 +516,7 @@ void TextEditor::RemoveLine(int aIndex) {
 
   ErrorMarkers etmp;
   for (auto &i : mErrorMarkers) {
-    ErrorMarkers::value_type e(i.first > aIndex ? i.first - 1 : i.first,
-                               i.second);
+    ErrorMarkers::value_type e(i.first > aIndex ? i.first - 1 : i.first, i.second);
     if (e.first - 1 == aIndex)
       continue;
     etmp.insert(e);
@@ -581,8 +544,7 @@ TextEditor::Line &TextEditor::InsertLine(int aIndex) {
 
   ErrorMarkers etmp;
   for (auto &i : mErrorMarkers)
-    etmp.insert(ErrorMarkers::value_type(
-        i.first >= aIndex ? i.first + 1 : i.first, i.second));
+    etmp.insert(ErrorMarkers::value_type(i.first >= aIndex ? i.first + 1 : i.first, i.second));
   mErrorMarkers = std::move(etmp);
 
   Breakpoints btmp;
@@ -639,7 +601,7 @@ void TextEditor::HandleKeyboardInputs() {
   auto ctrl = io.ConfigMacOSXBehaviors ? io.KeySuper : io.KeyCtrl;
   auto alt = io.ConfigMacOSXBehaviors ? io.KeyCtrl : io.KeyAlt;
 
-  if (ImGui::IsWindowFocused()) {
+  if (ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows)) {
     if (ImGui::IsWindowHovered())
       ImGui::SetMouseCursor(ImGuiMouseCursor_TextInput);
     // ImGui::CaptureKeyboardFromApp(true);
@@ -647,78 +609,55 @@ void TextEditor::HandleKeyboardInputs() {
     io.WantCaptureKeyboard = true;
     io.WantTextInput = true;
 
-    if (!IsReadOnly() && ctrl && !shift && !alt &&
-        ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Z)))
+    if (!IsReadOnly() && ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Z)))
       Undo();
-    else if (!IsReadOnly() && !ctrl && !shift && alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Backspace)))
+    else if (!IsReadOnly() && !ctrl && !shift && alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Backspace)))
       Undo();
-    else if (!IsReadOnly() && ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Y)))
+    else if (!IsReadOnly() && ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Y)))
       Redo();
-    else if (!ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_UpArrow)))
+    else if (!ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_UpArrow)))
       MoveUp(1, shift);
-    else if (!ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_DownArrow)))
+    else if (!ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_DownArrow)))
       MoveDown(1, shift);
-    else if (!alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
+    else if (!alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
       MoveLeft(1, shift, ctrl);
-    else if (!alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
+    else if (!alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
       MoveRight(1, shift, ctrl);
     else if (!alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_PageUp)))
       MoveUp(GetPageSize() - 4, shift);
     else if (!alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_PageDown)))
       MoveDown(GetPageSize() - 4, shift);
-    else if (!alt && ctrl &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Home)))
+    else if (!alt && ctrl && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Home)))
       MoveTop(shift);
-    else if (ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_End)))
+    else if (ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_End)))
       MoveBottom(shift);
-    else if (!ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Home)))
+    else if (!ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Home)))
       MoveHome(shift);
-    else if (!ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_End)))
+    else if (!ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_End)))
       MoveEnd(shift);
-    else if (!IsReadOnly() && !ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)))
+    else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)))
       Delete();
-    else if (!IsReadOnly() && !ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Backspace)))
+    else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Backspace)))
       Backspace();
-    else if (!ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
+    else if (!ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
       mOverwrite ^= true;
-    else if (ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
+    else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
       Copy();
-    else if (ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_C)))
+    else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_C)))
       Copy();
-    else if (!IsReadOnly() && !ctrl && shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
+    else if (!IsReadOnly() && !ctrl && shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Insert)))
       Paste();
-    else if (!IsReadOnly() && ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_V)))
+    else if (!IsReadOnly() && ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_V)))
       Paste();
-    else if (ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_X)))
+    else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_X)))
       Cut();
-    else if (!ctrl && shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)))
+    else if (!ctrl && shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete)))
       Cut();
-    else if (ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_A)))
+    else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_A)))
       SelectAll();
-    else if (!IsReadOnly() && !ctrl && !shift && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter)))
+    else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter)))
       EnterCharacter('\n', false);
-    else if (!IsReadOnly() && !ctrl && !alt &&
-             ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Tab)))
+    else if (!IsReadOnly() && !ctrl && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Tab)))
       EnterCharacter('\t', shift);
 
     if (!IsReadOnly() && !io.InputQueueCharacters.empty()) {
@@ -738,14 +677,12 @@ void TextEditor::HandleMouseInputs() {
   auto ctrl = io.ConfigMacOSXBehaviors ? io.KeySuper : io.KeyCtrl;
   auto alt = io.ConfigMacOSXBehaviors ? io.KeyCtrl : io.KeyAlt;
 
-  if (ImGui::IsWindowFocused()) {
+  if (ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows)) {
     if (!shift && !alt) {
       auto click = ImGui::IsMouseClicked(0);
       auto doubleClick = ImGui::IsMouseDoubleClicked(0);
       auto t = ImGui::GetTime();
-      auto tripleClick =
-          click && !doubleClick &&
-          (mLastClick != -1.0f && (t - mLastClick) < io.MouseDoubleClickTime);
+      auto tripleClick = click && !doubleClick && (mLastClick != -1.0f && (t - mLastClick) < io.MouseDoubleClickTime);
 
       /*
       Left mouse button triple click
@@ -753,8 +690,7 @@ void TextEditor::HandleMouseInputs() {
 
       if (tripleClick) {
         if (!ctrl) {
-          mState.mCursorPosition = mInteractiveStart = mInteractiveEnd =
-              ScreenPosToCoordinates(ImGui::GetMousePos());
+          mState.mCursorPosition = mInteractiveStart = mInteractiveEnd = ScreenPosToCoordinates(ImGui::GetMousePos());
           mSelectionMode = SelectionMode::Line;
           SetSelection(mInteractiveStart, mInteractiveEnd, mSelectionMode);
         }
@@ -768,8 +704,7 @@ void TextEditor::HandleMouseInputs() {
 
       else if (doubleClick) {
         if (!ctrl) {
-          mState.mCursorPosition = mInteractiveStart = mInteractiveEnd =
-              ScreenPosToCoordinates(ImGui::GetMousePos());
+          mState.mCursorPosition = mInteractiveStart = mInteractiveEnd = ScreenPosToCoordinates(ImGui::GetMousePos());
           if (mSelectionMode == SelectionMode::Line)
             mSelectionMode = SelectionMode::Normal;
           else
@@ -784,8 +719,7 @@ void TextEditor::HandleMouseInputs() {
       Left mouse button click
       */
       else if (click) {
-        mState.mCursorPosition = mInteractiveStart = mInteractiveEnd =
-            ScreenPosToCoordinates(ImGui::GetMousePos());
+        mState.mCursorPosition = mInteractiveStart = mInteractiveEnd = ScreenPosToCoordinates(ImGui::GetMousePos());
         if (ctrl)
           mSelectionMode = SelectionMode::Word;
         else
@@ -797,8 +731,7 @@ void TextEditor::HandleMouseInputs() {
       // Mouse left button dragging (=> update selection)
       else if (ImGui::IsMouseDragging(0) && ImGui::IsMouseDown(0)) {
         io.WantCaptureMouse = true;
-        mState.mCursorPosition = mInteractiveEnd =
-            ScreenPosToCoordinates(ImGui::GetMousePos());
+        mState.mCursorPosition = mInteractiveEnd = ScreenPosToCoordinates(ImGui::GetMousePos());
         SetSelection(mInteractiveStart, mInteractiveEnd, mSelectionMode);
       }
     }
@@ -807,12 +740,8 @@ void TextEditor::HandleMouseInputs() {
 
 void TextEditor::Render() {
   /* Compute mCharAdvance regarding to scaled font size (Ctrl + mouse wheel)*/
-  const float fontSize = ImGui::GetFont()
-                             ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX,
-                                             -1.0f, "#", nullptr, nullptr)
-                             .x;
-  mCharAdvance =
-      ImVec2(fontSize, ImGui::GetTextLineHeightWithSpacing() * mLineSpacing);
+  const float fontSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, "#", nullptr, nullptr).x;
+  mCharAdvance = ImVec2(fontSize, ImGui::GetTextLineHeightWithSpacing() * mLineSpacing);
 
   /* Update palette with the current alpha from style */
   for (int i = 0; i < (int)PaletteIndex::Max; ++i) {
@@ -838,37 +767,23 @@ void TextEditor::Render() {
 
   auto lineNo = (int)floor(scrollY / mCharAdvance.y);
   auto globalLineMax = (int)mLines.size();
-  auto lineMax =
-      std::max(0, std::min((int)mLines.size() - 1,
-                           lineNo + (int)floor((scrollY + contentSize.y) /
-                                               mCharAdvance.y)));
+  auto lineMax = std::max(0, std::min((int)mLines.size() - 1, lineNo + (int)floor((scrollY + contentSize.y) / mCharAdvance.y)));
 
   // Deduce mTextStart by evaluating mLines size (global lineMax) plus two
   // spaces as text width
   char buf[16];
   snprintf(buf, 16, " %d ", globalLineMax);
-  mTextStart = ImGui::GetFont()
-                   ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf,
-                                   nullptr, nullptr)
-                   .x +
-               mLeftMargin;
+  mTextStart = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x + mLeftMargin;
 
   if (!mLines.empty()) {
-    float spaceSize = ImGui::GetFont()
-                          ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f,
-                                          " ", nullptr, nullptr)
-                          .x;
+    float spaceSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, " ", nullptr, nullptr).x;
 
     while (lineNo <= lineMax) {
-      ImVec2 lineStartScreenPos = ImVec2(
-          cursorScreenPos.x, cursorScreenPos.y + lineNo * mCharAdvance.y);
-      ImVec2 textScreenPos =
-          ImVec2(lineStartScreenPos.x + mTextStart, lineStartScreenPos.y);
+      ImVec2 lineStartScreenPos = ImVec2(cursorScreenPos.x, cursorScreenPos.y + lineNo * mCharAdvance.y);
+      ImVec2 textScreenPos = ImVec2(lineStartScreenPos.x + mTextStart, lineStartScreenPos.y);
 
       auto &line = mLines[lineNo];
-      longest = std::max(mTextStart + TextDistanceToLineStart(Coordinates(
-                                          lineNo, GetLineMaxColumn(lineNo))),
-                         longest);
+      longest = std::max(mTextStart + TextDistanceToLineStart(Coordinates(lineNo, GetLineMaxColumn(lineNo))), longest);
       auto columnNo = 0;
       Coordinates lineStartCoord(lineNo, 0);
       Coordinates lineEndCoord(lineNo, GetLineMaxColumn(lineNo));
@@ -879,43 +794,32 @@ void TextEditor::Render() {
 
       assert(mState.mSelectionStart <= mState.mSelectionEnd);
       if (mState.mSelectionStart <= lineEndCoord)
-        sstart = mState.mSelectionStart > lineStartCoord
-                     ? TextDistanceToLineStart(mState.mSelectionStart)
-                     : 0.0f;
+        sstart = mState.mSelectionStart > lineStartCoord ? TextDistanceToLineStart(mState.mSelectionStart) : 0.0f;
       if (mState.mSelectionEnd > lineStartCoord)
-        ssend = TextDistanceToLineStart(mState.mSelectionEnd < lineEndCoord
-                                            ? mState.mSelectionEnd
-                                            : lineEndCoord);
+        ssend = TextDistanceToLineStart(mState.mSelectionEnd < lineEndCoord ? mState.mSelectionEnd : lineEndCoord);
 
       if (mState.mSelectionEnd.mLine > lineNo)
         ssend += mCharAdvance.x;
 
       if (sstart != -1 && ssend != -1 && sstart < ssend) {
-        ImVec2 vstart(lineStartScreenPos.x + mTextStart + sstart,
-                      lineStartScreenPos.y);
-        ImVec2 vend(lineStartScreenPos.x + mTextStart + ssend,
-                    lineStartScreenPos.y + mCharAdvance.y);
-        drawList->AddRectFilled(vstart, vend,
-                                mPalette[(int)PaletteIndex::Selection]);
+        ImVec2 vstart(lineStartScreenPos.x + mTextStart + sstart, lineStartScreenPos.y);
+        ImVec2 vend(lineStartScreenPos.x + mTextStart + ssend, lineStartScreenPos.y + mCharAdvance.y);
+        drawList->AddRectFilled(vstart, vend, mPalette[(int)PaletteIndex::Selection]);
       }
 
       // Draw breakpoints
       auto start = ImVec2(lineStartScreenPos.x + scrollX, lineStartScreenPos.y);
 
       if (mBreakpoints.count(lineNo + 1) != 0) {
-        auto end = ImVec2(lineStartScreenPos.x + contentSize.x + 2.0f * scrollX,
-                          lineStartScreenPos.y + mCharAdvance.y);
-        drawList->AddRectFilled(start, end,
-                                mPalette[(int)PaletteIndex::Breakpoint]);
+        auto end = ImVec2(lineStartScreenPos.x + contentSize.x + 2.0f * scrollX, lineStartScreenPos.y + mCharAdvance.y);
+        drawList->AddRectFilled(start, end, mPalette[(int)PaletteIndex::Breakpoint]);
       }
 
       // Draw error markers
       auto errorIt = mErrorMarkers.find(lineNo + 1);
       if (errorIt != mErrorMarkers.end()) {
-        auto end = ImVec2(lineStartScreenPos.x + contentSize.x + 2.0f * scrollX,
-                          lineStartScreenPos.y + mCharAdvance.y);
-        drawList->AddRectFilled(start, end,
-                                mPalette[(int)PaletteIndex::ErrorMarker]);
+        auto end = ImVec2(lineStartScreenPos.x + contentSize.x + 2.0f * scrollX, lineStartScreenPos.y + mCharAdvance.y);
+        drawList->AddRectFilled(start, end, mPalette[(int)PaletteIndex::ErrorMarker]);
 
         if (ImGui::IsMouseHoveringRect(lineStartScreenPos, end)) {
           ImGui::BeginTooltip();
@@ -933,27 +837,17 @@ void TextEditor::Render() {
       // Draw line number (right aligned)
       snprintf(buf, 16, "%d  ", lineNo + 1);
 
-      auto lineNoWidth = ImGui::GetFont()
-                             ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX,
-                                             -1.0f, buf, nullptr, nullptr)
-                             .x;
-      drawList->AddText(ImVec2(lineStartScreenPos.x + mTextStart - lineNoWidth,
-                               lineStartScreenPos.y),
-                        mPalette[(int)PaletteIndex::LineNumber], buf);
+      auto lineNoWidth = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
+      drawList->AddText(ImVec2(lineStartScreenPos.x + mTextStart - lineNoWidth, lineStartScreenPos.y), mPalette[(int)PaletteIndex::LineNumber], buf);
 
       if (mState.mCursorPosition.mLine == lineNo) {
-        auto focused = ImGui::IsWindowFocused();
+        auto focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
         // Highlight the current line (where the cursor is)
         if (!HasSelection()) {
-          auto end = ImVec2(start.x + contentSize.x + scrollX,
-                            start.y + mCharAdvance.y);
-          drawList->AddRectFilled(
-              start, end,
-              mPalette[(int)(focused ? PaletteIndex::CurrentLineFill
-                                     : PaletteIndex::CurrentLineFillInactive)]);
-          drawList->AddRect(start, end,
-                            mPalette[(int)PaletteIndex::CurrentLineEdge], 1.0f);
+          auto end = ImVec2(start.x + contentSize.x + scrollX, start.y + mCharAdvance.y);
+          drawList->AddRectFilled(start, end, mPalette[(int)(focused ? PaletteIndex::CurrentLineFill : PaletteIndex::CurrentLineFillInactive)]);
+          drawList->AddRect(start, end, mPalette[(int)PaletteIndex::CurrentLineEdge], 1.0f);
         }
 
         // Render the cursor
@@ -970,25 +864,18 @@ void TextEditor::Render() {
           if (mOverwrite && cindex < (int)line.size()) {
             auto c = line[cindex].mChar;
             if (c == '\t') {
-              auto x = (1.0f + std::floor((1.0f + cx) /
-                                          (float(mTabSize) * spaceSize))) *
-                       (float(mTabSize) * spaceSize);
+              auto x = (1.0f + std::floor((1.0f + cx) / (float(mTabSize) * spaceSize))) * (float(mTabSize) * spaceSize);
               width = x - cx;
             } else {
               char buf2[2];
               buf2[0] = line[cindex].mChar;
               buf2[1] = '\0';
-              width = ImGui::GetFont()
-                          ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f,
-                                          buf2)
-                          .x;
+              width = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf2).x;
             }
           }
           ImVec2 cstart(textScreenPos.x + cx, lineStartScreenPos.y);
-          ImVec2 cend(textScreenPos.x + cx + width,
-                      lineStartScreenPos.y + mCharAdvance.y);
-          drawList->AddRectFilled(cstart, cend,
-                                  mPalette[(int)PaletteIndex::Cursor]);
+          ImVec2 cend(textScreenPos.x + cx + width, lineStartScreenPos.y + mCharAdvance.y);
+          drawList->AddRectFilled(cstart, cend, mPalette[(int)PaletteIndex::Cursor]);
 
           // store screen cursor pos
           mCursorScreenX = cend.y;
@@ -1000,22 +887,17 @@ void TextEditor::Render() {
       }
 
       // Render colorized text
-      auto prevColor = line.empty() ? mPalette[(int)PaletteIndex::Default]
-                                    : GetGlyphColor(line[0]);
+      auto prevColor = line.empty() ? mPalette[(int)PaletteIndex::Default] : GetGlyphColor(line[0]);
       ImVec2 bufferOffset;
 
       for (int i = 0; i < line.size();) {
         auto &glyph = line[i];
         auto color = GetGlyphColor(glyph);
 
-        if ((color != prevColor || glyph.mChar == '\t' || glyph.mChar == ' ') &&
-            !mLineBuffer.empty()) {
-          const ImVec2 newOffset(textScreenPos.x + bufferOffset.x,
-                                 textScreenPos.y + bufferOffset.y);
+        if ((color != prevColor || glyph.mChar == '\t' || glyph.mChar == ' ') && !mLineBuffer.empty()) {
+          const ImVec2 newOffset(textScreenPos.x + bufferOffset.x, textScreenPos.y + bufferOffset.y);
           drawList->AddText(newOffset, prevColor, mLineBuffer.c_str());
-          auto textSize = ImGui::GetFont()->CalcTextSizeA(
-              ImGui::GetFontSize(), FLT_MAX, -1.0f, mLineBuffer.c_str(),
-              nullptr, nullptr);
+          auto textSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, mLineBuffer.c_str(), nullptr, nullptr);
           bufferOffset.x += textSize.x;
           mLineBuffer.clear();
         }
@@ -1023,9 +905,7 @@ void TextEditor::Render() {
 
         if (glyph.mChar == '\t') {
           auto oldX = bufferOffset.x;
-          bufferOffset.x = (1.0f + std::floor((1.0f + bufferOffset.x) /
-                                              (float(mTabSize) * spaceSize))) *
-                           (float(mTabSize) * spaceSize);
+          bufferOffset.x = (1.0f + std::floor((1.0f + bufferOffset.x) / (float(mTabSize) * spaceSize))) * (float(mTabSize) * spaceSize);
           ++i;
 
           if (mShowWhitespaces) {
@@ -1059,8 +939,7 @@ void TextEditor::Render() {
       }
 
       if (!mLineBuffer.empty()) {
-        const ImVec2 newOffset(textScreenPos.x + bufferOffset.x,
-                               textScreenPos.y + bufferOffset.y);
+        const ImVec2 newOffset(textScreenPos.x + bufferOffset.x, textScreenPos.y + bufferOffset.y);
         drawList->AddText(newOffset, prevColor, mLineBuffer.c_str());
         mLineBuffer.clear();
       }
@@ -1103,14 +982,10 @@ void TextEditor::Render(const char *aTitle, const ImVec2 &aSize, bool aBorder) {
   mTextChanged = false;
   mCursorPositionChanged = false;
 
-  ImGui::PushStyleColor(
-      ImGuiCol_ChildBg,
-      ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]));
+  ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]));
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
   if (!mIgnoreImGuiChild)
-    ImGui::BeginChild(aTitle, aSize, aBorder,
-                      ImGuiWindowFlags_HorizontalScrollbar |
-                          ImGuiWindowFlags_NoMove);
+    ImGui::BeginChild(aTitle, aSize, aBorder, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoMove);
 
   if (mHandleKeyboardInputs) {
     HandleKeyboardInputs();
@@ -1191,8 +1066,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
   u.mBefore = mState;
 
   if (HasSelection()) {
-    if (aChar == '\t' &&
-        mState.mSelectionStart.mLine != mState.mSelectionEnd.mLine) {
+    if (aChar == '\t' && mState.mSelectionStart.mLine != mState.mSelectionEnd.mLine) {
 
       auto start = mState.mSelectionStart;
       auto end = mState.mSelectionEnd;
@@ -1226,17 +1100,14 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
               line.erase(line.begin());
               modified = true;
             } else {
-              for (int j = 0;
-                   j < mTabSize && !line.empty() && line.front().mChar == ' ';
-                   j++) {
+              for (int j = 0; j < mTabSize && !line.empty() && line.front().mChar == ' '; j++) {
                 line.erase(line.begin());
                 modified = true;
               }
             }
           }
         } else {
-          line.insert(line.begin(),
-                      Glyph('\t', TextEditor::PaletteIndex::Background));
+          line.insert(line.begin(), Glyph('\t', TextEditor::PaletteIndex::Background));
           modified = true;
         }
       }
@@ -1250,8 +1121,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
           u.mAdded = GetText(start, end);
         } else {
           end = Coordinates(originalEnd.mLine, 0);
-          rangeEnd =
-              Coordinates(end.mLine - 1, GetLineMaxColumn(end.mLine - 1));
+          rangeEnd = Coordinates(end.mLine - 1, GetLineMaxColumn(end.mLine - 1));
           u.mAdded = GetText(start, rangeEnd);
         }
 
@@ -1289,18 +1159,14 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
     auto &newLine = mLines[coord.mLine + 1];
 
     if (mLanguageDefinition.mAutoIndentation)
-      for (size_t it = 0; it < line.size() && isascii(line[it].mChar) &&
-                          isblank(line[it].mChar);
-           ++it)
+      for (size_t it = 0; it < line.size() && isascii(line[it].mChar) && isblank(line[it].mChar); ++it)
         newLine.push_back(line[it]);
 
     const size_t whitespaceSize = newLine.size();
     auto cindex = GetCharacterIndex(coord);
     newLine.insert(newLine.end(), line.begin() + cindex, line.end());
     line.erase(line.begin() + cindex, line.begin() + line.size());
-    SetCursorPosition(
-        Coordinates(coord.mLine + 1,
-                    GetCharacterColumn(coord.mLine + 1, (int)whitespaceSize)));
+    SetCursorPosition(Coordinates(coord.mLine + 1, GetCharacterColumn(coord.mLine + 1, (int)whitespaceSize)));
     u.mAdded = (char)aChar;
   } else {
     char buf[7];
@@ -1320,8 +1186,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
         auto d = UTF8CharLength(line[cindex].mChar);
 
         u.mRemovedStart = mState.mCursorPosition;
-        u.mRemovedEnd = Coordinates(
-            coord.mLine, GetCharacterColumn(coord.mLine, cindex + d));
+        u.mRemovedEnd = Coordinates(coord.mLine, GetCharacterColumn(coord.mLine, cindex + d));
 
         while (d-- > 0 && cindex < (int)line.size()) {
           u.mRemoved += line[cindex].mChar;
@@ -1333,8 +1198,7 @@ void TextEditor::EnterCharacter(ImWchar aChar, bool aShift) {
         line.insert(line.begin() + cindex, Glyph(*p, PaletteIndex::Default));
       u.mAdded = buf;
 
-      SetCursorPosition(
-          Coordinates(coord.mLine, GetCharacterColumn(coord.mLine, cindex)));
+      SetCursorPosition(Coordinates(coord.mLine, GetCharacterColumn(coord.mLine, cindex)));
     } else
       return;
   }
@@ -1362,9 +1226,7 @@ void TextEditor::SetCursorPosition(const Coordinates &aPosition) {
   }
 }
 
-TextEditor::Coordinates TextEditor::GetSelectionStart() {
-  return mState.mSelectionStart;
-}
+TextEditor::Coordinates TextEditor::GetSelectionStart() { return mState.mSelectionStart; }
 
 void TextEditor::SetSelectionStart(const Coordinates &aPosition) {
   mState.mSelectionStart = SanitizeCoordinates(aPosition);
@@ -1378,8 +1240,7 @@ void TextEditor::SetSelectionEnd(const Coordinates &aPosition) {
     std::swap(mState.mSelectionStart, mState.mSelectionEnd);
 }
 
-void TextEditor::SetSelection(const Coordinates &aStart,
-                              const Coordinates &aEnd, SelectionMode aMode) {
+void TextEditor::SetSelection(const Coordinates &aStart, const Coordinates &aEnd, SelectionMode aMode) {
   auto oldSelStart = mState.mSelectionStart;
   auto oldSelEnd = mState.mSelectionEnd;
 
@@ -1399,8 +1260,7 @@ void TextEditor::SetSelection(const Coordinates &aStart,
   }
   case TextEditor::SelectionMode::Line: {
     const auto lineNo = mState.mSelectionEnd.mLine;
-    const auto lineSize =
-        (size_t)lineNo < mLines.size() ? mLines[lineNo].size() : 0;
+    const auto lineSize = (size_t)lineNo < mLines.size() ? mLines[lineNo].size() : 0;
     mState.mSelectionStart = Coordinates(mState.mSelectionStart.mLine, 0);
     mState.mSelectionEnd = Coordinates(lineNo, GetLineMaxColumn(lineNo));
     break;
@@ -1409,18 +1269,13 @@ void TextEditor::SetSelection(const Coordinates &aStart,
     break;
   }
 
-  if (mState.mSelectionStart != oldSelStart ||
-      mState.mSelectionEnd != oldSelEnd)
+  if (mState.mSelectionStart != oldSelStart || mState.mSelectionEnd != oldSelEnd)
     mCursorPositionChanged = true;
 }
 
-void TextEditor::SetTabSize(int aValue) {
-  mTabSize = std::max(0, std::min(32, aValue));
-}
+void TextEditor::SetTabSize(int aValue) { mTabSize = std::max(0, std::min(32, aValue)); }
 
-void TextEditor::InsertText(const std::string &aValue) {
-  InsertText(aValue.c_str());
-}
+void TextEditor::InsertText(const std::string &aValue) { InsertText(aValue.c_str()); }
 
 void TextEditor::InsertText(const char *aValue) {
   if (aValue == nullptr)
@@ -1452,8 +1307,7 @@ void TextEditor::DeleteSelection() {
 
 void TextEditor::MoveUp(int aAmount, bool aSelect) {
   auto oldPos = mState.mCursorPosition;
-  mState.mCursorPosition.mLine =
-      std::max(0, mState.mCursorPosition.mLine - aAmount);
+  mState.mCursorPosition.mLine = std::max(0, mState.mCursorPosition.mLine - aAmount);
   if (oldPos != mState.mCursorPosition) {
     if (aSelect) {
       if (oldPos == mInteractiveStart)
@@ -1475,9 +1329,7 @@ void TextEditor::MoveUp(int aAmount, bool aSelect) {
 void TextEditor::MoveDown(int aAmount, bool aSelect) {
   assert(mState.mCursorPosition.mColumn >= 0);
   auto oldPos = mState.mCursorPosition;
-  mState.mCursorPosition.mLine =
-      std::max(0, std::min((int)mLines.size() - 1,
-                           mState.mCursorPosition.mLine + aAmount));
+  mState.mCursorPosition.mLine = std::max(0, std::min((int)mLines.size() - 1, mState.mCursorPosition.mLine + aAmount));
 
   if (mState.mCursorPosition != oldPos) {
     if (aSelect) {
@@ -1527,8 +1379,7 @@ void TextEditor::MoveLeft(int aAmount, bool aSelect, bool aWordMode) {
       }
     }
 
-    mState.mCursorPosition =
-        Coordinates(line, GetCharacterColumn(line, cindex));
+    mState.mCursorPosition = Coordinates(line, GetCharacterColumn(line, cindex));
     if (aWordMode) {
       mState.mCursorPosition = FindWordStart(mState.mCursorPosition);
       cindex = GetCharacterIndex(mState.mCursorPosition);
@@ -1549,9 +1400,7 @@ void TextEditor::MoveLeft(int aAmount, bool aSelect, bool aWordMode) {
     }
   } else
     mInteractiveStart = mInteractiveEnd = mState.mCursorPosition;
-  SetSelection(mInteractiveStart, mInteractiveEnd,
-               aSelect && aWordMode ? SelectionMode::Word
-                                    : SelectionMode::Normal);
+  SetSelection(mInteractiveStart, mInteractiveEnd, aSelect && aWordMode ? SelectionMode::Word : SelectionMode::Normal);
 
   EnsureCursorVisible();
 }
@@ -1569,16 +1418,13 @@ void TextEditor::MoveRight(int aAmount, bool aSelect, bool aWordMode) {
 
     if (cindex >= line.size()) {
       if (mState.mCursorPosition.mLine < mLines.size() - 1) {
-        mState.mCursorPosition.mLine =
-            std::max(0, std::min((int)mLines.size() - 1,
-                                 mState.mCursorPosition.mLine + 1));
+        mState.mCursorPosition.mLine = std::max(0, std::min((int)mLines.size() - 1, mState.mCursorPosition.mLine + 1));
         mState.mCursorPosition.mColumn = 0;
       } else
         return;
     } else {
       cindex += UTF8CharLength(line[cindex].mChar);
-      mState.mCursorPosition =
-          Coordinates(lindex, GetCharacterColumn(lindex, cindex));
+      mState.mCursorPosition = Coordinates(lindex, GetCharacterColumn(lindex, cindex));
       if (aWordMode)
         mState.mCursorPosition = FindNextWord(mState.mCursorPosition);
     }
@@ -1595,9 +1441,7 @@ void TextEditor::MoveRight(int aAmount, bool aSelect, bool aWordMode) {
     }
   } else
     mInteractiveStart = mInteractiveEnd = mState.mCursorPosition;
-  SetSelection(mInteractiveStart, mInteractiveEnd,
-               aSelect && aWordMode ? SelectionMode::Word
-                                    : SelectionMode::Normal);
+  SetSelection(mInteractiveStart, mInteractiveEnd, aSelect && aWordMode ? SelectionMode::Word : SelectionMode::Normal);
 
   EnsureCursorVisible();
 }
@@ -1650,8 +1494,7 @@ void TextEditor::MoveHome(bool aSelect) {
 
 void TextEditor::MoveEnd(bool aSelect) {
   auto oldPos = mState.mCursorPosition;
-  SetCursorPosition(Coordinates(mState.mCursorPosition.mLine,
-                                GetLineMaxColumn(oldPos.mLine)));
+  SetCursorPosition(Coordinates(mState.mCursorPosition.mLine, GetLineMaxColumn(oldPos.mLine)));
 
   if (mState.mCursorPosition != oldPos) {
     if (aSelect) {
@@ -1744,8 +1587,7 @@ void TextEditor::Backspace() {
         return;
 
       u.mRemoved = '\n';
-      u.mRemovedStart = u.mRemovedEnd =
-          Coordinates(pos.mLine - 1, GetLineMaxColumn(pos.mLine - 1));
+      u.mRemovedStart = u.mRemovedEnd = Coordinates(pos.mLine - 1, GetLineMaxColumn(pos.mLine - 1));
       Advance(u.mRemovedEnd);
 
       auto &line = mLines[mState.mCursorPosition.mLine];
@@ -1755,9 +1597,7 @@ void TextEditor::Backspace() {
 
       ErrorMarkers etmp;
       for (auto &i : mErrorMarkers)
-        etmp.insert(ErrorMarkers::value_type(
-            i.first - 1 == mState.mCursorPosition.mLine ? i.first - 1 : i.first,
-            i.second));
+        etmp.insert(ErrorMarkers::value_type(i.first - 1 == mState.mCursorPosition.mLine ? i.first - 1 : i.first, i.second));
       mErrorMarkers = std::move(etmp);
 
       RemoveLine(mState.mCursorPosition.mLine);
@@ -1803,13 +1643,9 @@ void TextEditor::SelectWordUnderCursor() {
   SetSelection(FindWordStart(c), FindWordEnd(c));
 }
 
-void TextEditor::SelectAll() {
-  SetSelection(Coordinates(0, 0), Coordinates((int)mLines.size(), 0));
-}
+void TextEditor::SelectAll() { SetSelection(Coordinates(0, 0), Coordinates((int)mLines.size(), 0)); }
 
-bool TextEditor::HasSelection() const {
-  return mState.mSelectionEnd > mState.mSelectionStart;
-}
+bool TextEditor::HasSelection() const { return mState.mSelectionEnd > mState.mSelectionStart; }
 
 void TextEditor::Copy() {
   if (HasSelection()) {
@@ -1874,9 +1710,7 @@ void TextEditor::Paste() {
 
 bool TextEditor::CanUndo() const { return !mReadOnly && mUndoIndex > 0; }
 
-bool TextEditor::CanRedo() const {
-  return !mReadOnly && mUndoIndex < (int)mUndoBuffer.size();
-}
+bool TextEditor::CanRedo() const { return !mReadOnly && mUndoIndex < (int)mUndoBuffer.size(); }
 
 void TextEditor::Undo(int aSteps) {
   while (CanUndo() && aSteps-- > 0)
@@ -1969,9 +1803,7 @@ const TextEditor::Palette &TextEditor::GetRetroBluePalette() {
   return p;
 }
 
-std::string TextEditor::GetText() const {
-  return GetText(Coordinates(), Coordinates((int)mLines.size(), 0));
-}
+std::string TextEditor::GetText() const { return GetText(Coordinates(), Coordinates((int)mLines.size(), 0)); }
 
 std::vector<std::string> TextEditor::GetTextLines() const {
   std::vector<std::string> result;
@@ -1992,21 +1824,17 @@ std::vector<std::string> TextEditor::GetTextLines() const {
   return result;
 }
 
-std::string TextEditor::GetSelectedText() const {
-  return GetText(mState.mSelectionStart, mState.mSelectionEnd);
-}
+std::string TextEditor::GetSelectedText() const { return GetText(mState.mSelectionStart, mState.mSelectionEnd); }
 
 std::string TextEditor::GetCurrentLineText() const {
   auto lineLength = GetLineMaxColumn(mState.mCursorPosition.mLine);
-  return GetText(Coordinates(mState.mCursorPosition.mLine, 0),
-                 Coordinates(mState.mCursorPosition.mLine, lineLength));
+  return GetText(Coordinates(mState.mCursorPosition.mLine, 0), Coordinates(mState.mCursorPosition.mLine, lineLength));
 }
 
 void TextEditor::ProcessInputs() {}
 
 void TextEditor::Colorize(int aFromLine, int aLines) {
-  int toLine = aLines == -1 ? (int)mLines.size()
-                            : std::min((int)mLines.size(), aFromLine + aLines);
+  int toLine = aLines == -1 ? (int)mLines.size() : std::min((int)mLines.size(), aFromLine + aLines);
   mColorRangeMin = std::min(mColorRangeMin, aFromLine);
   mColorRangeMax = std::max(mColorRangeMax, toLine);
   mColorRangeMin = std::max(0, mColorRangeMin);
@@ -2049,8 +1877,7 @@ void TextEditor::ColorizeRange(int aFromLine, int aToLine) {
       bool hasTokenizeResult = false;
 
       if (mLanguageDefinition.mTokenize != nullptr) {
-        if (mLanguageDefinition.mTokenize(first, last, token_begin, token_end,
-                                          token_color))
+        if (mLanguageDefinition.mTokenize(first, last, token_begin, token_end, token_color))
           hasTokenizeResult = true;
       }
 
@@ -2060,8 +1887,7 @@ void TextEditor::ColorizeRange(int aFromLine, int aToLine) {
         // first), first);
 
         for (auto &p : mRegexList) {
-          if (std::regex_search(first, last, results, p.first,
-                                std::regex_constants::match_continuous)) {
+          if (std::regex_search(first, last, results, p.first, std::regex_constants::match_continuous)) {
             hasTokenizeResult = true;
 
             auto &v = *results.begin();
@@ -2120,8 +1946,7 @@ void TextEditor::ColorizeInternal() {
     auto withinString = false;
     auto withinSingleLineComment = false;
     auto withinPreproc = false;
-    auto firstChar =
-        true; // there is no other non-whitespace characters in the line before
+    auto firstChar = true;    // there is no other non-whitespace characters in the line before
     auto concatenate = false; // '\' on the very end of the line
     auto currentLine = 0;
     auto currentIndex = 0;
@@ -2143,20 +1968,16 @@ void TextEditor::ColorizeInternal() {
         if (c != mLanguageDefinition.mPreprocChar && !isspace(c))
           firstChar = false;
 
-        if (currentIndex == (int)line.size() - 1 &&
-            line[line.size() - 1].mChar == '\\')
+        if (currentIndex == (int)line.size() - 1 && line[line.size() - 1].mChar == '\\')
           concatenate = true;
 
-        bool inComment = (commentStartLine < currentLine ||
-                          (commentStartLine == currentLine &&
-                           commentStartIndex <= currentIndex));
+        bool inComment = (commentStartLine < currentLine || (commentStartLine == currentLine && commentStartIndex <= currentIndex));
 
         if (withinString) {
           line[currentIndex].mMultiLineComment = inComment;
 
           if (c == '\"') {
-            if (currentIndex + 1 < (int)line.size() &&
-                line[currentIndex + 1].mChar == '\"') {
+            if (currentIndex + 1 < (int)line.size() && line[currentIndex + 1].mChar == '\"') {
               currentIndex += 1;
               if (currentIndex < (int)line.size())
                 line[currentIndex].mMultiLineComment = inComment;
@@ -2175,37 +1996,25 @@ void TextEditor::ColorizeInternal() {
             withinString = true;
             line[currentIndex].mMultiLineComment = inComment;
           } else {
-            auto pred = [](const char &a, const Glyph &b) {
-              return a == b.mChar;
-            };
+            auto pred = [](const char &a, const Glyph &b) { return a == b.mChar; };
             auto from = line.begin() + currentIndex;
             auto &startStr = mLanguageDefinition.mCommentStart;
             auto &singleStartStr = mLanguageDefinition.mSingleLineComment;
 
-            if (singleStartStr.size() > 0 &&
-                currentIndex + singleStartStr.size() <= line.size() &&
-                equals(singleStartStr.begin(), singleStartStr.end(), from,
-                       from + singleStartStr.size(), pred)) {
+            if (singleStartStr.size() > 0 && currentIndex + singleStartStr.size() <= line.size() && equals(singleStartStr.begin(), singleStartStr.end(), from, from + singleStartStr.size(), pred)) {
               withinSingleLineComment = true;
-            } else if (!withinSingleLineComment &&
-                       currentIndex + startStr.size() <= line.size() &&
-                       equals(startStr.begin(), startStr.end(), from,
-                              from + startStr.size(), pred)) {
+            } else if (!withinSingleLineComment && currentIndex + startStr.size() <= line.size() && equals(startStr.begin(), startStr.end(), from, from + startStr.size(), pred)) {
               commentStartLine = currentLine;
               commentStartIndex = currentIndex;
             }
 
-            inComment = inComment = (commentStartLine < currentLine ||
-                                     (commentStartLine == currentLine &&
-                                      commentStartIndex <= currentIndex));
+            inComment = inComment = (commentStartLine < currentLine || (commentStartLine == currentLine && commentStartIndex <= currentIndex));
 
             line[currentIndex].mMultiLineComment = inComment;
             line[currentIndex].mComment = withinSingleLineComment;
 
             auto &endStr = mLanguageDefinition.mCommentEnd;
-            if (currentIndex + 1 >= (int)endStr.size() &&
-                equals(endStr.begin(), endStr.end(), from + 1 - endStr.size(),
-                       from + 1, pred)) {
+            if (currentIndex + 1 >= (int)endStr.size() && equals(endStr.begin(), endStr.end(), from + 1 - endStr.size(), from + 1, pred)) {
               commentStartIndex = endIndex;
               commentStartLine = endLine;
             }
@@ -2226,8 +2035,7 @@ void TextEditor::ColorizeInternal() {
   }
 
   if (mColorRangeMin < mColorRangeMax) {
-    const int increment =
-        (mLanguageDefinition.mTokenize == nullptr) ? 10 : 10000;
+    const int increment = (mLanguageDefinition.mTokenize == nullptr) ? 10 : 10000;
     const int to = std::min(mColorRangeMin + increment, mColorRangeMax);
     ColorizeRange(mColorRangeMin, to);
     mColorRangeMin = to;
@@ -2243,16 +2051,11 @@ void TextEditor::ColorizeInternal() {
 float TextEditor::TextDistanceToLineStart(const Coordinates &aFrom) const {
   auto &line = mLines[aFrom.mLine];
   float distance = 0.0f;
-  float spaceSize = ImGui::GetFont()
-                        ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f,
-                                        " ", nullptr, nullptr)
-                        .x;
+  float spaceSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, " ", nullptr, nullptr).x;
   int colIndex = GetCharacterIndex(aFrom);
   for (size_t it = 0u; it < line.size() && it < colIndex;) {
     if (line[it].mChar == '\t') {
-      distance = (1.0f + std::floor((1.0f + distance) /
-                                    (float(mTabSize) * spaceSize))) *
-                 (float(mTabSize) * spaceSize);
+      distance = (1.0f + std::floor((1.0f + distance) / (float(mTabSize) * spaceSize))) * (float(mTabSize) * spaceSize);
       ++it;
     } else {
       auto d = UTF8CharLength(line[it].mChar);
@@ -2262,10 +2065,7 @@ float TextEditor::TextDistanceToLineStart(const Coordinates &aFrom) const {
         tempCString[i] = line[it].mChar;
 
       tempCString[i] = '\0';
-      distance += ImGui::GetFont()
-                      ->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f,
-                                      tempCString, nullptr, nullptr)
-                      .x;
+      distance += ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, tempCString, nullptr, nullptr).x;
     }
   }
 
@@ -2296,8 +2096,7 @@ void TextEditor::EnsureCursorVisible() {
   if (pos.mLine < top)
     ImGui::SetScrollY(std::max(0.0f, (pos.mLine - 1) * mCharAdvance.y));
   if (pos.mLine > bottom - 4)
-    ImGui::SetScrollY(
-        std::max(0.0f, (pos.mLine + 4) * mCharAdvance.y - height));
+    ImGui::SetScrollY(std::max(0.0f, (pos.mLine + 4) * mCharAdvance.y - height));
   if (len + mTextStart < left + 4)
     ImGui::SetScrollX(std::max(0.0f, len + mTextStart - 4));
   if (len + mTextStart > right - 4)
@@ -2309,17 +2108,7 @@ int TextEditor::GetPageSize() const {
   return (int)floor(height / mCharAdvance.y);
 }
 
-TextEditor::UndoRecord::UndoRecord(const std::string &aAdded,
-                                   const TextEditor::Coordinates aAddedStart,
-                                   const TextEditor::Coordinates aAddedEnd,
-                                   const std::string &aRemoved,
-                                   const TextEditor::Coordinates aRemovedStart,
-                                   const TextEditor::Coordinates aRemovedEnd,
-                                   TextEditor::EditorState &aBefore,
-                                   TextEditor::EditorState &aAfter)
-    : mAdded(aAdded), mAddedStart(aAddedStart), mAddedEnd(aAddedEnd),
-      mRemoved(aRemoved), mRemovedStart(aRemovedStart),
-      mRemovedEnd(aRemovedEnd), mBefore(aBefore), mAfter(aAfter) {
+TextEditor::UndoRecord::UndoRecord(const std::string &aAdded, const TextEditor::Coordinates aAddedStart, const TextEditor::Coordinates aAddedEnd, const std::string &aRemoved, const TextEditor::Coordinates aRemovedStart, const TextEditor::Coordinates aRemovedEnd, TextEditor::EditorState &aBefore, TextEditor::EditorState &aAfter) : mAdded(aAdded), mAddedStart(aAddedStart), mAddedEnd(aAddedEnd), mRemoved(aRemoved), mRemovedStart(aRemovedStart), mRemovedEnd(aRemovedEnd), mBefore(aBefore), mAfter(aAfter) {
   assert(mAddedStart <= mAddedEnd);
   assert(mRemovedStart <= mRemovedEnd);
 }
@@ -2327,15 +2116,13 @@ TextEditor::UndoRecord::UndoRecord(const std::string &aAdded,
 void TextEditor::UndoRecord::Undo(TextEditor *aEditor) {
   if (!mAdded.empty()) {
     aEditor->DeleteRange(mAddedStart, mAddedEnd);
-    aEditor->Colorize(mAddedStart.mLine - 1,
-                      mAddedEnd.mLine - mAddedStart.mLine + 2);
+    aEditor->Colorize(mAddedStart.mLine - 1, mAddedEnd.mLine - mAddedStart.mLine + 2);
   }
 
   if (!mRemoved.empty()) {
     auto start = mRemovedStart;
     aEditor->InsertTextAt(start, mRemoved.c_str());
-    aEditor->Colorize(mRemovedStart.mLine - 1,
-                      mRemovedEnd.mLine - mRemovedStart.mLine + 2);
+    aEditor->Colorize(mRemovedStart.mLine - 1, mRemovedEnd.mLine - mRemovedStart.mLine + 2);
   }
 
   aEditor->mState = mBefore;
@@ -2345,23 +2132,20 @@ void TextEditor::UndoRecord::Undo(TextEditor *aEditor) {
 void TextEditor::UndoRecord::Redo(TextEditor *aEditor) {
   if (!mRemoved.empty()) {
     aEditor->DeleteRange(mRemovedStart, mRemovedEnd);
-    aEditor->Colorize(mRemovedStart.mLine - 1,
-                      mRemovedEnd.mLine - mRemovedStart.mLine + 1);
+    aEditor->Colorize(mRemovedStart.mLine - 1, mRemovedEnd.mLine - mRemovedStart.mLine + 1);
   }
 
   if (!mAdded.empty()) {
     auto start = mAddedStart;
     aEditor->InsertTextAt(start, mAdded.c_str());
-    aEditor->Colorize(mAddedStart.mLine - 1,
-                      mAddedEnd.mLine - mAddedStart.mLine + 1);
+    aEditor->Colorize(mAddedStart.mLine - 1, mAddedEnd.mLine - mAddedStart.mLine + 1);
   }
 
   aEditor->mState = mAfter;
   aEditor->EnsureCursorVisible();
 }
 
-static bool TokenizeCStyleString(const char *in_begin, const char *in_end,
-                                 const char *&out_begin, const char *&out_end) {
+static bool TokenizeCStyleString(const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end) {
   const char *p = in_begin;
 
   if (*p == '"') {
@@ -2386,10 +2170,7 @@ static bool TokenizeCStyleString(const char *in_begin, const char *in_end,
   return false;
 }
 
-static bool TokenizeCStyleCharacterLiteral(const char *in_begin,
-                                           const char *in_end,
-                                           const char *&out_begin,
-                                           const char *&out_end) {
+static bool TokenizeCStyleCharacterLiteral(const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end) {
   const char *p = in_begin;
 
   if (*p == '\'') {
@@ -2413,17 +2194,13 @@ static bool TokenizeCStyleCharacterLiteral(const char *in_begin,
   return false;
 }
 
-static bool TokenizeCStyleIdentifier(const char *in_begin, const char *in_end,
-                                     const char *&out_begin,
-                                     const char *&out_end) {
+static bool TokenizeCStyleIdentifier(const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end) {
   const char *p = in_begin;
 
   if ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || *p == '_') {
     p++;
 
-    while ((p < in_end) &&
-           ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') ||
-            (*p >= '0' && *p <= '9') || *p == '_'))
+    while ((p < in_end) && ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || (*p >= '0' && *p <= '9') || *p == '_'))
       p++;
 
     out_begin = in_begin;
@@ -2434,8 +2211,7 @@ static bool TokenizeCStyleIdentifier(const char *in_begin, const char *in_end,
   return false;
 }
 
-static bool TokenizeCStyleNumber(const char *in_begin, const char *in_end,
-                                 const char *&out_begin, const char *&out_end) {
+static bool TokenizeCStyleNumber(const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end) {
   const char *p = in_begin;
 
   const bool startsWithNumber = *p >= '0' && *p <= '9';
@@ -2475,9 +2251,7 @@ static bool TokenizeCStyleNumber(const char *in_begin, const char *in_end,
 
       p++;
 
-      while (p < in_end &&
-             ((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'f') ||
-              (*p >= 'A' && *p <= 'F')))
+      while (p < in_end && ((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'f') || (*p >= 'A' && *p <= 'F')))
         p++;
     } else if (*p == 'b' || *p == 'B') {
       // binary formatted integer of the type 0b01011101
@@ -2529,9 +2303,7 @@ static bool TokenizeCStyleNumber(const char *in_begin, const char *in_end,
   return true;
 }
 
-static bool TokenizeCStylePunctuation(const char *in_begin, const char *in_end,
-                                      const char *&out_begin,
-                                      const char *&out_end) {
+static bool TokenizeCStylePunctuation(const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end) {
   (void)in_end;
 
   switch (*in_begin) {
@@ -2567,129 +2339,23 @@ static bool TokenizeCStylePunctuation(const char *in_begin, const char *in_end,
   return false;
 }
 
-const TextEditor::LanguageDefinition &
-TextEditor::LanguageDefinition::CPlusPlus() {
+const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::CPlusPlus() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const cppKeywords[] = {"alignas",
-                                              "alignof",
-                                              "and",
-                                              "and_eq",
-                                              "asm",
-                                              "atomic_cancel",
-                                              "atomic_commit",
-                                              "atomic_noexcept",
-                                              "auto",
-                                              "bitand",
-                                              "bitor",
-                                              "bool",
-                                              "break",
-                                              "case",
-                                              "catch",
-                                              "char",
-                                              "char16_t",
-                                              "char32_t",
-                                              "class",
-                                              "compl",
-                                              "concept",
-                                              "const",
-                                              "constexpr",
-                                              "const_cast",
-                                              "continue",
-                                              "decltype",
-                                              "default",
-                                              "delete",
-                                              "do",
-                                              "double",
-                                              "dynamic_cast",
-                                              "else",
-                                              "enum",
-                                              "explicit",
-                                              "export",
-                                              "extern",
-                                              "false",
-                                              "float",
-                                              "for",
-                                              "friend",
-                                              "goto",
-                                              "if",
-                                              "import",
-                                              "inline",
-                                              "int",
-                                              "long",
-                                              "module",
-                                              "mutable",
-                                              "namespace",
-                                              "new",
-                                              "noexcept",
-                                              "not",
-                                              "not_eq",
-                                              "nullptr",
-                                              "operator",
-                                              "or",
-                                              "or_eq",
-                                              "private",
-                                              "protected",
-                                              "public",
-                                              "register",
-                                              "reinterpret_cast",
-                                              "requires",
-                                              "return",
-                                              "short",
-                                              "signed",
-                                              "sizeof",
-                                              "static",
-                                              "static_assert",
-                                              "static_cast",
-                                              "struct",
-                                              "switch",
-                                              "synchronized",
-                                              "template",
-                                              "this",
-                                              "thread_local",
-                                              "throw",
-                                              "true",
-                                              "try",
-                                              "typedef",
-                                              "typeid",
-                                              "typename",
-                                              "union",
-                                              "unsigned",
-                                              "using",
-                                              "virtual",
-                                              "void",
-                                              "volatile",
-                                              "wchar_t",
-                                              "while",
-                                              "xor",
-                                              "xor_eq"};
+    static const char *const cppKeywords[] = {"alignas", "alignof", "and",      "and_eq", "asm",   "atomic_cancel", "atomic_commit", "atomic_noexcept", "auto",     "bitand",           "bitor",    "bool",   "break", "case",   "catch",  "char",   "char16_t",      "char32_t",    "class",  "compl",  "concept",      "const",    "constexpr", "const_cast",   "continue", "decltype", "default", "delete",  "do",     "double",   "dynamic_cast", "else",     "enum",  "explicit", "export", "extern",   "false",   "float", "for", "friend", "goto", "if", "import", "inline", "int", "long", "module", "mutable", "namespace", "new", "noexcept", "not",
+                                              "not_eq",  "nullptr", "operator", "or",     "or_eq", "private",       "protected",     "public",          "register", "reinterpret_cast", "requires", "return", "short", "signed", "sizeof", "static", "static_assert", "static_cast", "struct", "switch", "synchronized", "template", "this",      "thread_local", "throw",    "true",     "try",     "typedef", "typeid", "typename", "union",        "unsigned", "using", "virtual",  "void",   "volatile", "wchar_t", "while", "xor", "xor_eq"};
     for (auto &k : cppKeywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {
-        "abort",   "abs",           "acos",    "asin",          "atan",
-        "atexit",  "atof",          "atoi",    "atol",          "ceil",
-        "clock",   "cosh",          "ctime",   "div",           "exit",
-        "fabs",    "floor",         "fmod",    "getchar",       "getenv",
-        "isalnum", "isalpha",       "isdigit", "isgraph",       "ispunct",
-        "isspace", "isupper",       "kbhit",   "log10",         "log2",
-        "log",     "memcmp",        "modf",    "pow",           "printf",
-        "sprintf", "snprintf",      "putchar", "putenv",        "puts",
-        "rand",    "remove",        "rename",  "sinh",          "sqrt",
-        "srand",   "strcat",        "strcmp",  "strerror",      "time",
-        "tolower", "toupper",       "std",     "string",        "vector",
-        "map",     "unordered_map", "set",     "unordered_set", "min",
-        "max"};
+    static const char *const identifiers[] = {"abort", "abs", "acos", "asin", "atan", "atexit", "atof", "atoi", "atol", "ceil", "clock", "cosh", "ctime", "div", "exit", "fabs", "floor", "fmod", "getchar", "getenv", "isalnum", "isalpha", "isdigit", "isgraph", "ispunct", "isspace", "isupper", "kbhit", "log10", "log2", "log", "memcmp", "modf", "pow", "printf", "sprintf", "snprintf", "putchar", "putenv", "puts", "rand", "remove", "rename", "sinh", "sqrt", "srand", "strcat", "strcmp", "strerror", "time", "tolower", "toupper", "std", "string", "vector", "map", "unordered_map", "set", "unordered_set", "min", "max"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenize = [](const char *in_begin, const char *in_end,
-                           const char *&out_begin, const char *&out_end,
-                           PaletteIndex &paletteIndex) -> bool {
+    langDef.mTokenize = [](const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end, PaletteIndex &paletteIndex) -> bool {
       paletteIndex = PaletteIndex::Max;
 
       while (in_begin < in_end && isascii(*in_begin) && isblank(*in_begin))
@@ -2701,8 +2367,7 @@ TextEditor::LanguageDefinition::CPlusPlus() {
         paletteIndex = PaletteIndex::Default;
       } else if (TokenizeCStyleString(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::String;
-      else if (TokenizeCStyleCharacterLiteral(in_begin, in_end, out_begin,
-                                              out_end))
+      else if (TokenizeCStyleCharacterLiteral(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::CharLiteral;
       else if (TokenizeCStyleIdentifier(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::Identifier;
@@ -2924,184 +2589,164 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::HLSL() {
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {
-        "abort",
-        "abs",
-        "acos",
-        "all",
-        "AllMemoryBarrier",
-        "AllMemoryBarrierWithGroupSync",
-        "any",
-        "asdouble",
-        "asfloat",
-        "asin",
-        "asint",
-        "asint",
-        "asuint",
-        "asuint",
-        "atan",
-        "atan2",
-        "ceil",
-        "CheckAccessFullyMapped",
-        "clamp",
-        "clip",
-        "cos",
-        "cosh",
-        "countbits",
-        "cross",
-        "D3DCOLORtoUBYTE4",
-        "ddx",
-        "ddx_coarse",
-        "ddx_fine",
-        "ddy",
-        "ddy_coarse",
-        "ddy_fine",
-        "degrees",
-        "determinant",
-        "DeviceMemoryBarrier",
-        "DeviceMemoryBarrierWithGroupSync",
-        "distance",
-        "dot",
-        "dst",
-        "errorf",
-        "EvaluateAttributeAtCentroid",
-        "EvaluateAttributeAtSample",
-        "EvaluateAttributeSnapped",
-        "exp",
-        "exp2",
-        "f16tof32",
-        "f32tof16",
-        "faceforward",
-        "firstbithigh",
-        "firstbitlow",
-        "floor",
-        "fma",
-        "fmod",
-        "frac",
-        "frexp",
-        "fwidth",
-        "GetRenderTargetSampleCount",
-        "GetRenderTargetSamplePosition",
-        "GroupMemoryBarrier",
-        "GroupMemoryBarrierWithGroupSync",
-        "InterlockedAdd",
-        "InterlockedAnd",
-        "InterlockedCompareExchange",
-        "InterlockedCompareStore",
-        "InterlockedExchange",
-        "InterlockedMax",
-        "InterlockedMin",
-        "InterlockedOr",
-        "InterlockedXor",
-        "isfinite",
-        "isinf",
-        "isnan",
-        "ldexp",
-        "length",
-        "lerp",
-        "lit",
-        "log",
-        "log10",
-        "log2",
-        "mad",
-        "max",
-        "min",
-        "modf",
-        "msad4",
-        "mul",
-        "noise",
-        "normalize",
-        "pow",
-        "printf",
-        "Process2DQuadTessFactorsAvg",
-        "Process2DQuadTessFactorsMax",
-        "Process2DQuadTessFactorsMin",
-        "ProcessIsolineTessFactors",
-        "ProcessQuadTessFactorsAvg",
-        "ProcessQuadTessFactorsMax",
-        "ProcessQuadTessFactorsMin",
-        "ProcessTriTessFactorsAvg",
-        "ProcessTriTessFactorsMax",
-        "ProcessTriTessFactorsMin",
-        "radians",
-        "rcp",
-        "reflect",
-        "refract",
-        "reversebits",
-        "round",
-        "rsqrt",
-        "saturate",
-        "sign",
-        "sin",
-        "sincos",
-        "sinh",
-        "smoothstep",
-        "sqrt",
-        "step",
-        "tan",
-        "tanh",
-        "tex1D",
-        "tex1D",
-        "tex1Dbias",
-        "tex1Dgrad",
-        "tex1Dlod",
-        "tex1Dproj",
-        "tex2D",
-        "tex2D",
-        "tex2Dbias",
-        "tex2Dgrad",
-        "tex2Dlod",
-        "tex2Dproj",
-        "tex3D",
-        "tex3D",
-        "tex3Dbias",
-        "tex3Dgrad",
-        "tex3Dlod",
-        "tex3Dproj",
-        "texCUBE",
-        "texCUBE",
-        "texCUBEbias",
-        "texCUBEgrad",
-        "texCUBElod",
-        "texCUBEproj",
-        "transpose",
-        "trunc"};
+    static const char *const identifiers[] = {"abort",
+                                              "abs",
+                                              "acos",
+                                              "all",
+                                              "AllMemoryBarrier",
+                                              "AllMemoryBarrierWithGroupSync",
+                                              "any",
+                                              "asdouble",
+                                              "asfloat",
+                                              "asin",
+                                              "asint",
+                                              "asint",
+                                              "asuint",
+                                              "asuint",
+                                              "atan",
+                                              "atan2",
+                                              "ceil",
+                                              "CheckAccessFullyMapped",
+                                              "clamp",
+                                              "clip",
+                                              "cos",
+                                              "cosh",
+                                              "countbits",
+                                              "cross",
+                                              "D3DCOLORtoUBYTE4",
+                                              "ddx",
+                                              "ddx_coarse",
+                                              "ddx_fine",
+                                              "ddy",
+                                              "ddy_coarse",
+                                              "ddy_fine",
+                                              "degrees",
+                                              "determinant",
+                                              "DeviceMemoryBarrier",
+                                              "DeviceMemoryBarrierWithGroupSync",
+                                              "distance",
+                                              "dot",
+                                              "dst",
+                                              "errorf",
+                                              "EvaluateAttributeAtCentroid",
+                                              "EvaluateAttributeAtSample",
+                                              "EvaluateAttributeSnapped",
+                                              "exp",
+                                              "exp2",
+                                              "f16tof32",
+                                              "f32tof16",
+                                              "faceforward",
+                                              "firstbithigh",
+                                              "firstbitlow",
+                                              "floor",
+                                              "fma",
+                                              "fmod",
+                                              "frac",
+                                              "frexp",
+                                              "fwidth",
+                                              "GetRenderTargetSampleCount",
+                                              "GetRenderTargetSamplePosition",
+                                              "GroupMemoryBarrier",
+                                              "GroupMemoryBarrierWithGroupSync",
+                                              "InterlockedAdd",
+                                              "InterlockedAnd",
+                                              "InterlockedCompareExchange",
+                                              "InterlockedCompareStore",
+                                              "InterlockedExchange",
+                                              "InterlockedMax",
+                                              "InterlockedMin",
+                                              "InterlockedOr",
+                                              "InterlockedXor",
+                                              "isfinite",
+                                              "isinf",
+                                              "isnan",
+                                              "ldexp",
+                                              "length",
+                                              "lerp",
+                                              "lit",
+                                              "log",
+                                              "log10",
+                                              "log2",
+                                              "mad",
+                                              "max",
+                                              "min",
+                                              "modf",
+                                              "msad4",
+                                              "mul",
+                                              "noise",
+                                              "normalize",
+                                              "pow",
+                                              "printf",
+                                              "Process2DQuadTessFactorsAvg",
+                                              "Process2DQuadTessFactorsMax",
+                                              "Process2DQuadTessFactorsMin",
+                                              "ProcessIsolineTessFactors",
+                                              "ProcessQuadTessFactorsAvg",
+                                              "ProcessQuadTessFactorsMax",
+                                              "ProcessQuadTessFactorsMin",
+                                              "ProcessTriTessFactorsAvg",
+                                              "ProcessTriTessFactorsMax",
+                                              "ProcessTriTessFactorsMin",
+                                              "radians",
+                                              "rcp",
+                                              "reflect",
+                                              "refract",
+                                              "reversebits",
+                                              "round",
+                                              "rsqrt",
+                                              "saturate",
+                                              "sign",
+                                              "sin",
+                                              "sincos",
+                                              "sinh",
+                                              "smoothstep",
+                                              "sqrt",
+                                              "step",
+                                              "tan",
+                                              "tanh",
+                                              "tex1D",
+                                              "tex1D",
+                                              "tex1Dbias",
+                                              "tex1Dgrad",
+                                              "tex1Dlod",
+                                              "tex1Dproj",
+                                              "tex2D",
+                                              "tex2D",
+                                              "tex2Dbias",
+                                              "tex2Dgrad",
+                                              "tex2Dlod",
+                                              "tex2Dproj",
+                                              "tex3D",
+                                              "tex3D",
+                                              "tex3Dbias",
+                                              "tex3Dgrad",
+                                              "tex3Dlod",
+                                              "tex3Dproj",
+                                              "texCUBE",
+                                              "texCUBE",
+                                              "texCUBEbias",
+                                              "texCUBEgrad",
+                                              "texCUBElod",
+                                              "texCUBEproj",
+                                              "transpose",
+                                              "trunc"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[ \\t]*#[ \\t]*[a-zA-Z_]+",
-                                                  PaletteIndex::Preprocessor));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'",
-                                                  PaletteIndex::CharLiteral));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?",
-            PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*",
-                                                  PaletteIndex::Identifier));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
-            "\\;\\,\\.]",
-            PaletteIndex::Punctuation));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
+                                                                                   "\\;\\,\\.]",
+                                                                                   PaletteIndex::Punctuation));
 
     langDef.mCommentStart = "/*";
     langDef.mCommentEnd = "*/";
@@ -3121,67 +2766,28 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::GLSL() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const keywords[] = {
-        "auto",       "break",     "case",           "char",
-        "const",      "continue",  "default",        "do",
-        "double",     "else",      "enum",           "extern",
-        "float",      "for",       "goto",           "if",
-        "inline",     "int",       "long",           "register",
-        "restrict",   "return",    "short",          "signed",
-        "sizeof",     "static",    "struct",         "switch",
-        "typedef",    "union",     "unsigned",       "void",
-        "volatile",   "while",     "_Alignas",       "_Alignof",
-        "_Atomic",    "_Bool",     "_Complex",       "_Generic",
-        "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local"};
+    static const char *const keywords[] = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while", "_Alignas", "_Alignof", "_Atomic", "_Bool", "_Complex", "_Generic", "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local"};
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {
-        "abort",   "abs",     "acos",    "asin",     "atan",    "atexit",
-        "atof",    "atoi",    "atol",    "ceil",     "clock",   "cosh",
-        "ctime",   "div",     "exit",    "fabs",     "floor",   "fmod",
-        "getchar", "getenv",  "isalnum", "isalpha",  "isdigit", "isgraph",
-        "ispunct", "isspace", "isupper", "kbhit",    "log10",   "log2",
-        "log",     "memcmp",  "modf",    "pow",      "putchar", "putenv",
-        "puts",    "rand",    "remove",  "rename",   "sinh",    "sqrt",
-        "srand",   "strcat",  "strcmp",  "strerror", "time",    "tolower",
-        "toupper"};
+    static const char *const identifiers[] = {"abort", "abs", "acos", "asin", "atan", "atexit", "atof", "atoi", "atol", "ceil", "clock", "cosh", "ctime", "div", "exit", "fabs", "floor", "fmod", "getchar", "getenv", "isalnum", "isalpha", "isdigit", "isgraph", "ispunct", "isspace", "isupper", "kbhit", "log10", "log2", "log", "memcmp", "modf", "pow", "putchar", "putenv", "puts", "rand", "remove", "rename", "sinh", "sqrt", "srand", "strcat", "strcmp", "strerror", "time", "tolower", "toupper"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[ \\t]*#[ \\t]*[a-zA-Z_]+",
-                                                  PaletteIndex::Preprocessor));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'",
-                                                  PaletteIndex::CharLiteral));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?",
-            PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*",
-                                                  PaletteIndex::Identifier));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
-            "\\;\\,\\.]",
-            PaletteIndex::Punctuation));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[ \\t]*#[ \\t]*[a-zA-Z_]+", PaletteIndex::Preprocessor));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'", PaletteIndex::CharLiteral));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
+                                                                                   "\\;\\,\\.]",
+                                                                                   PaletteIndex::Punctuation));
 
     langDef.mCommentStart = "/*";
     langDef.mCommentEnd = "*/";
@@ -3201,40 +2807,18 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::C() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const keywords[] = {
-        "auto",       "break",     "case",           "char",
-        "const",      "continue",  "default",        "do",
-        "double",     "else",      "enum",           "extern",
-        "float",      "for",       "goto",           "if",
-        "inline",     "int",       "long",           "register",
-        "restrict",   "return",    "short",          "signed",
-        "sizeof",     "static",    "struct",         "switch",
-        "typedef",    "union",     "unsigned",       "void",
-        "volatile",   "while",     "_Alignas",       "_Alignof",
-        "_Atomic",    "_Bool",     "_Complex",       "_Generic",
-        "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local"};
+    static const char *const keywords[] = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while", "_Alignas", "_Alignof", "_Atomic", "_Bool", "_Complex", "_Generic", "_Imaginary", "_Noreturn", "_Static_assert", "_Thread_local"};
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {
-        "abort",   "abs",     "acos",    "asin",     "atan",    "atexit",
-        "atof",    "atoi",    "atol",    "ceil",     "clock",   "cosh",
-        "ctime",   "div",     "exit",    "fabs",     "floor",   "fmod",
-        "getchar", "getenv",  "isalnum", "isalpha",  "isdigit", "isgraph",
-        "ispunct", "isspace", "isupper", "kbhit",    "log10",   "log2",
-        "log",     "memcmp",  "modf",    "pow",      "putchar", "putenv",
-        "puts",    "rand",    "remove",  "rename",   "sinh",    "sqrt",
-        "srand",   "strcat",  "strcmp",  "strerror", "time",    "tolower",
-        "toupper"};
+    static const char *const identifiers[] = {"abort", "abs", "acos", "asin", "atan", "atexit", "atof", "atoi", "atol", "ceil", "clock", "cosh", "ctime", "div", "exit", "fabs", "floor", "fmod", "getchar", "getenv", "isalnum", "isalpha", "isdigit", "isgraph", "ispunct", "isspace", "isupper", "kbhit", "log10", "log2", "log", "memcmp", "modf", "pow", "putchar", "putenv", "puts", "rand", "remove", "rename", "sinh", "sqrt", "srand", "strcat", "strcmp", "strerror", "time", "tolower", "toupper"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenize = [](const char *in_begin, const char *in_end,
-                           const char *&out_begin, const char *&out_end,
-                           PaletteIndex &paletteIndex) -> bool {
+    langDef.mTokenize = [](const char *in_begin, const char *in_end, const char *&out_begin, const char *&out_end, PaletteIndex &paletteIndex) -> bool {
       paletteIndex = PaletteIndex::Max;
 
       while (in_begin < in_end && isascii(*in_begin) && isblank(*in_begin))
@@ -3246,8 +2830,7 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::C() {
         paletteIndex = PaletteIndex::Default;
       } else if (TokenizeCStyleString(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::String;
-      else if (TokenizeCStyleCharacterLiteral(in_begin, in_end, out_begin,
-                                              out_end))
+      else if (TokenizeCStyleCharacterLiteral(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::CharLiteral;
       else if (TokenizeCStyleIdentifier(in_begin, in_end, out_begin, out_end))
         paletteIndex = PaletteIndex::Identifier;
@@ -3277,353 +2860,31 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::SQL() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const keywords[] = {"ADD",
-                                           "EXCEPT",
-                                           "PERCENT",
-                                           "ALL",
-                                           "EXEC",
-                                           "PLAN",
-                                           "ALTER",
-                                           "EXECUTE",
-                                           "PRECISION",
-                                           "AND",
-                                           "EXISTS",
-                                           "PRIMARY",
-                                           "ANY",
-                                           "EXIT",
-                                           "PRINT",
-                                           "AS",
-                                           "FETCH",
-                                           "PROC",
-                                           "ASC",
-                                           "FILE",
-                                           "PROCEDURE",
-                                           "AUTHORIZATION",
-                                           "FILLFACTOR",
-                                           "PUBLIC",
-                                           "BACKUP",
-                                           "FOR",
-                                           "RAISERROR",
-                                           "BEGIN",
-                                           "FOREIGN",
-                                           "READ",
-                                           "BETWEEN",
-                                           "FREETEXT",
-                                           "READTEXT",
-                                           "BREAK",
-                                           "FREETEXTTABLE",
-                                           "RECONFIGURE",
-                                           "BROWSE",
-                                           "FROM",
-                                           "REFERENCES",
-                                           "BULK",
-                                           "FULL",
-                                           "REPLICATION",
-                                           "BY",
-                                           "FUNCTION",
-                                           "RESTORE",
-                                           "CASCADE",
-                                           "GOTO",
-                                           "RESTRICT",
-                                           "CASE",
-                                           "GRANT",
-                                           "RETURN",
-                                           "CHECK",
-                                           "GROUP",
-                                           "REVOKE",
-                                           "CHECKPOINT",
-                                           "HAVING",
-                                           "RIGHT",
-                                           "CLOSE",
-                                           "HOLDLOCK",
-                                           "ROLLBACK",
-                                           "CLUSTERED",
-                                           "IDENTITY",
-                                           "ROWCOUNT",
-                                           "COALESCE",
-                                           "IDENTITY_INSERT",
-                                           "ROWGUIDCOL",
-                                           "COLLATE",
-                                           "IDENTITYCOL",
-                                           "RULE",
-                                           "COLUMN",
-                                           "IF",
-                                           "SAVE",
-                                           "COMMIT",
-                                           "IN",
-                                           "SCHEMA",
-                                           "COMPUTE",
-                                           "INDEX",
-                                           "SELECT",
-                                           "CONSTRAINT",
-                                           "INNER",
-                                           "SESSION_USER",
-                                           "CONTAINS",
-                                           "INSERT",
-                                           "SET",
-                                           "CONTAINSTABLE",
-                                           "INTERSECT",
-                                           "SETUSER",
-                                           "CONTINUE",
-                                           "INTO",
-                                           "SHUTDOWN",
-                                           "CONVERT",
-                                           "IS",
-                                           "SOME",
-                                           "CREATE",
-                                           "JOIN",
-                                           "STATISTICS",
-                                           "CROSS",
-                                           "KEY",
-                                           "SYSTEM_USER",
-                                           "CURRENT",
-                                           "KILL",
-                                           "TABLE",
-                                           "CURRENT_DATE",
-                                           "LEFT",
-                                           "TEXTSIZE",
-                                           "CURRENT_TIME",
-                                           "LIKE",
-                                           "THEN",
-                                           "CURRENT_TIMESTAMP",
-                                           "LINENO",
-                                           "TO",
-                                           "CURRENT_USER",
-                                           "LOAD",
-                                           "TOP",
-                                           "CURSOR",
-                                           "NATIONAL",
-                                           "TRAN",
-                                           "DATABASE",
-                                           "NOCHECK",
-                                           "TRANSACTION",
-                                           "DBCC",
-                                           "NONCLUSTERED",
-                                           "TRIGGER",
-                                           "DEALLOCATE",
-                                           "NOT",
-                                           "TRUNCATE",
-                                           "DECLARE",
-                                           "NULL",
-                                           "TSEQUAL",
-                                           "DEFAULT",
-                                           "NULLIF",
-                                           "UNION",
-                                           "DELETE",
-                                           "OF",
-                                           "UNIQUE",
-                                           "DENY",
-                                           "OFF",
-                                           "UPDATE",
-                                           "DESC",
-                                           "OFFSETS",
-                                           "UPDATETEXT",
-                                           "DISK",
-                                           "ON",
-                                           "USE",
-                                           "DISTINCT",
-                                           "OPEN",
-                                           "USER",
-                                           "DISTRIBUTED",
-                                           "OPENDATASOURCE",
-                                           "VALUES",
-                                           "DOUBLE",
-                                           "OPENQUERY",
-                                           "VARYING",
-                                           "DROP",
-                                           "OPENROWSET",
-                                           "VIEW",
-                                           "DUMMY",
-                                           "OPENXML",
-                                           "WAITFOR",
-                                           "DUMP",
-                                           "OPTION",
-                                           "WHEN",
-                                           "ELSE",
-                                           "OR",
-                                           "WHERE",
-                                           "END",
-                                           "ORDER",
-                                           "WHILE",
-                                           "ERRLVL",
-                                           "OUTER",
-                                           "WITH",
-                                           "ESCAPE",
-                                           "OVER",
-                                           "WRITETEXT"};
+    static const char *const keywords[] = {"ADD",         "EXCEPT", "PERCENT", "ALL",    "EXEC", "PLAN",    "ALTER",      "EXECUTE", "PRECISION", "AND",   "EXISTS",   "PRIMARY",    "ANY",   "EXIT",         "PRINT",          "AS",     "FETCH",  "PROC",          "ASC",       "FILE",    "PROCEDURE",  "AUTHORIZATION", "FILLFACTOR", "PUBLIC",  "BACKUP",  "FOR",  "RAISERROR", "BEGIN", "FOREIGN",    "READ",  "BETWEEN", "FREETEXT",    "READTEXT", "BREAK", "FREETEXTTABLE", "RECONFIGURE",  "BROWSE", "FROM",     "REFERENCES",   "BULK",     "FULL", "REPLICATION",       "BY",     "FUNCTION", "RESTORE",      "CASCADE", "GOTO", "RESTRICT", "CASE",     "GRANT", "RETURN",   "CHECK",   "GROUP",       "REVOKE", "CHECKPOINT",   "HAVING",  "RIGHT",      "CLOSE", "HOLDLOCK", "ROLLBACK", "CLUSTERED", "IDENTITY", "ROWCOUNT", "COALESCE", "IDENTITY_INSERT", "ROWGUIDCOL", "COLLATE",
+                                           "IDENTITYCOL", "RULE",   "COLUMN",  "IF",     "SAVE", "COMMIT",  "IN",         "SCHEMA",  "COMPUTE",   "INDEX", "SELECT",   "CONSTRAINT", "INNER", "SESSION_USER", "CONTAINS",       "INSERT", "SET",    "CONTAINSTABLE", "INTERSECT", "SETUSER", "CONTINUE",   "INTO",          "SHUTDOWN",   "CONVERT", "IS",      "SOME", "CREATE",    "JOIN",  "STATISTICS", "CROSS", "KEY",     "SYSTEM_USER", "CURRENT",  "KILL",  "TABLE",         "CURRENT_DATE", "LEFT",   "TEXTSIZE", "CURRENT_TIME", "LIKE",     "THEN", "CURRENT_TIMESTAMP", "LINENO", "TO",       "CURRENT_USER", "LOAD",    "TOP",  "CURSOR",   "NATIONAL", "TRAN",  "DATABASE", "NOCHECK", "TRANSACTION", "DBCC",   "NONCLUSTERED", "TRIGGER", "DEALLOCATE", "NOT",   "TRUNCATE", "DECLARE",  "NULL",      "TSEQUAL",  "DEFAULT",  "NULLIF",   "UNION",           "DELETE",     "OF",
+                                           "UNIQUE",      "DENY",   "OFF",     "UPDATE", "DESC", "OFFSETS", "UPDATETEXT", "DISK",    "ON",        "USE",   "DISTINCT", "OPEN",       "USER",  "DISTRIBUTED",  "OPENDATASOURCE", "VALUES", "DOUBLE", "OPENQUERY",     "VARYING",   "DROP",    "OPENROWSET", "VIEW",          "DUMMY",      "OPENXML", "WAITFOR", "DUMP", "OPTION",    "WHEN",  "ELSE",       "OR",    "WHERE",   "END",         "ORDER",    "WHILE", "ERRLVL",        "OUTER",        "WITH",   "ESCAPE",   "OVER",         "WRITETEXT"};
 
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {"ABS",
-                                              "ACOS",
-                                              "ADD_MONTHS",
-                                              "ASCII",
-                                              "ASCIISTR",
-                                              "ASIN",
-                                              "ATAN",
-                                              "ATAN2",
-                                              "AVG",
-                                              "BFILENAME",
-                                              "BIN_TO_NUM",
-                                              "BITAND",
-                                              "CARDINALITY",
-                                              "CASE",
-                                              "CAST",
-                                              "CEIL",
-                                              "CHARTOROWID",
-                                              "CHR",
-                                              "COALESCE",
-                                              "COMPOSE",
-                                              "CONCAT",
-                                              "CONVERT",
-                                              "CORR",
-                                              "COS",
-                                              "COSH",
-                                              "COUNT",
-                                              "COVAR_POP",
-                                              "COVAR_SAMP",
-                                              "CUME_DIST",
-                                              "CURRENT_DATE",
-                                              "CURRENT_TIMESTAMP",
-                                              "DBTIMEZONE",
-                                              "DECODE",
-                                              "DECOMPOSE",
-                                              "DENSE_RANK",
-                                              "DUMP",
-                                              "EMPTY_BLOB",
-                                              "EMPTY_CLOB",
-                                              "EXP",
-                                              "EXTRACT",
-                                              "FIRST_VALUE",
-                                              "FLOOR",
-                                              "FROM_TZ",
-                                              "GREATEST",
-                                              "GROUP_ID",
-                                              "HEXTORAW",
-                                              "INITCAP",
-                                              "INSTR",
-                                              "INSTR2",
-                                              "INSTR4",
-                                              "INSTRB",
-                                              "INSTRC",
-                                              "LAG",
-                                              "LAST_DAY",
-                                              "LAST_VALUE",
-                                              "LEAD",
-                                              "LEAST",
-                                              "LENGTH",
-                                              "LENGTH2",
-                                              "LENGTH4",
-                                              "LENGTHB",
-                                              "LENGTHC",
-                                              "LISTAGG",
-                                              "LN",
-                                              "LNNVL",
-                                              "LOCALTIMESTAMP",
-                                              "LOG",
-                                              "LOWER",
-                                              "LPAD",
-                                              "LTRIM",
-                                              "MAX",
-                                              "MEDIAN",
-                                              "MIN",
-                                              "MOD",
-                                              "MONTHS_BETWEEN",
-                                              "NANVL",
-                                              "NCHR",
-                                              "NEW_TIME",
-                                              "NEXT_DAY",
-                                              "NTH_VALUE",
-                                              "NULLIF",
-                                              "NUMTODSINTERVAL",
-                                              "NUMTOYMINTERVAL",
-                                              "NVL",
-                                              "NVL2",
-                                              "POWER",
-                                              "RANK",
-                                              "RAWTOHEX",
-                                              "REGEXP_COUNT",
-                                              "REGEXP_INSTR",
-                                              "REGEXP_REPLACE",
-                                              "REGEXP_SUBSTR",
-                                              "REMAINDER",
-                                              "REPLACE",
-                                              "ROUND",
-                                              "ROWNUM",
-                                              "RPAD",
-                                              "RTRIM",
-                                              "SESSIONTIMEZONE",
-                                              "SIGN",
-                                              "SIN",
-                                              "SINH",
-                                              "SOUNDEX",
-                                              "SQRT",
-                                              "STDDEV",
-                                              "SUBSTR",
-                                              "SUM",
-                                              "SYS_CONTEXT",
-                                              "SYSDATE",
-                                              "SYSTIMESTAMP",
-                                              "TAN",
-                                              "TANH",
-                                              "TO_CHAR",
-                                              "TO_CLOB",
-                                              "TO_DATE",
-                                              "TO_DSINTERVAL",
-                                              "TO_LOB",
-                                              "TO_MULTI_BYTE",
-                                              "TO_NCLOB",
-                                              "TO_NUMBER",
-                                              "TO_SINGLE_BYTE",
-                                              "TO_TIMESTAMP",
-                                              "TO_TIMESTAMP_TZ",
-                                              "TO_YMINTERVAL",
-                                              "TRANSLATE",
-                                              "TRIM",
-                                              "TRUNC",
-                                              "TZ_OFFSET",
-                                              "UID",
-                                              "UPPER",
-                                              "USER",
-                                              "USERENV",
-                                              "VAR_POP",
-                                              "VAR_SAMP",
-                                              "VARIANCE",
-                                              "VSIZE "};
+    static const char *const identifiers[] = {"ABS", "ACOS", "ADD_MONTHS",     "ASCII", "ASCIISTR", "ASIN",     "ATAN",     "ATAN2",     "AVG",    "BFILENAME",       "BIN_TO_NUM",      "BITAND", "CARDINALITY", "CASE",  "CAST", "CEIL",     "CHARTOROWID",  "CHR",          "COALESCE",       "COMPOSE",       "CONCAT",    "CONVERT", "CORR",  "COS",    "COSH", "COUNT", "COVAR_POP",       "COVAR_SAMP", "CUME_DIST", "CURRENT_DATE", "CURRENT_TIMESTAMP", "DBTIMEZONE", "DECODE", "DECOMPOSE", "DENSE_RANK", "DUMP",        "EMPTY_BLOB", "EMPTY_CLOB",   "EXP", "EXTRACT", "FIRST_VALUE", "FLOOR",   "FROM_TZ", "GREATEST",      "GROUP_ID", "HEXTORAW",      "INITCAP",  "INSTR",     "INSTR2",         "INSTR4",       "INSTRB",          "INSTRC",        "LAG",       "LAST_DAY", "LAST_VALUE", "LEAD",      "LEAST", "LENGTH", "LENGTH2", "LENGTH4", "LENGTHB", "LENGTHC",  "LISTAGG",  "LN",    "LNNVL", "LOCALTIMESTAMP", "LOG", "LOWER", "LPAD", "LTRIM", "MAX", "MEDIAN",
+                                              "MIN", "MOD",  "MONTHS_BETWEEN", "NANVL", "NCHR",     "NEW_TIME", "NEXT_DAY", "NTH_VALUE", "NULLIF", "NUMTODSINTERVAL", "NUMTOYMINTERVAL", "NVL",    "NVL2",        "POWER", "RANK", "RAWTOHEX", "REGEXP_COUNT", "REGEXP_INSTR", "REGEXP_REPLACE", "REGEXP_SUBSTR", "REMAINDER", "REPLACE", "ROUND", "ROWNUM", "RPAD", "RTRIM", "SESSIONTIMEZONE", "SIGN",       "SIN",       "SINH",         "SOUNDEX",           "SQRT",       "STDDEV", "SUBSTR",    "SUM",        "SYS_CONTEXT", "SYSDATE",    "SYSTIMESTAMP", "TAN", "TANH",    "TO_CHAR",     "TO_CLOB", "TO_DATE", "TO_DSINTERVAL", "TO_LOB",   "TO_MULTI_BYTE", "TO_NCLOB", "TO_NUMBER", "TO_SINGLE_BYTE", "TO_TIMESTAMP", "TO_TIMESTAMP_TZ", "TO_YMINTERVAL", "TRANSLATE", "TRIM",     "TRUNC",      "TZ_OFFSET", "UID",   "UPPER",  "USER",    "USERENV", "VAR_POP", "VAR_SAMP", "VARIANCE", "VSIZE "};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("\\\'[^\\\']*\\\'",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?",
-            PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*",
-                                                  PaletteIndex::Identifier));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
-            "\\;\\,\\.]",
-            PaletteIndex::Punctuation));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\\'[^\\\']*\\\'", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
+                                                                                   "\\;\\,\\.]",
+                                                                                   PaletteIndex::Punctuation));
 
     langDef.mCommentStart = "/*";
     langDef.mCommentEnd = "*/";
@@ -3639,69 +2900,32 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::SQL() {
   return langDef;
 }
 
-const TextEditor::LanguageDefinition &
-TextEditor::LanguageDefinition::AngelScript() {
+const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::AngelScript() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const keywords[] = {
-        "and",       "abstract", "auto",      "bool",      "break",
-        "case",      "cast",     "class",     "const",     "continue",
-        "default",   "do",       "double",    "else",      "enum",
-        "false",     "final",    "float",     "for",       "from",
-        "funcdef",   "function", "get",       "if",        "import",
-        "in",        "inout",    "int",       "interface", "int8",
-        "int16",     "int32",    "int64",     "is",        "mixin",
-        "namespace", "not",      "null",      "or",        "out",
-        "override",  "private",  "protected", "return",    "set",
-        "shared",    "super",    "switch",    "this ",     "true",
-        "typedef",   "uint",     "uint8",     "uint16",    "uint32",
-        "uint64",    "void",     "while",     "xor"};
+    static const char *const keywords[] = {"and", "abstract", "auto", "bool", "break", "case", "cast", "class", "const", "continue", "default", "do", "double", "else", "enum", "false", "final", "float", "for", "from", "funcdef", "function", "get", "if", "import", "in", "inout", "int", "interface", "int8", "int16", "int32", "int64", "is", "mixin", "namespace", "not", "null", "or", "out", "override", "private", "protected", "return", "set", "shared", "super", "switch", "this ", "true", "typedef", "uint", "uint8", "uint16", "uint32", "uint64", "void", "while", "xor"};
 
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {
-        "cos",         "sin",         "tab",      "acos",        "asin",
-        "atan",        "atan2",       "cosh",     "sinh",        "tanh",
-        "log",         "log10",       "pow",      "sqrt",        "abs",
-        "ceil",        "floor",       "fraction", "closeTo",     "fpFromIEEE",
-        "fpToIEEE",    "complex",     "opEquals", "opAddAssign", "opSubAssign",
-        "opMulAssign", "opDivAssign", "opAdd",    "opSub",       "opMul",
-        "opDiv"};
+    static const char *const identifiers[] = {"cos", "sin", "tab", "acos", "asin", "atan", "atan2", "cosh", "sinh", "tanh", "log", "log10", "pow", "sqrt", "abs", "ceil", "floor", "fraction", "closeTo", "fpFromIEEE", "fpToIEEE", "complex", "opEquals", "opAddAssign", "opSubAssign", "opMulAssign", "opDivAssign", "opAdd", "opSub", "opMul", "opDiv"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?",
-            PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*",
-                                                  PaletteIndex::Identifier));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
-            "\\;\\,\\.]",
-            PaletteIndex::Punctuation));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\'\\\\?[^\\']\\'", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[0-7]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
+                                                                                   "\\;\\,\\.]",
+                                                                                   PaletteIndex::Punctuation));
 
     langDef.mCommentStart = "/*";
     langDef.mCommentEnd = "*/";
@@ -3721,133 +2945,29 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::Lua() {
   static bool inited = false;
   static LanguageDefinition langDef;
   if (!inited) {
-    static const char *const keywords[] = {
-        "and", "break",    "do",     "",     "else", "elseif", "end",  "false",
-        "for", "function", "if",     "in",   "",     "local",  "nil",  "not",
-        "or",  "repeat",   "return", "then", "true", "until",  "while"};
+    static const char *const keywords[] = {"and", "break", "do", "", "else", "elseif", "end", "false", "for", "function", "if", "in", "", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"};
 
     for (auto &k : keywords)
       langDef.mKeywords.insert(k);
 
-    static const char *const identifiers[] = {"assert",       "collectgarbage",
-                                              "dofile",       "error",
-                                              "getmetatable", "ipairs",
-                                              "loadfile",     "load",
-                                              "loadstring",   "next",
-                                              "pairs",        "pcall",
-                                              "print",        "rawequal",
-                                              "rawlen",       "rawget",
-                                              "rawset",       "select",
-                                              "setmetatable", "tonumber",
-                                              "tostring",     "type",
-                                              "xpcall",       "_G",
-                                              "_VERSION",     "arshift",
-                                              "band",         "bnot",
-                                              "bor",          "bxor",
-                                              "btest",        "extract",
-                                              "lrotate",      "lshift",
-                                              "replace",      "rrotate",
-                                              "rshift",       "create",
-                                              "resume",       "running",
-                                              "status",       "wrap",
-                                              "yield",        "isyieldable",
-                                              "debug",        "getuservalue",
-                                              "gethook",      "getinfo",
-                                              "getlocal",     "getregistry",
-                                              "getmetatable", "getupvalue",
-                                              "upvaluejoin",  "upvalueid",
-                                              "setuservalue", "sethook",
-                                              "setlocal",     "setmetatable",
-                                              "setupvalue",   "traceback",
-                                              "close",        "flush",
-                                              "input",        "lines",
-                                              "open",         "output",
-                                              "popen",        "read",
-                                              "tmpfile",      "type",
-                                              "write",        "close",
-                                              "flush",        "lines",
-                                              "read",         "seek",
-                                              "setvbuf",      "write",
-                                              "__gc",         "__tostring",
-                                              "abs",          "acos",
-                                              "asin",         "atan",
-                                              "ceil",         "cos",
-                                              "deg",          "exp",
-                                              "tointeger",    "floor",
-                                              "fmod",         "ult",
-                                              "log",          "max",
-                                              "min",          "modf",
-                                              "rad",          "random",
-                                              "randomseed",   "sin",
-                                              "sqrt",         "string",
-                                              "tan",          "type",
-                                              "atan2",        "cosh",
-                                              "sinh",         "tanh",
-                                              "pow",          "frexp",
-                                              "ldexp",        "log10",
-                                              "pi",           "huge",
-                                              "maxinteger",   "mininteger",
-                                              "loadlib",      "searchpath",
-                                              "seeall",       "preload",
-                                              "cpath",        "path",
-                                              "searchers",    "loaded",
-                                              "module",       "require",
-                                              "clock",        "date",
-                                              "difftime",     "execute",
-                                              "exit",         "getenv",
-                                              "remove",       "rename",
-                                              "setlocale",    "time",
-                                              "tmpname",      "byte",
-                                              "char",         "dump",
-                                              "find",         "format",
-                                              "gmatch",       "gsub",
-                                              "len",          "lower",
-                                              "match",        "rep",
-                                              "reverse",      "sub",
-                                              "upper",        "pack",
-                                              "packsize",     "unpack",
-                                              "concat",       "maxn",
-                                              "insert",       "pack",
-                                              "unpack",       "remove",
-                                              "move",         "sort",
-                                              "offset",       "codepoint",
-                                              "char",         "len",
-                                              "codes",        "charpattern",
-                                              "coroutine",    "table",
-                                              "io",           "os",
-                                              "string",       "utf8",
-                                              "bit32",        "math",
-                                              "debug",        "package"};
+    static const char *const identifiers[] = {"assert", "collectgarbage", "dofile",    "error",  "getmetatable", "ipairs",  "loadfile", "load", "loadstring", "next",    "pairs", "pcall",  "print",  "rawequal", "rawlen",    "rawget", "rawset",  "select", "setmetatable", "tonumber",   "tostring", "type",   "xpcall", "_G",   "_VERSION", "arshift", "band",  "bnot", "bor",       "bxor",  "btest", "extract", "lrotate",  "lshift", "replace", "rrotate", "rshift", "create", "resume",     "running", "status", "wrap",   "yield",  "isyieldable", "debug", "getuservalue", "gethook", "getinfo",     "getlocal",  "getregistry", "getmetatable", "getupvalue", "upvaluejoin", "upvalueid", "setuservalue", "sethook",    "setlocal", "setmetatable", "setupvalue", "traceback",
+                                              "close",  "flush",          "input",     "lines",  "open",         "output",  "popen",    "read", "tmpfile",    "type",    "write", "close",  "flush",  "lines",    "read",      "seek",   "setvbuf", "write",  "__gc",         "__tostring", "abs",      "acos",   "asin",   "atan", "ceil",     "cos",     "deg",   "exp",  "tointeger", "floor", "fmod",  "ult",     "log",      "max",    "min",     "modf",    "rad",    "random", "randomseed", "sin",     "sqrt",   "string", "tan",    "type",        "atan2", "cosh",         "sinh",    "tanh",        "pow",       "frexp",       "ldexp",        "log10",      "pi",          "huge",      "maxinteger",   "mininteger", "loadlib",  "searchpath",   "seeall",     "preload",
+                                              "cpath",  "path",           "searchers", "loaded", "module",       "require", "clock",    "date", "difftime",   "execute", "exit",  "getenv", "remove", "rename",   "setlocale", "time",   "tmpname", "byte",   "char",         "dump",       "find",     "format", "gmatch", "gsub", "len",      "lower",   "match", "rep",  "reverse",   "sub",   "upper", "pack",    "packsize", "unpack", "concat",  "maxn",    "insert", "pack",   "unpack",     "remove",  "move",   "sort",   "offset", "codepoint",   "char",  "len",          "codes",   "charpattern", "coroutine", "table",       "io",           "os",         "string",      "utf8",      "bit32",        "math",       "debug",    "package"};
     for (auto &k : identifiers) {
       Identifier id;
       id.mDeclaration = "Built-in function";
       langDef.mIdentifiers.insert(std::make_pair(std::string(k), id));
     }
 
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("\\\'[^\\\']*\\\'",
-                                                  PaletteIndex::String));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?",
-            PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?",
-                                                  PaletteIndex::Number));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*",
-                                                  PaletteIndex::Identifier));
-    langDef.mTokenRegexStrings.push_back(
-        std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
-            "\\;\\,\\.]",
-            PaletteIndex::Punctuation));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("L?\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("\\\'[^\\\']*\\\'", PaletteIndex::String));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fF]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[+-]?[0-9]+[Uu]?[lL]?[lL]?", PaletteIndex::Number));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
+    langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/"
+                                                                                   "\\;\\,\\.]",
+                                                                                   PaletteIndex::Punctuation));
 
     langDef.mCommentStart = "--[[";
     langDef.mCommentEnd = "]]";
