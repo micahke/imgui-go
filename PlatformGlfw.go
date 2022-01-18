@@ -515,3 +515,8 @@ func (platform *GLFW) SetTitle(title string) {
 func (platform *GLFW) IsMinimized() bool {
 	return glfw.True == platform.window.GetAttrib(glfw.Iconified)
 }
+
+// IsVisible checks whether window is visible.
+func (platform *GLFW) IsVisible() bool {
+	return glfw.True == platform.window.GetAttrib(glfw.Visible)
+}

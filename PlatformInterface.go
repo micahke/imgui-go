@@ -78,4 +78,7 @@ type Platform interface {
 
 	// Check whehter window is minimized
 	IsMinimized() bool
+
+	// Check whether window is visible
+	IsVisible() bool
 }
