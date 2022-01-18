@@ -75,4 +75,7 @@ type Platform interface {
 
 	// Get DPI scale factor
 	GetContentScale() float32
+
+	// Check whehter window is minimized
+	IsMinimized() bool
 }

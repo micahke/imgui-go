@@ -506,6 +506,12 @@ func (platform *GLFW) SetSizeLimits(minw, minh, maxw, maxh int) {
 	platform.window.SetSizeLimits(minw, minh, maxw, maxh)
 }
 
+// SetTitle sets the title of window.
 func (platform *GLFW) SetTitle(title string) {
 	platform.window.SetTitle(title)
+}
+
+// IsMinimized checks whether window is minimized.
+func (platform *GLFW) IsMinimized() bool {
+	return glfw.True == platform.window.GetAttrib(glfw.Iconified)
 }
