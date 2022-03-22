@@ -158,9 +158,9 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 	gl.EnableVertexAttribArray(uint32(renderer.attribLocationUV))
 	gl.EnableVertexAttribArray(uint32(renderer.attribLocationColor))
 	vertexSize, vertexOffsetPos, vertexOffsetUv, vertexOffsetCol := VertexBufferLayout()
-	gl.VertexAttribPointer(uint32(renderer.attribLocationPosition), 2, gl.FLOAT, false, int32(vertexSize), unsafe.Pointer(uintptr(vertexOffsetPos)))
-	gl.VertexAttribPointer(uint32(renderer.attribLocationUV), 2, gl.FLOAT, false, int32(vertexSize), unsafe.Pointer(uintptr(vertexOffsetUv)))
-	gl.VertexAttribPointer(uint32(renderer.attribLocationColor), 4, gl.UNSIGNED_BYTE, true, int32(vertexSize), unsafe.Pointer(uintptr(vertexOffsetCol)))
+	gl.VertexAttribPointerWithOffset(uint32(renderer.attribLocationPosition), 2, gl.FLOAT, false, int32(vertexSize), uintptr(vertexOffsetPos))
+	gl.VertexAttribPointerWithOffset(uint32(renderer.attribLocationUV), 2, gl.FLOAT, false, int32(vertexSize), uintptr(vertexOffsetUv))
+	gl.VertexAttribPointerWithOffset(uint32(renderer.attribLocationColor), 4, gl.UNSIGNED_BYTE, true, int32(vertexSize), uintptr(vertexOffsetCol))
 	indexSize := IndexBufferLayout()
 	drawType := gl.UNSIGNED_SHORT
 	if indexSize == 4 {
