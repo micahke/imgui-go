@@ -7,6 +7,11 @@ unsigned int iggDrawCommandIdxOffset(IggDrawCmd handle) {
   return cmd->IdxOffset;
 }
 
+void iggDrawCommandGetVertexOffset(IggDrawCmd handle, unsigned int *count) {
+  ImDrawCmd *cmd = reinterpret_cast<ImDrawCmd *>(handle);
+  *count = cmd->VtxOffset;
+}
+
 void iggDrawCommandGetElementCount(IggDrawCmd handle, unsigned int *count) {
   ImDrawCmd *cmd = reinterpret_cast<ImDrawCmd *>(handle);
   *count = cmd->ElemCount;

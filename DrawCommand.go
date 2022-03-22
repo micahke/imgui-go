@@ -14,6 +14,15 @@ func (cmd DrawCommand) IdxOffset() uint {
 	return uint(C.iggDrawCommandIdxOffset(cmd.handle()))
 }
 
+// VertexOffset is the start offset in vertex buffer.
+// ImGuiBackendFlags_RendererHasVtxOffset: false always 0,
+// otherwise may be >0 to support meshes larger than 64K vertices with 16-bit indices.
+func (cmd DrawCommand) VertexOffset() int {
+	var count C.uint
+	C.iggDrawCommandGetVertexOffset(cmd.handle(), &count)
+	return int(count)
+}
+
 // ElementCount is the number of indices (multiple of 3) to be rendered as triangles.
 // Vertices are stored in the callee DrawList's VertexBuffer, indices in IndexBuffer.
 func (cmd DrawCommand) ElementCount() int {
