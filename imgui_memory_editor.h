@@ -318,8 +318,8 @@ struct MemoryEditor
                     {
                         ImGui::SetKeyboardFocusHere();
                         ImGui::CaptureKeyboardFromApp(true);
-                        snprintf(AddrInputBuf, sizeof(buffer), format_data, s.AddrDigitsCount, base_display_addr + addr);
-                        snprintf(DataInputBuf, sizeof(buffer), format_byte, ReadFn ? ReadFn(mem_data, addr) : mem_data[addr]);
+                        snprintf(AddrInputBuf, sizeof(AddrInputBuf), format_data, s.AddrDigitsCount, base_display_addr + addr);
+                        snprintf(DataInputBuf, sizeof(DataInputBuf), format_byte, ReadFn ? ReadFn(mem_data, addr) : mem_data[addr]);
                     }
                     struct UserData
                     {
