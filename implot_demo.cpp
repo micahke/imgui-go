@@ -23,6 +23,7 @@
 // ImPlot v0.11 WIP
 
 #include "implot.h"
+#include <cstdio>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +31,10 @@
 
 #ifdef _MSC_VER
 #define sprintf sprintf_s
+#endif
+
+#ifdef _MSC_VER
+#define snprintf snprintf_s
 #endif
 
 #ifndef PI
@@ -678,13 +683,13 @@ void ShowDemo_DigitalPlots() {
     if (ImPlot::BeginPlot("##Digital")) {
         for (int i = 0; i < 2; ++i) {
             if (showDigital[i] && dataDigital[i].Data.size() > 0) {
-                sprintf(label, "digital_%d", i);
+                snprintf(label, sizeof(label), "digital_%d", i);
                 ImPlot::PlotDigital(label, &dataDigital[i].Data[0].x, &dataDigital[i].Data[0].y, dataDigital[i].Data.size(), dataDigital[i].Offset, 2 * sizeof(float));
             }
         }
         for (int i = 0; i < 2; ++i) {
             if (showAnalog[i]) {
-                sprintf(label, "analog_%d", i);
+                snprintf(label, sizeof(label), "analog_%d", i);
                 if (dataAnalog[i].Data.size() > 0)
                     ImPlot::PlotLine(label, &dataAnalog[i].Data[0].x, &dataAnalog[i].Data[0].y, dataAnalog[i].Data.size(), dataAnalog[i].Offset, 2 * sizeof(float));
             }
@@ -985,7 +990,7 @@ void ShowDemo_SubplotsSizing() {
             if (ImPlot::BeginPlot("",NULL,NULL,ImVec2(),ImPlotFlags_NoLegend,ImPlotAxisFlags_NoTickLabels,ImPlotAxisFlags_NoTickLabels)) {
                 char buffer[8];
                 float fi = 0.01f * (i+1);
-                sprintf(buffer, "data%d", i);
+                snprintf(buffer, sizeof(buffer), "data%d", i);
                 if (i == 0)
                     ImPlot::SetNextLineStyle(ImVec4(0,1,0,1));
                 ImPlot::PlotLineG(buffer,SinewaveGetter,&fi,1000);
@@ -1013,7 +1018,7 @@ void ShowDemo_SubplotItemSharing() {
                     if (id[j] == i) {
                         char label[8];
                         float fj = 0.01f * (j+2);
-                        sprintf(label, "data%d", j);
+                        snprintf(label, sizeof(label), "data%d", j);
                         ImPlot::PlotLineG(label,SinewaveGetter,&fj,1000);
                         if (ImPlot::BeginDragDropSourceItem(label)) {
                             curj = j;
@@ -1291,7 +1296,7 @@ void ShowDemo_DragAndDrop() {
             Idx = i++;
             Plt = 0;
             Yax = ImPlotYAxis_1;
-            sprintf(Label, "%02d Hz", Idx+1);
+            snprintf(Label, sizeof(Label), "%02d Hz", Idx+1);
             Color = RandomColor();
             Data.reserve(1001);
             for (int k = 0; k < 1001; ++k) {
@@ -1344,7 +1349,7 @@ void ShowDemo_DragAndDrop() {
                 ImPlot::SetPlotYAxis(dnd[k].Yax);
                 ImPlot::SetNextLineStyle(dnd[k].Color);
                 static char label[32];
-                sprintf(label,"%s (Y%d)", dnd[k].Label, dnd[k].Yax+1);
+                snprintf(label, sizeof(label), "%s (Y%d)", dnd[k].Label, dnd[k].Yax+1);
                 ImPlot::PlotLine(label, &dnd[k].Data[0].x, &dnd[k].Data[0].y, dnd[k].Data.size(), 0, 2 * sizeof(float));
                 // allow legend item labels to be DND sources
                 if (ImPlot::BeginDragDropSourceItem(label)) {
@@ -1496,7 +1501,7 @@ void ShowDemo_OffsetAndStride() {
         ImPlot::PushColormap(ImPlotColormap_Jet);
         char buff[16];
         for (int c = 0; c < k_circles; ++c) {
-            sprintf(buff, "Circle %d", c);
+            snprintf(buff, sizeof(buff), "Circle %d", c);
             ImPlot::PlotLine(buff, &interleaved_data[c*2 + 0], &interleaved_data[c*2 + 1], k_points_per, offset, 2*k_circles*sizeof(double));
         }
         ImPlot::EndPlot();
@@ -2189,7 +2194,7 @@ void ShowBenchmarkTool() {
     if (ImPlot::BeginPlot("##Stats", "Items (1,000 pts each)", "Framerate (Hz)", ImVec2(-1,0), ImPlotFlags_NoChild)) {
         for (int run = 0; run < records.size(); ++run) {
             if (records[run].Data.Size > 1) {
-                sprintf(buffer, "B%d-%s%s", run + 1, names[records[run].Mode], records[run].AA ? "-AA" : "");
+                snprintf(buffer, sizeof(buffer), "B%d-%s%s", run + 1, names[records[run].Mode], records[run].AA ? "-AA" : "");
                 ImVector<ImPlotPoint>& d = records[run].Data;
                 ImPlot::PlotLine(buffer, &d[0].x, &d[0].y, d.Size, 0, 2*sizeof(double));
             }
